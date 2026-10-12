@@ -5,6 +5,7 @@ import { AttendanceChart } from "@/components/dashboard/attendance-chart"
 import { CalendarCard } from "@/components/dashboard/calendar-card"
 import { DailyMonitoring } from "@/components/dashboard/daily-monitoring"
 import { LeaveRequests } from "@/components/dashboard/leave-requests"
+import { PageHeader } from "@/components/dashboard/page-header"
 import { PagedCard } from "@/components/dashboard/paged-card"
 import { AppSidebar, Topbar } from "@/components/dashboard/shell"
 import { QuotaCard } from "@/components/dashboard/stat-card"
@@ -27,10 +28,9 @@ export default function Dashboard() {
         <SidebarInset className="bg-background">
           <Topbar />
           <main className="mx-auto w-full max-w-[1400px] space-y-6 p-4 md:p-6">
-            <div>
-              <p className="text-xs text-muted-foreground">Demo Account / Dashboard</p>
-              <h1 className="text-display font-extrabold">Selamat datang, <span className="font-normal">Demo Admin</span></h1>
-            </div>
+            <PageHeader crumbs={[{ label: "Demo Account" }, { label: "Dashboard" }]}>
+              Selamat datang, <span className="font-normal">Demo Admin</span>
+            </PageHeader>
 
             <div className="grid gap-6 xl:grid-cols-3">
               <div className="xl:col-span-2">{loading ? <ChartCardSkeleton /> : <AttendanceChart />}</div>
