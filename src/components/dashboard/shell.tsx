@@ -18,19 +18,8 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
+import { nav } from "@/components/dashboard/nav"
 
-const nav = [
-  { icon: LayoutGrid, label: "Dashboard", active: true },
-  { icon: Megaphone, label: "Pemberitahuan" },
-  { icon: Building2, label: "Organisasi" },
-  { icon: Users, label: "Karyawan" },
-  { icon: MapPin, label: "Kantor" },
-  { icon: Fingerprint, label: "Perangkat Absensi" },
-  { icon: CalendarCheck, label: "Absensi" },
-  { icon: FileBarChart, label: "Laporan" },
-  { icon: Download, label: "Unduh" },
-  { icon: Settings, label: "Pengaturan" },
-]
 
 /** Tombol collapse/expand: ikon berganti sesuai kondisi sidebar (tutup saat terbuka, buka saat ciut). */
 function SidebarToggle({ className }: { className?: string }) {
@@ -49,8 +38,8 @@ function SidebarToggle({ className }: { className?: string }) {
 }
 
 /** Sidebar resmi shadcn: otomatis menjadi Sheet di mobile dan bisa diciutkan ke ikon di desktop. */
-export function AppSidebar() {
-  const { state, isMobile } = useSidebar()
+export function AppSidebar({ path }: { path: string }) {
+  const { state, isMobile, setOpenMobile } = useSidebar()
   const collapsed = !isMobile && state === "collapsed"
   return (
     <Sidebar collapsible="icon">
@@ -69,14 +58,17 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
-              {nav.map(({ icon: Icon, label, active }) => (
+              {nav.map(({ icon: Icon, label, path: to }) => (
                 <SidebarMenuItem key={label}>
                   <SidebarMenuButton
-                    isActive={active}
+                    asChild
+                    isActive={to === path}
                     tooltip={label}
                     className="h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>span]:hidden"
                   >
-                    <Icon /> <span>{label}</span>
+                    <a href={`#${to}`} onClick={() => isMobile && setOpenMobile(false)}>
+                      <Icon /> <span>{label}</span>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -101,17 +93,19 @@ export function Topbar() {
           <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
         </>
       )}
-      <InputGroup className={cn("h-10 max-w-md flex-1 rounded-xl bg-background", isMobile && "ml-1")}>
+      <InputGroup className={cn("h-10 max-w-md flex-1 rounded-xl bg-background", isMobile && "ml-1 min-w-0")}>
         <InputGroupAddon><Search /></InputGroupAddon>
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
-      <div className="flex-1" />
+      <div className="hidden flex-1 md:block" />
       <Button variant="ghost" size="icon" aria-label="Ganti tema" onClick={toggle}>
         {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
       </Button>
-      <Button variant="ghost" size="icon" aria-label="Notifikasi" className="relative">
-        <Bell className="size-5" />
-        <Badge className="absolute -right-0.5 -top-0.5 size-4 justify-center rounded-full p-0 text-[10px]">4</Badge>
+      <Button asChild variant="ghost" size="icon" aria-label="Pemberitahuan" className="relative">
+        <a href="#/pemberitahuan">
+          <Bell className="size-5" />
+          <Badge className="absolute -right-0.5 -top-0.5 size-4 justify-center rounded-full p-0 text-[10px]">4</Badge>
+        </a>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-4 outline-none">

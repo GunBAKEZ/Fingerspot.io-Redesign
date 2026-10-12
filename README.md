@@ -13,6 +13,14 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (teal), warna status y
 
 ## Fitur
 
+**Pemberitahuan** (`/#/pemberitahuan`)
+
+- Tab **Umum** dan **Layanan Saya** dengan jumlah belum dibaca, daftar berhalaman (10 per halaman).
+- Status baru/terbaca, klik untuk membuka detail (`Dialog`), dan tombol **Tandai semua dibaca**.
+- Empty state dan skeleton loading.
+
+**Dashboard** (`/`)
+
 - **Performa kehadiran** — grafik garis per kantor; legenda (`ToggleGroup`) menyalakan/mematikan seri.
 - **Kalender** — shadcn `Calendar` berbahasa Indonesia, minggu mulai Senin, hari libur ditandai.
 - **Karyawan yang mengajukan izin** — tabel dengan filter rentang tanggal, tombol Setujui/Tolak, dan Empty state.
@@ -42,7 +50,9 @@ npm run dev        # http://localhost:5173
 Halaman:
 
 - `/` — Dashboard
+- `/#/pemberitahuan` — Pemberitahuan
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
+- Menu sidebar lain (Karyawan, Kantor, dst.) menampilkan halaman *“sedang dibangun”* sampai dikerjakan
 
 ## Tech stack
 
@@ -62,10 +72,10 @@ Halaman:
 src/
 ├── components/
 │   ├── ui/               # komponen shadcn (dari registry resmi + kustomisasi merek)
-│   └── dashboard/        # komposisi khusus dashboard (kartu, grafik, sidebar, filter)
-├── data/mock.ts          # data contoh
-├── hooks/                # use-theme, use-fake-loading, use-mobile
-├── pages/                # dashboard.tsx, design-system.tsx
+│   └── dashboard/        # komposisi aplikasi: app-layout, shell (sidebar/topbar), nav, kartu, grafik, filter
+├── data/                 # mock.ts (dashboard), announcements.ts (pemberitahuan) — data contoh
+├── hooks/                # use-theme, use-hash-route, use-fake-loading, use-mobile
+├── pages/                # dashboard, announcements, coming-soon, design-system
 ├── lib/utils.ts          # helper cn()
 └── index.css             # design token (warna, radius, shadow, font)
 docs/
@@ -101,7 +111,7 @@ Catatan: `shadcn add -o` menimpa file di `src/components/ui/`, termasuk kustomis
 
 Data contoh dan simulasi loading ada di dua tempat:
 
-- `src/data/mock.ts` — ganti fungsi/konstanta (mis. `disciplineRange`, `leaveRequests`, `dailyMonitoring`) dengan pemanggilan API.
+- `src/data/mock.ts` dan `src/data/announcements.ts` — ganti fungsi/konstanta (mis. `disciplineRange`, `leaveRequests`, `dailyMonitoring`) dengan pemanggilan API.
 - `src/hooks/use-fake-loading.ts` — ganti dengan `isLoading` dari query (mis. TanStack Query); skeleton di `components/dashboard/skeletons.tsx` sudah siap dipakai.
 
 ## Deploy
@@ -111,7 +121,8 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 ## Roadmap
 
 - [ ] Sambungan ke API Fingerspot
+- [x] Halaman Pemberitahuan
 - [ ] Halaman Karyawan (tabel, filter, dialog tambah/edit)
 - [ ] Halaman Absensi dan Laporan
-- [ ] Router sungguhan (React Router) menggantikan hash routing
+- [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
 - [ ] i18n (ID/EN)
