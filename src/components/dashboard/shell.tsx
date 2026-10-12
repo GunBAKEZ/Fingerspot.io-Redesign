@@ -81,7 +81,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <SidebarMenuSub>
+          <SidebarMenuSub className="ml-[17px] mr-px">
             {item.children!.map((c) => (
               <SidebarMenuSubItem key={c.path}>
                 <SidebarMenuSubButton asChild isActive={c.path === path || (c.path === item.children![0].path && path === item.path)} className="h-9 rounded-lg">
@@ -100,7 +100,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
 function UnreadMenuBadge() {
   const unread = useUnreadCount()
   if (unread === 0) return null
-  return <SidebarMenuBadge className="rounded-full bg-primary px-1.5 text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">{unread}</SidebarMenuBadge>
+  return <SidebarMenuBadge className="right-2 top-2.5 peer-data-[size=default]/menu-button:top-2.5 rounded-full bg-primary px-1.5 text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">{unread}</SidebarMenuBadge>
 }
 
 /** Tombol ikon dengan tooltip (Topbar). */
@@ -120,7 +120,7 @@ export function AppSidebar({ path }: { path: string }) {
   const closeSheet = () => { if (isMobile) setOpenMobile(false) }
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="h-[72px] justify-center border-b px-3 group-data-[collapsible=icon]:px-0">
+      <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
         {collapsed ? (
           <SidebarToggle className="mx-auto size-10" />
         ) : (
