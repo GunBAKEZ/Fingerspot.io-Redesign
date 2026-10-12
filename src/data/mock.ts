@@ -27,11 +27,11 @@ export const dailyMonitoring = {
 
 export type LeaveStatus = "pending" | "approved" | "rejected"
 
-export const leaveRequests: { name: string; role: string; type: string; range: string; status: LeaveStatus }[] = [
-  { name: "Rina Marlina", role: "Staff HRD", type: "Cuti Tahunan", range: "12 – 14 Okt 2026", status: "pending" },
-  { name: "Dimas Aryo", role: "Teknisi", type: "Sakit", range: "12 Okt 2026", status: "approved" },
-  { name: "Sinta Wulandari", role: "Admin Support", type: "Izin Keluarga", range: "13 – 14 Okt 2026", status: "pending" },
-  { name: "Budi Hartono", role: "Sales", type: "Cuti Menikah", range: "19 – 23 Okt 2026", status: "approved" },
+export const leaveRequests: { name: string; role: string; type: string; range: string; start: string; end: string; status: LeaveStatus }[] = [
+  { name: "Rina Marlina", role: "Staff HRD", type: "Cuti Tahunan", range: "12 – 14 Okt 2026", start: "2026-10-12", end: "2026-10-14", status: "pending" },
+  { name: "Dimas Aryo", role: "Teknisi", type: "Sakit", range: "12 Okt 2026", start: "2026-10-12", end: "2026-10-12", status: "approved" },
+  { name: "Sinta Wulandari", role: "Admin Support", type: "Izin Keluarga", range: "13 – 14 Okt 2026", start: "2026-10-13", end: "2026-10-14", status: "pending" },
+  { name: "Budi Hartono", role: "Sales", type: "Cuti Menikah", range: "19 – 23 Okt 2026", start: "2026-10-19", end: "2026-10-23", status: "approved" },
 ]
 
 export const disciplineList = [
@@ -67,5 +67,16 @@ export function disciplineFor(date: Date) {
   const day = date.getDay()
   if (day === 0 || day === 6) return []
   const n = date.getDate() % disciplineList.length
-  return [...disciplineList.slice(n), ...disciplineList.slice(0, n)].slice(0, 7)
+  return [...disciplineList.slice(n), ...disciplineList.slice(0, n)].slice(0, 5).map((e) => ({ ...e, date: new Date(date) }))
+}
+
+/** Gabungan data indisipliner untuk rentang tanggal (maks. 31 hari). */
+export function disciplineRange(from: Date, to: Date) {
+  const out: ReturnType<typeof disciplineFor> = []
+  const d = new Date(from)
+  for (let i = 0; i < 31 && d <= to; i++) {
+    out.push(...disciplineFor(d))
+    d.setDate(d.getDate() + 1)
+  }
+  return out
 }

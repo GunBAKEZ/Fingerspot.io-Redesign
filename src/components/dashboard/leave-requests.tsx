@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { ArrowRight, Check, CalendarOff, X } from "lucide-react"
+import { useMemo, useState } from "react"
+import { Check, CalendarOff, X } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DatePicker } from "@/components/ui/date-picker"
+import { DateRangeFilter } from "@/components/dashboard/date-range-filter"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { leaveRequests, type LeaveStatus } from "@/data/mock"
@@ -15,6 +15,11 @@ export function LeaveRequests() {
   const [rows, setRows] = useState(leaveRequests)
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [applied, setApplied] = useState<{ from: Date; to: Date }>()
+  const visible = useMemo(
+    () => (applied ? rows.filter((r) => new Date(r.start) <= applied.to && new Date(r.end) >= applied.from) : rows),
+    [rows, applied]
+  )
   const decide = (name: string, status: LeaveStatus) =>
     setRows((r) => r.map((x) => (x.name === name ? { ...x, status } : x)))
 
@@ -25,12 +30,7 @@ export function LeaveRequests() {
         <CardAction><Badge variant="danger" dot>Hari ini</Badge></CardAction>
       </CardHeader>
       <CardContent className="space-y-5">
-        <div className="flex flex-wrap items-center gap-3">
-          <DatePicker value={from} onChange={setFrom} placeholder="Tanggal mulai" />
-          <ArrowRight className="size-4 text-primary" />
-          <DatePicker value={to} onChange={setTo} placeholder="Tanggal selesai" disabled={from ? { before: from } : undefined} />
-          <Button variant="secondary">Tampilkan</Button>
-        </div>
+        <DateRangeFilter from={from} to={to} onFromChange={setFrom} onToChange={setTo} onApply={() => setApplied(from && to ? { from, to } : undefined)} />
         <Table>
           <TableHeader>
             <TableRow>
@@ -41,7 +41,7 @@ export function LeaveRequests() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.length === 0 && (
+            {visible.length === 0 && (
               <TableRow>
                 <TableCell colSpan={4}>
                   <Empty className="py-8">
@@ -54,7 +54,7 @@ export function LeaveRequests() {
                 </TableCell>
               </TableRow>
             )}
-            {rows.map((r) => (
+            {visible.map((r) => (
               <TableRow key={r.name}>
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export function LeaveRequests() {
             ))}
           </TableBody>
         </Table>
-        <p className="text-xs text-muted-foreground">Menampilkan {rows.length} dari {rows.length} data</p>
+        <p className="text-xs text-muted-foreground">Menampilkan {visible.length} dari {rows.length} data</p>
       </CardContent>
     </Card>
   )

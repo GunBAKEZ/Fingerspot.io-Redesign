@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { format } from "date-fns"
+import { id } from "date-fns/locale"
 import { Fingerprint, MapPin, UserCheck, Users } from "lucide-react"
 import { useFakeLoading } from "@/hooks/use-fake-loading"
 import { CalendarSkeleton, ChartCardSkeleton, ListCardSkeleton, QuotaSkeleton } from "@/components/dashboard/skeletons"
@@ -13,18 +15,20 @@ import { QuotaCard } from "@/components/dashboard/stat-card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DatePicker } from "@/components/ui/date-picker"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { Progress } from "@/components/ui/progress"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { disciplineFor, incompleteData } from "@/data/mock"
+import { disciplineRange, incompleteData } from "@/data/mock"
+import { DateRangeFilter } from "@/components/dashboard/date-range-filter"
 
 export default function Dashboard() {
   const loading = useFakeLoading()
-  const [disciplineDate, setDisciplineDate] = useState<Date | undefined>(new Date())
+  const [dFrom, setDFrom] = useState<Date | undefined>(new Date())
+  const [dTo, setDTo] = useState<Date | undefined>(new Date())
+  const [dApplied, setDApplied] = useState({ from: new Date(), to: new Date() })
   return (
     <TooltipProvider>
       <SidebarProvider style={{ "--sidebar-width-icon": "4rem" } as React.CSSProperties}>
@@ -64,14 +68,14 @@ export default function Dashboard() {
               {loading ? <><ListCardSkeleton rows={5} /><ListCardSkeleton rows={5} /></> : <>
               <PagedCard
                 title="Karyawan" titleRest="indisipliner"
-                action={<DatePicker value={disciplineDate} onChange={setDisciplineDate} placeholder="Pilih tanggal" className="h-9 w-40" />}
-                items={disciplineDate ? disciplineFor(disciplineDate) : []}
+                toolbar={<DateRangeFilter from={dFrom} to={dTo} onFromChange={setDFrom} onToChange={setDTo} maxDays={30} onApply={() => dFrom && dTo && setDApplied({ from: dFrom, to: dTo })} />}
+                items={disciplineRange(dApplied.from, dApplied.to)}
                 empty={
                   <Empty className="py-8">
                     <EmptyHeader>
                       <EmptyMedia variant="icon"><UserCheck /></EmptyMedia>
                       <EmptyTitle>Tidak ada karyawan indisipliner</EmptyTitle>
-                      <EmptyDescription>Semua karyawan disiplin, atau tanggal ini adalah hari libur.</EmptyDescription>
+                      <EmptyDescription>Semua karyawan disiplin pada rentang ini, atau rentangnya hanya berisi hari libur.</EmptyDescription>
                     </EmptyHeader>
                   </Empty>
                 }
@@ -80,7 +84,7 @@ export default function Dashboard() {
                     <ItemMedia><Avatar><AvatarFallback>{e.name[0].toUpperCase()}</AvatarFallback></Avatar></ItemMedia>
                     <ItemContent>
                       <ItemTitle className="font-bold">{e.name}</ItemTitle>
-                      <ItemDescription>{e.role}</ItemDescription>
+                      <ItemDescription>{e.role} · {format(e.date, "d MMM yyyy", { locale: id })}</ItemDescription>
                     </ItemContent>
                     <ItemActions><Badge variant={e.status === "Alpha" ? "danger" : "warning"} dot>{e.status}</Badge></ItemActions>
                   </Item>
