@@ -70,8 +70,8 @@ export function Topbar() {
     <header className="sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6">
       <SidebarTrigger className="ml-[11px] mr-0 size-8 shrink-0" />
       <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
-      <InputGroup className="ml-1 max-w-md flex-1 border-0 bg-transparent shadow-none has-[[data-slot=input-group-control]:focus-visible]:ring-0">
-        <InputGroupAddon><Search className="text-foreground" /></InputGroupAddon>
+      <InputGroup className="ml-1 h-10 max-w-md flex-1 rounded-xl bg-background">
+        <InputGroupAddon><Search /></InputGroupAddon>
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
       <div className="flex-1" />

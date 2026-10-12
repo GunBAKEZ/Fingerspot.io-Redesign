@@ -32,7 +32,7 @@ export default function Dashboard() {
         <SidebarInset className="bg-background">
           <Topbar />
           <main className="mx-auto w-full max-w-[1400px] space-y-6 p-4 md:p-6">
-            <PageHeader crumbs={[{ label: "Demo Account" }, { label: "Dashboard" }]}>
+            <PageHeader crumbs={[{ label: "Dashboard" }]}>
               Selamat datang, <span className="font-normal">Demo Admin</span>
             </PageHeader>
 
