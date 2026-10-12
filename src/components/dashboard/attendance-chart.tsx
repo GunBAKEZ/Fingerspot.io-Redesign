@@ -45,7 +45,7 @@ export function AttendanceChart() {
             )}
           </LineChart>
         </ChartContainer>
-        <ToggleGroup type="multiple" size="sm" spacing={8} value={visible} onValueChange={setVisible} className="flex-wrap justify-start">
+        <ToggleGroup type="multiple" size="sm" spacing={2} value={visible} onValueChange={setVisible} className="flex-wrap justify-start">
           {offices.map((o) => (
             <ToggleGroupItem key={o.key} value={o.key} aria-label={o.name} className="gap-2 rounded-full text-xs">
               <span className="size-2 rounded-full" style={{ background: o.color }} /> {o.name}
