@@ -21,6 +21,8 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 | Pastel | `tint-mint / lilac / peach / sky / rose / cream` |
 | Chart | `chart-1…5` (kuning, biru, teal, merah, ungu) |
 
+**Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen tetap teal merek (`primary #2BB594`, `primary-soft #17382F`) agar identitas sama dengan mode terang. Token ada di blok `.dark` di `src/index.css`.
+
 **Tipografi** – Plus Jakarta Sans. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.
 **Radius** – kartu `2xl` (16px+8), kontrol `xl` (12px), badge `full`. **Shadow** – `shadow-card`, `shadow-pop` (overlay/popover).
 **Spacing** – skala 4px; padding kartu `p-6`, jarak antar kartu `gap-4`/`gap-6`.

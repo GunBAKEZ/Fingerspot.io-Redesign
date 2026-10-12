@@ -103,6 +103,7 @@ Ringkas:
 - **Warna aksi:** teal `#167A65`; teks navy `#1B2559`; kanvas `#F6F7FB`.
 - **Status:** biru = tepat waktu, hijau = hadir/izin, oranye = terlambat, merah = tidak hadir/alpha.
 - **Bentuk:** kartu `rounded-2xl` tanpa border dengan `shadow-card`; kontrol `rounded-xl`.
+- **Mode gelap:** palet netral bawaan shadcn (hampir hitam) dengan aksen teal merek.
 - **Token** ada di `src/index.css` dan otomatis tersedia sebagai utility Tailwind (`bg-primary`, `text-danger`, `bg-tint-mint`, …).
 
 Dokumentasi lengkap: [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).

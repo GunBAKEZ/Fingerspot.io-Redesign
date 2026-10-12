@@ -71,38 +71,46 @@
 }
 
 .dark {
-  --background: #0e1226;
-  --foreground: #e8ebff;
-  --card: #151a35;
-  --card-foreground: #e8ebff;
-  --popover: #151a35;
-  --popover-foreground: #e8ebff;
-  --sidebar: #151a35;
-  --sidebar-foreground: #e8ebff;
-  --sidebar-accent: #17382f;
-  --sidebar-accent-foreground: #6fdcc0;
+  /* Permukaan & teks: palet netral bawaan shadcn/ui (dark). Aksen tetap teal merek. */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --destructive: oklch(0.704 0.191 22.216);
+
+  /* Sidebar */
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+
+  /* Brand (teal) */
   --primary: #2bb594;
   --primary-foreground: #04231b;
   --primary-soft: #17382f;
-  --secondary: #1d2345;
-  --secondary-foreground: #e8ebff;
-  --accent: #1d2345;
-  --accent-foreground: #e8ebff;
-  --muted: #1a2040;
-  --muted-foreground: #8e97c0;
-  --border: #242b52;
-  --input: #2a3260;
   --ring: #2bb594;
+  --sidebar-primary: #2bb594;
+  --sidebar-primary-foreground: #04231b;
+  --sidebar-accent: #17382f;
+  --sidebar-accent-foreground: #6fdcc0;
+  --sidebar-ring: #2bb594;
+
+  /* Kartu pastel (versi redup) */
   --tint-mint: #14312a;
   --tint-lilac: #231f45;
   --tint-peach: #3a241d;
   --tint-sky: #14263d;
   --tint-rose: #3a1d22;
   --tint-cream: #38301a;
-  --sidebar-primary: #2bb594;
-  --sidebar-primary-foreground: #04231b;
-  --sidebar-border: #242b52;
-  --sidebar-ring: #2bb594;
 }
 
 @theme inline {
