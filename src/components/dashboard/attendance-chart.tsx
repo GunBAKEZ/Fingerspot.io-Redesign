@@ -5,6 +5,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { attendanceTrend, offices } from "@/data/mock"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const config = Object.fromEntries(
   offices.map((o) => [o.key, { label: o.name, color: o.color }])
@@ -13,12 +14,13 @@ const config = Object.fromEntries(
 /** Grafik performa kehadiran per kantor; ToggleGroup menyalakan/mematikan seri. */
 export function AttendanceChart() {
   const [visible, setVisible] = useState<string[]>(offices.map((o) => o.key))
+  const isMobile = useIsMobile()
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="max-sm:grid-cols-1">
         <CardTitle>Performa <span>kehadiran karyawan</span></CardTitle>
-        <CardAction>
+        <CardAction className="max-sm:col-start-1 max-sm:row-start-2 max-sm:justify-self-start">
           <Select defaultValue="2026-10">
             <SelectTrigger size="sm" className="rounded-xl border-0 bg-primary-soft font-semibold text-primary shadow-none" aria-label="Bulan">
               <SelectValue />
@@ -35,7 +37,7 @@ export function AttendanceChart() {
         <ChartContainer config={config} className="h-64 w-full">
           <LineChart data={attendanceTrend} margin={{ left: -16, right: 8 }}>
             <CartesianGrid vertical={false} />
-            <XAxis dataKey="week" tickLine={false} axisLine={false} tickMargin={8} />
+            <XAxis dataKey="week" tickLine={false} axisLine={false} tickMargin={8} interval={0} tickFormatter={(v: string) => (isMobile ? v.replace("Minggu ke-", "M") : v)} />
             <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} unit="%" tickLine={false} axisLine={false} />
             <ChartTooltip content={<ChartTooltipContent />} />
             {offices.map((o) =>

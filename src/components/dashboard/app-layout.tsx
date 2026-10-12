@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 export function AppLayout({ path, children }: { path: string; children: React.ReactNode }) {
   return (
     <TooltipProvider>
-      <SidebarProvider style={{ "--sidebar-width-icon": "4rem" } as React.CSSProperties}>
+      <SidebarProvider style={{ "--sidebar-width-icon": "3.5rem" } as React.CSSProperties}>
         <AppSidebar path={path} />
         <SidebarInset className="bg-background">
           <Topbar />

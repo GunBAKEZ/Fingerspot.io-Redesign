@@ -32,9 +32,9 @@ export function PageHeader({ crumbs, children, actions }: { crumbs: Crumb[]; chi
         </BreadcrumbList>
       </Breadcrumb>
       )}
-      <h1 className="text-display font-extrabold">{children}</h1>
+      <h1 className="text-display font-extrabold max-sm:text-2xl">{children}</h1>
     </div>
-    {actions && <div className="flex items-center gap-2">{actions}</div>}
+    {actions && <div className="flex items-center gap-2 max-sm:w-full max-sm:[&>button]:w-full">{actions}</div>}
     </div>
   )
 }

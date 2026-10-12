@@ -84,7 +84,7 @@ export default function FunctionalPositions() {
             <TableHeader>
               <TableRow>
                 <TableHead aria-sort={asc === null ? "none" : asc ? "ascending" : "descending"}>
-                  <button type="button" onClick={() => setAsc((a) => (a === null ? true : a ? false : null))} className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide">
+                  <button type="button" onClick={() => setAsc((a) => (a === null ? true : a ? false : null))} className="-my-2 inline-flex min-h-10 items-center gap-1.5 text-xs font-bold uppercase tracking-wide">
                     Nama Jabatan <SortIcon className="size-3.5 text-muted-foreground" />
                   </button>
                 </TableHead>
@@ -110,8 +110,8 @@ export default function FunctionalPositions() {
                     <TableCell className="py-4 font-medium">{r.name}</TableCell>
                     <TableCell className="py-4">
                       <div className="flex justify-end gap-2">
-                        <Button size="sm" variant="soft" onClick={() => openForm({ mode: "edit", row: r })}><Pencil /> Ubah</Button>
-                        <Button size="sm" variant="outline" className="text-danger hover:text-danger" onClick={() => setDeleting(r)}><Trash2 /> Hapus</Button>
+                        <Button size="sm" variant="soft" aria-label={`Ubah ${r.name}`} className="max-sm:size-10 max-sm:px-0" onClick={() => openForm({ mode: "edit", row: r })}><Pencil /> <span className="max-sm:hidden">Ubah</span></Button>
+                        <Button size="sm" variant="outline" aria-label={`Hapus ${r.name}`} className="text-danger hover:text-danger max-sm:size-10 max-sm:px-0" onClick={() => setDeleting(r)}><Trash2 /> <span className="max-sm:hidden">Hapus</span></Button>
                       </div>
                     </TableCell>
                   </TableRow>

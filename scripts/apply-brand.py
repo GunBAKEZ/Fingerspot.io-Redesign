@@ -55,4 +55,34 @@ def select(s):
     s = s.replace("absolute right-2 flex size-3.5", "absolute right-3 flex size-3.5")
     return s.replace("-mx-1 my-1", "-mx-2 my-1.5")
 edit("select.tsx", select)
+# 7. Area sentuh: pada perangkat sentuh (pointer: coarse) kontrol minimal 40px; desktop tetap padat
+def touch_button(s):
+    if "pointer-coarse" in s: return s
+    s = s.replace('sm: "h-8 gap-1.5', 'sm: "h-8 pointer-coarse:h-10 gap-1.5')
+    s = s.replace('icon: "size-9"', 'icon: "size-9 pointer-coarse:size-10"')
+    return s.replace('"icon-sm": "size-8"', '"icon-sm": "size-8 pointer-coarse:size-10"')
+edit("button.tsx", touch_button)
+
+def touch_toggle(s):
+    if "pointer-coarse" in s: return s
+    s = s.replace('default: "h-9 min-w-9 px-2"', 'default: "h-9 min-w-9 px-2 pointer-coarse:h-10 pointer-coarse:min-w-10"')
+    return s.replace('sm: "h-8 min-w-8 px-1.5"', 'sm: "h-8 min-w-8 px-1.5 pointer-coarse:h-10 pointer-coarse:min-w-10"')
+edit("toggle.tsx", touch_toggle)
+
+def touch_select(s):
+    if "pointer-coarse" in s: return s
+    return s.replace("data-[size=default]:h-9", "data-[size=default]:h-9 pointer-coarse:data-[size=default]:h-10").replace("data-[size=sm]:h-8", "data-[size=sm]:h-8 pointer-coarse:data-[size=sm]:h-10")
+edit("select.tsx", touch_select)
+
+def touch_tabs(s):
+    if "pointer-coarse" in s: return s
+    return s.replace("group-data-[orientation=horizontal]/tabs:h-9", "group-data-[orientation=horizontal]/tabs:h-9 pointer-coarse:group-data-[orientation=horizontal]/tabs:h-11", 1)
+edit("tabs.tsx", touch_tabs)
+# 8. Calendar: tanggal terpilih simetris (selaras radius tombol), tanpa kotak "today" di belakangnya
+def calendar(s):
+    s = s.replace("[&:last-child[data-selected=true]_button]:rounded-r-md", "[&:last-child[data-selected=true]_button]:rounded-r-xl")
+    s = s.replace("[&:nth-child(2)[data-selected=true]_button]:rounded-l-md", "[&:nth-child(2)[data-selected=true]_button]:rounded-l-xl")
+    s = s.replace("[&:first-child[data-selected=true]_button]:rounded-l-md", "[&:first-child[data-selected=true]_button]:rounded-l-xl")
+    return s.replace("text-accent-foreground data-[selected=true]:rounded-none", "text-accent-foreground data-[selected=true]:bg-transparent")
+edit("calendar.tsx", calendar)
 print("brand customizations applied")

@@ -42,7 +42,7 @@ function SidebarToggle({ className }: { className?: string }) {
 }
 
 const menuButton =
-  "h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>span]:hidden"
+  "h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! [&>span]:transition-opacity [&>span]:duration-150 group-data-[collapsible=icon]:[&>span]:opacity-0"
 
 /** Menu bersubmenu: Collapsible saat sidebar terbuka; dropdown (flyout) saat sidebar ciut. */
 function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: string; collapsed: boolean; onNavigate: () => void }) {
@@ -135,29 +135,29 @@ export function AppSidebar({ path }: { path: string }) {
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
         {collapsed ? (
-          <SidebarToggle className="mx-auto size-10" />
+          <SidebarToggle className="mx-auto size-10 animate-in fade-in-0 duration-300" />
         ) : (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 animate-in fade-in-0 duration-300">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">f</span>
             <span className="min-w-0 flex-1 truncate text-xs font-bold tracking-[0.12em]">DEMO ACCOUNT</span>
             {!isMobile && <SidebarToggle className="size-8" />}
           </div>
         )}
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">{navTop.map(renderItem)}</SidebarMenu>
+            <SidebarMenu className="gap-1">{navTop.map(renderItem)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         {/* Pemisah: garis saat sidebar ciut, label "Menu Utama" saat terbuka */}
-        <SidebarSeparator className="mx-4 group-data-[collapsible=icon]:mx-3" />
+        <SidebarSeparator className="mx-3 data-[orientation=horizontal]:w-auto" />
 
         <SidebarGroup>
-          <SidebarGroupLabel className="px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Menu Utama</SidebarGroupLabel>
+          <SidebarGroupLabel className="whitespace-nowrap px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Menu Utama</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">{navMain.map(renderItem)}</SidebarMenu>
+            <SidebarMenu className="gap-1">{navMain.map(renderItem)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -258,7 +258,7 @@ export function Topbar() {
       {/* Desktop: tombol collapse/expand ada di header sidebar. Mobile: sidebar berupa Sheet, jadi tombol di sini. */}
       {isMobile && (
         <>
-          <SidebarToggle className="ml-[11px] mr-0 size-8" />
+          <SidebarToggle className="ml-2 mr-0 size-10" />
           <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
         </>
       )}
@@ -301,7 +301,7 @@ export function Topbar() {
       {/* Akun: hanya avatar */}
       <Separator orientation="vertical" className="mx-1 h-6 md:mx-2" />
       <DropdownMenu>
-        <DropdownMenuTrigger aria-label="Akun saya" className="flex items-center gap-1 rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
+        <DropdownMenuTrigger aria-label="Akun saya" className="flex h-10 items-center gap-1 rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>
           <ChevronDown className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>

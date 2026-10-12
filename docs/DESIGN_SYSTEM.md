@@ -23,6 +23,10 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 
 **Menu (Dropdown/Select)** — kotak `rounded-2xl p-2` (jarak sorotan hover ke tepi 8px), baris `rounded-lg px-3 py-2` (tinggi 36px). Radius baris = radius kotak − padding supaya sudut serasi. Diatur di `scripts/apply-brand.py`; jangan beri override `rounded-*` per menu.
 
+**Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `sm`/`icon`/`icon-sm`, Toggle, Select, dan Tabs diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.
+
+**Sidebar** — lebar ciut 3.5rem; ikon **tidak pernah berpindah** saat animasi collapse (tombol tidak dipusatkan ulang, label memudar dan terpotong oleh lebar yang menyempit). Tanpa scroll horizontal; scrollbar vertikal disembunyikan.
+
 **Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen cyan (`primary` cyan-500, `primary-soft #0E3A45`). Token ada di blok `.dark` di `src/index.css`.
 
 **Tipografi** – Plus Jakarta Sans. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.

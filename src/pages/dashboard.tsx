@@ -32,13 +32,13 @@ export default function Dashboard() {
       Selamat datang, <span className="font-normal">Demo Admin</span>
     </PageHeader>
 
-    <div className="grid gap-6 xl:grid-cols-3">
-      <div className="xl:col-span-2">{loading ? <ChartCardSkeleton /> : <AttendanceChart />}</div>
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      <div className="min-w-0 xl:col-span-2">{loading ? <ChartCardSkeleton /> : <AttendanceChart />}</div>
       {loading ? <CalendarSkeleton /> : <CalendarCard />}
     </div>
 
-    <div className="grid gap-6 xl:grid-cols-3">
-      <div className="xl:col-span-2">{loading ? <ListCardSkeleton rows={4} /> : <LeaveRequests />}</div>
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      <div className="min-w-0 xl:col-span-2">{loading ? <ListCardSkeleton rows={4} /> : <LeaveRequests />}</div>
       {loading ? <ListCardSkeleton rows={4} ring /> : <DailyMonitoring />}
     </div>
 
@@ -48,7 +48,7 @@ export default function Dashboard() {
         <CardTitle>Detail <span>kuota yang Anda miliki</span></CardTitle>
         <CardAction><Button variant="link" size="sm">Lihat selengkapnya →</Button></CardAction>
       </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-3">
+      <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <QuotaCard title="Perangkat" icon={Fingerprint} tone="lilac" total={51} used={18} />
         <QuotaCard title="Absensi GPS via Ponsel" icon={MapPin} tone="cyan" total={106} used={87} />
         <QuotaCard title="Karyawan" icon={Users} tone="peach" total={5406} used={369} />
@@ -56,7 +56,7 @@ export default function Dashboard() {
     </Card>
     )}
 
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {loading ? <><ListCardSkeleton rows={5} /><ListCardSkeleton rows={5} /></> : <>
       <PagedCard
         title="Karyawan" titleRest="indisipliner"

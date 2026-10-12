@@ -48,7 +48,7 @@ export default function Announcements() {
         <CardHeader>
           <CardTitle className="whitespace-nowrap">Kotak <span>pemberitahuan</span></CardTitle>
           <CardAction>
-            <Button variant="soft" size="sm" onClick={markAll} disabled={unreadIn(tab) === 0} aria-label="Tandai semua dibaca">
+            <Button variant="soft" size="sm" onClick={markAll} disabled={unreadIn(tab) === 0} aria-label="Tandai semua dibaca" className="max-sm:min-w-10">
               <CheckCheck /> <span className="hidden sm:inline">Tandai semua dibaca</span>
             </Button>
           </CardAction>
@@ -56,7 +56,7 @@ export default function Announcements() {
 
         <CardContent className="space-y-4">
           <Tabs value={tab} onValueChange={(v) => { setTab(v as Category); setPage(0) }}>
-            <TabsList className="h-10 rounded-xl">
+            <TabsList className="rounded-xl group-data-[orientation=horizontal]/tabs:h-10 pointer-coarse:group-data-[orientation=horizontal]/tabs:h-12">
               <TabsTrigger value="umum" className="gap-2 rounded-lg px-4">
                 Umum {unreadIn("umum") > 0 && <Badge className="h-5 min-w-5 justify-center rounded-full px-1.5 text-[10px]">{unreadIn("umum")}</Badge>}
               </TabsTrigger>
