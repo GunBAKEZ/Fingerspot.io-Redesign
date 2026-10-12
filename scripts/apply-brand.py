@@ -37,4 +37,22 @@ edit("input.tsx", lambda s: s.replace("h-9 w-full min-w-0 rounded-md", "h-10 w-f
 # 5. Progress / Avatar fallback
 edit("progress.tsx", lambda s: s.replace("bg-primary/20", "bg-muted"))
 edit("avatar.tsx", lambda s: s.replace("rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs", "rounded-full bg-primary-soft text-sm font-bold text-primary group-data-[size=sm]/avatar:text-xs"))
+# 6. Dropdown & Select: kotak rounded-2xl p-2 (jarak hover ke tepi 8px), baris rounded-lg px-3 py-2
+def dropdown(s):
+    s = s.replace("rounded-md border bg-popover p-1", "rounded-2xl border bg-popover p-2")
+    s = s.replace("gap-2 rounded-sm px-2 py-1.5", "gap-2.5 rounded-lg px-3 py-2")
+    s = s.replace("rounded-sm px-2 py-1.5", "rounded-lg px-3 py-2")
+    s = s.replace("gap-2 rounded-sm py-1.5 pr-2 pl-8", "gap-2.5 rounded-lg py-2 pr-3 pl-9")
+    s = s.replace("absolute left-2 flex size-3.5", "absolute left-3 flex size-3.5")
+    s = s.replace("px-2 py-1.5 text-sm font-medium", "px-3 py-1.5 text-sm font-medium")
+    return s.replace("-mx-1 my-1", "-mx-2 my-1.5")
+edit("dropdown-menu.tsx", dropdown)
+
+def select(s):
+    s = s.replace("rounded-md border bg-popover", "rounded-2xl border bg-popover")
+    s = s.replace('"p-1",', '"p-2",')
+    s = s.replace("gap-2 rounded-sm py-1.5 pr-8 pl-2", "gap-2.5 rounded-lg py-2 pr-9 pl-3")
+    s = s.replace("absolute right-2 flex size-3.5", "absolute right-3 flex size-3.5")
+    return s.replace("-mx-1 my-1", "-mx-2 my-1.5")
+edit("select.tsx", select)
 print("brand customizations applied")

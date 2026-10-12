@@ -21,6 +21,8 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 | Pastel | `tint-mint / lilac / peach / sky / rose / cream` |
 | Chart | `chart-1…5` (kuning, biru, teal, merah, ungu) |
 
+**Menu (Dropdown/Select)** — kotak `rounded-2xl p-2` (jarak sorotan hover ke tepi 8px), baris `rounded-lg px-3 py-2` (tinggi 36px). Radius baris = radius kotak − padding supaya sudut serasi. Diatur di `scripts/apply-brand.py`; jangan beri override `rounded-*` per menu.
+
 **Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen tetap teal merek (`primary #2BB594`, `primary-soft #17382F`) agar identitas sama dengan mode terang. Token ada di blok `.dark` di `src/index.css`.
 
 **Tipografi** – Plus Jakarta Sans. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.

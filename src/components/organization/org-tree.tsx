@@ -67,7 +67,7 @@ export function OrgTreeNode({
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon-sm" className="size-7 text-foreground" aria-label={`Tambah di ${node.name}`}><Plus /></Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44 rounded-xl">
+              <DropdownMenuContent align="end" className="w-44">
                 <DropdownMenuItem onSelect={() => onAction({ kind: "add", parent: node, nodeType: "struktur" })}>Tambah Struktur</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => onAction({ kind: "add", parent: node, nodeType: "jabatan" })}>Tambah Jabatan</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => onAction({ kind: "add", parent: node, nodeType: "struktur", withOffice: true })}>Tambah Kantor</DropdownMenuItem>
@@ -83,7 +83,7 @@ export function OrgTreeNode({
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon-sm" className="size-7 text-foreground" aria-label={`Ubah ${node.name}`}><Pencil /></Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44 rounded-xl">
+              <DropdownMenuContent align="end" className="w-44">
                 <DropdownMenuItem onSelect={() => onAction({ kind: "rename", node })}>Ubah Struktur</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => onAction({ kind: "office", node })}>{node.office ? "Ubah Kantor" : "Tambah Kantor"}</DropdownMenuItem>
               </DropdownMenuContent>
@@ -105,7 +105,7 @@ export function OrgTreeNode({
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon-sm" className="size-7 shrink-0 sm:hidden" aria-label={`Aksi untuk ${node.name}`}><MoreHorizontal /></Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 rounded-xl">
+          <DropdownMenuContent align="end" className="w-48">
             {struktur ? (
               <>
                 <DropdownMenuItem onSelect={() => onAction({ kind: "add", parent: node, nodeType: "struktur" })}>Tambah Struktur</DropdownMenuItem>

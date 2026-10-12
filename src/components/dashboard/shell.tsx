@@ -58,7 +58,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
               <Icon /> <span>{item.label}</span>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" align="start" sideOffset={8} className="w-56 rounded-xl">
+          <DropdownMenuContent side="right" align="start" sideOffset={8} className="w-56">
             <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
             {item.children!.map((c) => (
               <DropdownMenuItem key={c.path} asChild className={cn("cursor-pointer rounded-lg", c.path === path && "bg-sidebar-accent font-semibold text-sidebar-accent-foreground")}>
@@ -186,7 +186,7 @@ function TasksMenu() {
           </Button>
         </DropdownMenuTrigger>
       </IconTip>
-      <DropdownMenuContent align="end" className="w-80 rounded-2xl p-2">
+      <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel className="text-xs text-muted-foreground">Perlu tindakan</DropdownMenuLabel>
         {tasks.map(({ icon: Icon, title, source, count, tone, href }) => (
           <DropdownMenuItem key={title} asChild className="cursor-pointer gap-3 rounded-xl p-3">
@@ -209,11 +209,11 @@ function TasksMenu() {
 function Flag({ lang }: { lang: string }) {
   const cls = "h-3.5 w-5 shrink-0 rounded-[3px] ring-1 ring-border"
   return lang === "id" ? (
-    <svg viewBox="0 0 20 14" className={cls} aria-hidden>
+    <svg viewBox="0 0 20 14" width={20} height={14} className={cls} style={{ width: 20, height: 14 }} aria-hidden>
       <rect width="20" height="7" fill="#e70011" /><rect y="7" width="20" height="7" fill="#fff" />
     </svg>
   ) : (
-    <svg viewBox="0 0 20 14" className={cls} aria-hidden>
+    <svg viewBox="0 0 20 14" width={20} height={14} className={cls} style={{ width: 20, height: 14 }} aria-hidden>
       <rect width="20" height="14" fill="#1a3a8f" />
       <path d="M0 0l20 14M20 0L0 14" stroke="#fff" strokeWidth="2.4" /><path d="M0 0l20 14M20 0L0 14" stroke="#d3202f" strokeWidth="1" />
       <path d="M10 0v14M0 7h20" stroke="#fff" strokeWidth="4" /><path d="M10 0v14M0 7h20" stroke="#d3202f" strokeWidth="2.2" />
@@ -231,7 +231,7 @@ function LanguageMenu() {
           <Flag lang={lang} /> <span className="text-xs font-bold uppercase">{lang}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-44 rounded-xl">
+      <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuLabel>Bahasa</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={lang} onValueChange={setLang}>
           <DropdownMenuRadioItem value="id"><Flag lang="id" /> Indonesia</DropdownMenuRadioItem>
@@ -297,7 +297,7 @@ export function Topbar() {
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>
           <ChevronDown className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 rounded-xl">
+        <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel className="font-normal">
             <p className="text-sm font-semibold">Demo Admin</p>
             <p className="text-xs text-muted-foreground">admin@demo.id</p>
