@@ -5,13 +5,13 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
-type Tone = "mint" | "lilac" | "peach" | "sky" | "rose" | "cream"
+type Tone = "cyan" | "lilac" | "peach" | "sky" | "rose" | "cream"
 const toneBg: Record<Tone, string> = {
-  mint: "bg-tint-mint", lilac: "bg-tint-lilac", peach: "bg-tint-peach",
+  cyan: "bg-tint-cyan", lilac: "bg-tint-lilac", peach: "bg-tint-peach",
   sky: "bg-tint-sky", rose: "bg-tint-rose", cream: "bg-tint-cream",
 }
 const toneIcon: Record<Tone, string> = {
-  mint: "bg-success", lilac: "bg-chart-5", peach: "bg-warning",
+  cyan: "bg-primary", lilac: "bg-chart-5", peach: "bg-warning",
   sky: "bg-info", rose: "bg-danger", cream: "bg-warning",
 }
 

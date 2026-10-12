@@ -1,7 +1,7 @@
 # Fingerspot.io — Redesign Dashboard
 
 Redesign dashboard [fingerspot.io](https://fingerspot.io) dengan **React 19 + Tailwind CSS v4 + shadcn/ui**.
-Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (teal), warna status yang konsisten, mode gelap, dan semua komponen berasal dari **registry resmi shadcn/ui**.
+Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status yang konsisten, mode gelap, dan semua komponen berasal dari **registry resmi shadcn/ui**.
 
 > Status: **prototipe UI**. Seluruh data masih berupa data contoh (`src/data/mock.ts`) dan belum terhubung ke API Fingerspot.
 
@@ -19,13 +19,18 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (teal), warna status y
 - Status baru/terbaca, klik untuk membuka detail (`Dialog`), dan tombol **Tandai semua dibaca**.
 - Empty state dan skeleton loading.
 
+**Jabatan Fungsional** (`/#/organisasi/jabatan`)
+
+- Tabel dengan *Tampilkan N data* (10/25/50/100), pencarian, urut nama (A–Z / Z–A / asli), dan paginasi.
+- Tambah, Ubah (validasi nama unik), dan Hapus dengan konfirmasi; Empty state untuk data kosong/tidak ada hasil.
+
 **Struktur Organisasi** (`/#/organisasi/struktur`)
 
 - Pohon struktur dan jabatan yang bisa diperluas/diciutkan, dengan pencarian (kata yang cocok disorot) dan tombol Perluas/Ciutkan semua.
 - Aksi per node: **Tambah** (Struktur/Jabatan/Kantor), **Ubah** (nama, kantor), **Hapus** dengan konfirmasi dan jumlah turunan; node akar tidak bisa dihapus. Ikon gedung + tooltip menunjukkan kantor yang terhubung.
 - Di layar kecil aksi dilipat dalam satu menu “⋯”.
 - Perubahan tersimpan di memori (belum ke API). Logika pohon ada di `src/lib/org-tree.ts`.
-- Menu **Organisasi** di sidebar memiliki submenu (Collapsible; flyout saat sidebar ciut). *Jabatan Fungsional* belum dibangun.
+- Menu **Organisasi** di sidebar memiliki submenu (Collapsible; flyout saat sidebar ciut). Sidebar dibagi dua kelompok: Dashboard & Pemberitahuan, lalu “Menu Utama”. 
 
 **Dashboard** (`/`)
 
@@ -60,6 +65,7 @@ Halaman:
 - `/` — Dashboard
 - `/#/pemberitahuan` — Pemberitahuan
 - `/#/organisasi/struktur` — Struktur Organisasi
+- `/#/organisasi/jabatan` — Jabatan Fungsional
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
 - Menu sidebar lain (Karyawan, Kantor, dst.) menampilkan halaman *“sedang dibangun”* sampai dikerjakan
 
@@ -100,11 +106,11 @@ Komponen di `components/dashboard/` hanya **menyusun** komponen shadcn (tanpa el
 
 Ringkas:
 
-- **Warna aksi:** teal `#167A65`; teks navy `#1B2559`; kanvas `#F6F7FB`.
+- **Warna aksi:** cyan (skala Tailwind cyan yang dipakai tema shadcn: `cyan-700` terang, `cyan-500` gelap), hanya untuk komponen; latar halaman tetap netral. Teks navy `#1B2559`; kanvas `#F6F7FB`.
 - **Status:** biru = tepat waktu, hijau = hadir/izin, oranye = terlambat, merah = tidak hadir/alpha.
 - **Bentuk:** kartu `rounded-2xl` tanpa border dengan `shadow-card`; kontrol `rounded-xl`.
-- **Mode gelap:** palet netral bawaan shadcn (hampir hitam) dengan aksen teal merek.
-- **Token** ada di `src/index.css` dan otomatis tersedia sebagai utility Tailwind (`bg-primary`, `text-danger`, `bg-tint-mint`, …).
+- **Mode gelap:** palet netral bawaan shadcn (hampir hitam) dengan aksen cyan.
+- **Token** ada di `src/index.css` dan otomatis tersedia sebagai utility Tailwind (`bg-primary`, `text-danger`, `bg-tint-cyan`, …).
 
 Dokumentasi lengkap: [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 
@@ -134,7 +140,7 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 - [ ] Sambungan ke API Fingerspot
 - [x] Halaman Pemberitahuan
 - [x] Struktur Organisasi
-- [ ] Jabatan Fungsional
+- [x] Jabatan Fungsional
 - [ ] Halaman Karyawan (tabel, filter, dialog tambah/edit)
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`

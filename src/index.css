@@ -19,13 +19,13 @@
   --popover-foreground: #1b2559;
   --sidebar: #ffffff;
   --sidebar-foreground: #1b2559;
-  --sidebar-accent: #e3f1ee;
-  --sidebar-accent-foreground: #0f6b58;
+  --sidebar-accent: #e3f6fa;
+  --sidebar-accent-foreground: oklch(0.45 0.085 224.283); /* cyan-800 */
 
   /* Brand */
-  --primary: #167a65;             /* teal-emerald: aksi utama */
-  --primary-foreground: #ffffff;
-  --primary-soft: #e3f1ee;        /* tint untuk state aktif / hover */
+  --primary: oklch(0.52 0.105 223.128);        /* cyan-700: aksi utama (kontras AA dengan teks putih) */
+  --primary-foreground: oklch(0.984 0.019 200.873); /* cyan-50 */
+  --primary-soft: #e3f6fa;        /* tint untuk state aktif / hover */
   --secondary: #eef0f8;
   --secondary-foreground: #1b2559;
   --accent: #eef0f8;
@@ -36,7 +36,7 @@
   --muted-foreground: #8790ad;
   --border: #e8eaf3;
   --input: #e1e4f0;
-  --ring: #167a65;
+  --ring: oklch(0.609 0.126 221.723); /* cyan-600 */
 
   /* Semantic / status — dipakai konsisten di grafik, badge, dan kartu pastel */
   --destructive: #e5484d;
@@ -46,7 +46,7 @@
   --danger: #e5484d;              /* Tidak hadir / Alpha */
 
   /* Pastel surface (kartu agenda, kuota) */
-  --tint-mint: #e6f4ef;
+  --tint-cyan: #def3f8;
   --tint-lilac: #efeaff;
   --tint-peach: #fdece4;
   --tint-sky: #e6f1fc;
@@ -56,7 +56,7 @@
   /* Chart series */
   --chart-1: #f5b400;
   --chart-2: #3b5bdb;
-  --chart-3: #167a65;
+  --chart-3: oklch(0.609 0.126 221.723); /* cyan-600 */
   --chart-4: #e5484d;
   --chart-5: #8b5cf6;
 
@@ -64,14 +64,14 @@
   --radius: 1rem;
   --shadow-card: 0 1px 2px rgb(27 37 89 / 0.04), 0 8px 24px -8px rgb(27 37 89 / 0.08);
   --shadow-pop: 0 12px 32px -8px rgb(27 37 89 / 0.18);
-  --sidebar-primary: #167a65;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: oklch(0.52 0.105 223.128);
+  --sidebar-primary-foreground: oklch(0.984 0.019 200.873);
   --sidebar-border: #e8eaf3;
-  --sidebar-ring: #167a65;
+  --sidebar-ring: oklch(0.609 0.126 221.723);
 }
 
 .dark {
-  /* Permukaan & teks: palet netral bawaan shadcn/ui (dark). Aksen tetap teal merek. */
+  /* Permukaan & teks: palet netral bawaan shadcn/ui (dark). Aksen: cyan. */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -93,19 +93,20 @@
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
 
-  /* Brand (teal) */
-  --primary: #2bb594;
-  --primary-foreground: #04231b;
-  --primary-soft: #17382f;
-  --ring: #2bb594;
-  --sidebar-primary: #2bb594;
-  --sidebar-primary-foreground: #04231b;
-  --sidebar-accent: #17382f;
-  --sidebar-accent-foreground: #6fdcc0;
-  --sidebar-ring: #2bb594;
+  /* Brand (cyan) */
+  --primary: oklch(0.715 0.143 215.221);        /* cyan-500 */
+  --primary-foreground: oklch(0.302 0.056 229.695); /* cyan-950 */
+  --primary-soft: #0e3a45;
+  --ring: oklch(0.715 0.143 215.221);
+  --chart-3: oklch(0.715 0.143 215.221);
+  --sidebar-primary: oklch(0.715 0.143 215.221);
+  --sidebar-primary-foreground: oklch(0.302 0.056 229.695);
+  --sidebar-accent: #0e3a45;
+  --sidebar-accent-foreground: oklch(0.865 0.127 207.078); /* cyan-300 */
+  --sidebar-ring: oklch(0.715 0.143 215.221);
 
   /* Kartu pastel (versi redup) */
-  --tint-mint: #14312a;
+  --tint-cyan: #0f2f38;
   --tint-lilac: #231f45;
   --tint-peach: #3a241d;
   --tint-sky: #14263d;
@@ -143,7 +144,7 @@
   --color-info: var(--info);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
-  --color-tint-mint: var(--tint-mint);
+  --color-tint-cyan: var(--tint-cyan);
   --color-tint-lilac: var(--tint-lilac);
   --color-tint-peach: var(--tint-peach);
   --color-tint-sky: var(--tint-sky);

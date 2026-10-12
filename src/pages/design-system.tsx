@@ -11,8 +11,8 @@ import { DatePicker } from "@/components/ui/date-picker"
 import { Progress } from "@/components/ui/progress"
 
 const colors = [
-  ["primary", "bg-primary", "#167A65", "Aksi utama, state aktif"],
-  ["primary-soft", "bg-primary-soft", "#E3F1EE", "Hover / item nav aktif"],
+  ["primary", "bg-primary", "cyan-700", "Aksi utama, state aktif"],
+  ["primary-soft", "bg-primary-soft", "#E3F6FA", "Hover / item nav aktif"],
   ["foreground", "bg-foreground", "#1B2559", "Teks & judul (navy)"],
   ["background", "bg-background border", "#F6F7FB", "Kanvas halaman"],
   ["card", "bg-card border", "#FFFFFF", "Permukaan kartu"],
@@ -23,8 +23,8 @@ const colors = [
   ["danger", "bg-danger", "#E5484D", "Tidak hadir / Alpha"],
 ] as const
 
-const tints = ["mint", "lilac", "peach", "sky", "rose", "cream"] as const
-const tintBg = { mint: "bg-tint-mint", lilac: "bg-tint-lilac", peach: "bg-tint-peach", sky: "bg-tint-sky", rose: "bg-tint-rose", cream: "bg-tint-cream" }
+const tints = ["cyan", "lilac", "peach", "sky", "rose", "cream"] as const
+const tintBg = { cyan: "bg-tint-cyan", lilac: "bg-tint-lilac", peach: "bg-tint-peach", sky: "bg-tint-sky", rose: "bg-tint-rose", cream: "bg-tint-cream" }
 
 const trend = ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"].map((w, i) => ({
   w, hadir: [72, 91, 84, 88][i], terlambat: [10, 6, 12, 7][i],
@@ -59,7 +59,7 @@ export default function DesignSystem() {
           <h1 className="mt-3 text-display font-extrabold">Fingerspot Design System</h1>
           <p className="mt-1 max-w-xl text-muted-foreground">
             Bahasa visual baru untuk dashboard fingerspot.io: bersih, ramah, kartu putih lembut di atas kanvas abu-biru,
-            dengan satu warna aksi (teal) dan warna status yang konsisten.
+            dengan satu warna aksi (cyan) dan warna status yang konsisten.
           </p>
         </div>
         <Button variant="outline" size="icon" onClick={toggle} aria-label="Ganti tema">
@@ -179,7 +179,7 @@ export default function DesignSystem() {
                   <h3 className="section-title mb-4">Detail <span>kuota Anda</span></h3>
                   <div className="grid gap-4 md:grid-cols-3">
                     <QuotaCard title="Perangkat" icon={Fingerprint} tone="lilac" total={51} used={18} />
-                    <QuotaCard title="Absensi GPS via Ponsel" icon={MapPin} tone="mint" total={106} used={87} />
+                    <QuotaCard title="Absensi GPS via Ponsel" icon={MapPin} tone="cyan" total={106} used={87} />
                     <QuotaCard title="Karyawan" icon={Users} tone="peach" total={5406} used={369} />
                   </div>
                 </div>

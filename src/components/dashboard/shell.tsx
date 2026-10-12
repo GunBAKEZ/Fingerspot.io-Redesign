@@ -16,10 +16,10 @@ import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader,
-  SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
+  SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, SidebarSeparator, useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { isActive, nav, type NavItem } from "@/components/dashboard/nav"
+import { isActive, navMain, navTop, type NavItem } from "@/components/dashboard/nav"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useUnreadCount } from "@/hooks/use-read-announcements"
@@ -118,6 +118,19 @@ export function AppSidebar({ path }: { path: string }) {
   const { state, isMobile, setOpenMobile } = useSidebar()
   const collapsed = !isMobile && state === "collapsed"
   const closeSheet = () => { if (isMobile) setOpenMobile(false) }
+  const renderItem = (item: NavItem) =>
+    item.children ? (
+      <NavGroup key={item.label} item={item} path={path} collapsed={collapsed} onNavigate={closeSheet} />
+    ) : (
+      <SidebarMenuItem key={item.label}>
+        <SidebarMenuButton asChild isActive={item.path === path} tooltip={item.label} className={menuButton}>
+          <a href={`#${item.path}`} onClick={closeSheet}>
+            <item.icon /> <span>{item.label}</span>
+          </a>
+        </SidebarMenuButton>
+        {item.path === "/pemberitahuan" && <UnreadMenuBadge />}
+      </SidebarMenuItem>
+    )
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
@@ -134,22 +147,17 @@ export function AppSidebar({ path }: { path: string }) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
-              {nav.map((item) =>
-                item.children ? (
-                  <NavGroup key={item.label} item={item} path={path} collapsed={collapsed} onNavigate={closeSheet} />
-                ) : (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton asChild isActive={item.path === path} tooltip={item.label} className={menuButton}>
-                      <a href={`#${item.path}`} onClick={closeSheet}>
-                        <item.icon /> <span>{item.label}</span>
-                      </a>
-                    </SidebarMenuButton>
-                    {item.path === "/pemberitahuan" && <UnreadMenuBadge />}
-                  </SidebarMenuItem>
-                )
-              )}
-            </SidebarMenu>
+            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">{navTop.map(renderItem)}</SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Pemisah: garis saat sidebar ciut, label "Menu Utama" saat terbuka */}
+        <SidebarSeparator className="mx-4 group-data-[collapsible=icon]:mx-3" />
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Menu Utama</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">{navMain.map(renderItem)}</SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

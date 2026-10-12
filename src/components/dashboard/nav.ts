@@ -46,3 +46,7 @@ export function titleFor(path: string): string | undefined {
 /** Menu induk aktif jika rute saat ini adalah induk atau salah satu anaknya. */
 export const isActive = (item: NavItem, path: string) =>
   item.path === "/" ? path === "/" : path === item.path || path.startsWith(item.path + "/")
+
+/** Dua kelompok menu sidebar: pintasan utama (Dashboard, Pemberitahuan) dan menu utama. */
+export const navTop = nav.filter((n) => n.path === "/" || n.path === "/pemberitahuan")
+export const navMain = nav.filter((n) => !navTop.includes(n))

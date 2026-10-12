@@ -50,7 +50,7 @@ export default function Dashboard() {
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-3">
         <QuotaCard title="Perangkat" icon={Fingerprint} tone="lilac" total={51} used={18} />
-        <QuotaCard title="Absensi GPS via Ponsel" icon={MapPin} tone="mint" total={106} used={87} />
+        <QuotaCard title="Absensi GPS via Ponsel" icon={MapPin} tone="cyan" total={106} used={87} />
         <QuotaCard title="Karyawan" icon={Users} tone="peach" total={5406} used={369} />
       </CardContent>
     </Card>

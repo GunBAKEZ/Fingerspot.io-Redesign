@@ -5,7 +5,7 @@ Demo: `npm run dev` → dashboard di `/`, showcase design system di `/#/design-s
 
 ## Prinsip
 1. **Tenang & lapang** – kanvas `background`, konten di kartu putih `rounded-2xl` dengan `shadow-card`; hindari border tebal.
-2. **Satu warna aksi** – `primary` (teal). Warna lain hanya untuk *makna* (status) atau kartu pastel.
+2. **Satu warna aksi** – `primary` (cyan), dipakai hanya pada komponen (tombol, state aktif, fokus, grafik); latar halaman tetap netral. Hijau hanya untuk makna sukses. Warna lain hanya untuk *makna* (status) atau kartu pastel.
 3. **Warna status konsisten** di grafik, badge, dan dot: info = Tepat waktu, danger = Tidak hadir/Alpha, warning = Terlambat, success = Izin/Hadir.
 4. **Data dulu** – angka besar & tebal (`font-extrabold`), label kecil `muted-foreground`.
 
@@ -16,14 +16,14 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 |---|---|
 | Surface | `background #F6F7FB`, `card #FFF`, `muted #F0F2F8`, `border #E8EAF3` |
 | Teks | `foreground #1B2559`, `muted-foreground #8790AD` |
-| Brand | `primary #167A65`, `primary-soft #E3F1EE` |
+| Brand | `primary` cyan-700 (terang) / cyan-500 (gelap), `primary-soft #E3F6FA` / `#0E3A45` |
 | Status | `info #3B5BDB`, `success #1F9D6B`, `warning #F59F00`, `danger #E5484D` |
-| Pastel | `tint-mint / lilac / peach / sky / rose / cream` |
-| Chart | `chart-1…5` (kuning, biru, teal, merah, ungu) |
+| Pastel | `tint-cyan / lilac / peach / sky / rose / cream` |
+| Chart | `chart-1…5` (kuning, biru, cyan, merah, ungu) |
 
 **Menu (Dropdown/Select)** — kotak `rounded-2xl p-2` (jarak sorotan hover ke tepi 8px), baris `rounded-lg px-3 py-2` (tinggi 36px). Radius baris = radius kotak − padding supaya sudut serasi. Diatur di `scripts/apply-brand.py`; jangan beri override `rounded-*` per menu.
 
-**Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen tetap teal merek (`primary #2BB594`, `primary-soft #17382F`) agar identitas sama dengan mode terang. Token ada di blok `.dark` di `src/index.css`.
+**Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen cyan (`primary` cyan-500, `primary-soft #0E3A45`). Token ada di blok `.dark` di `src/index.css`.
 
 **Tipografi** – Plus Jakarta Sans. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.
 **Radius** – kartu `2xl` (16px+8), kontrol `xl` (12px), badge `full`. **Shadow** – `shadow-card`, `shadow-pop` (overlay/popover).
@@ -52,10 +52,10 @@ npm uninstall cn                     # CLI kadang memasang paket npm "cn"; helpe
 `scripts/apply-brand.py` bersifat idempoten dan memuat semua kustomisasi merek: Button `rounded-xl` + varian `soft`, Card tanpa border + `shadow-card`, Input `rounded-xl`, Progress/Avatar berwarna merek.
 
 ## Pemetaan dashboard lama → baru
-- Sidebar panjang → sidebar putih, ikon + label, aktif berwarna teal-soft.
+- Sidebar panjang → sidebar putih, ikon + label, aktif berwarna cyan-soft; dua kelompok (Dashboard & Pemberitahuan, lalu Menu Utama).
 - Performa Kehadiran → `Card` + area chart `chart-*`, filter bulan sebagai tombol `soft`.
 - Daily Monitoring (donut) → `HeroStatCard`/`StatTile` dengan dot status.
-- Detail Kuota → `QuotaCard` pastel (lilac / mint / peach).
+- Detail Kuota → `QuotaCard` pastel (lilac / cyan / peach).
 - Kalender, Karyawan Indisipliner, Data Belum Lengkap → `Card` + `Avatar`, `Badge`, `Progress`.
 
 ## Langkah berikut
