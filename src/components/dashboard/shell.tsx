@@ -43,13 +43,13 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
+            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
               {nav.map(({ icon: Icon, label, active }) => (
                 <SidebarMenuItem key={label}>
                   <SidebarMenuButton
                     isActive={active}
                     tooltip={label}
-                    className="h-10 rounded-xl font-medium data-[active=true]:font-semibold"
+                    className="h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>span]:hidden"
                   >
                     <Icon /> <span>{label}</span>
                   </SidebarMenuButton>
