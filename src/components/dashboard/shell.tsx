@@ -16,10 +16,11 @@ import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
+  SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { isActive, nav, type NavItem } from "@/components/dashboard/nav"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useUnreadCount } from "@/hooks/use-read-announcements"
 
@@ -95,6 +96,23 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
   )
 }
 
+/** Jumlah pengumuman belum dibaca, ditampilkan di menu Pemberitahuan. */
+function UnreadMenuBadge() {
+  const unread = useUnreadCount()
+  if (unread === 0) return null
+  return <SidebarMenuBadge className="rounded-full bg-primary px-1.5 text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">{unread}</SidebarMenuBadge>
+}
+
+/** Tombol ikon dengan tooltip (Topbar). */
+function IconTip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
 /** Sidebar resmi shadcn: otomatis menjadi Sheet di mobile dan bisa diciutkan ke ikon di desktop. */
 export function AppSidebar({ path }: { path: string }) {
   const { state, isMobile, setOpenMobile } = useSidebar()
@@ -127,6 +145,7 @@ export function AppSidebar({ path }: { path: string }) {
                         <item.icon /> <span>{item.label}</span>
                       </a>
                     </SidebarMenuButton>
+                    {item.path === "/pemberitahuan" && <UnreadMenuBadge />}
                   </SidebarMenuItem>
                 )
               )}
@@ -159,12 +178,14 @@ function TasksMenu() {
   const total = tasks.reduce((n, t) => n + t.count, 0)
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={`Tugas menunggu (${total})`} className="relative">
-          <Bell className="size-5" />
-          <CountBadge count={total} variant="danger" />
-        </Button>
-      </DropdownMenuTrigger>
+      <IconTip label="Perlu tindakan">
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" aria-label={`Tugas menunggu (${total})`} className="relative">
+            <Bell className="size-5" />
+            <CountBadge count={total} variant="danger" />
+          </Button>
+        </DropdownMenuTrigger>
+      </IconTip>
       <DropdownMenuContent align="end" className="w-80 rounded-2xl p-2">
         <DropdownMenuLabel className="text-xs text-muted-foreground">Perlu tindakan</DropdownMenuLabel>
         {tasks.map(({ icon: Icon, title, source, count, tone, href }) => (
@@ -208,7 +229,6 @@ function LanguageMenu() {
 export function Topbar() {
   const { theme, toggle } = useTheme()
   const { isMobile } = useSidebar()
-  const unread = useUnreadCount()
   return (
     <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-2 border-b bg-card pr-4 md:gap-3 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
       {/* Desktop: tombol collapse/expand ada di header sidebar. Mobile: sidebar berupa Sheet, jadi tombol di sini. */}
@@ -228,18 +248,24 @@ export function Topbar() {
       <Button asChild variant="outline" size="sm" className="hidden rounded-full lg:inline-flex">
         <a href="#/saldo"><Wallet /> Rp 0</a>
       </Button>
-      <Button asChild variant="ghost" size="icon" aria-label="Keranjang" className="hidden md:inline-flex">
-        <a href="#/keranjang"><ShoppingCart className="size-5" /></a>
-      </Button>
+      <IconTip label="Keranjang">
+        <Button asChild variant="ghost" size="icon" aria-label="Keranjang" className="hidden md:inline-flex">
+          <a href="#/keranjang"><ShoppingCart className="size-5" /></a>
+        </Button>
+      </IconTip>
       <div className="hidden md:block"><LanguageMenu /></div>
 
       <TasksMenu />
-      <Button asChild variant="ghost" size="icon" aria-label={`Pemberitahuan (${unread} belum dibaca)`} className="relative hidden md:inline-flex">
-        <a href="#/pemberitahuan"><Inbox className="size-5" /><CountBadge count={unread} /></a>
-      </Button>
-      <Button variant="ghost" size="icon" aria-label="Ganti tema" onClick={toggle}>
-        {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
-      </Button>
+      <IconTip label="Inbox">
+        <Button asChild variant="ghost" size="icon" aria-label="Inbox" className="hidden md:inline-flex">
+          <a href="#/inbox"><Inbox className="size-5" /></a>
+        </Button>
+      </IconTip>
+      <IconTip label={theme === "dark" ? "Mode terang" : "Mode gelap"}>
+        <Button variant="ghost" size="icon" aria-label="Ganti tema" onClick={toggle}>
+          {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+        </Button>
+      </IconTip>
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-3 outline-none md:pl-4">
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>

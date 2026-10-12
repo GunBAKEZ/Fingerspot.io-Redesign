@@ -30,6 +30,7 @@ export const nav: NavItem[] = [
 export const extraRoutes: Record<string, string> = {
   "/keranjang": "Keranjang",
   "/saldo": "Saldo",
+  "/inbox": "Inbox",
 }
 
 /** Judul halaman dari rute (menu, submenu, atau rute tambahan). */
