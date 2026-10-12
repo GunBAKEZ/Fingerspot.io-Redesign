@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Fingerprint, MapPin, Moon, Sun, Users } from "lucide-react"
-import { Sidebar, Topbar } from "@/components/dashboard/shell"
 import { HeroStatCard, QuotaCard, StatTile } from "@/components/dashboard/stat-card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -81,7 +80,7 @@ export default function DesignSystem() {
       </Section>
 
       <Section title="Tipografi" hint="Plus Jakarta Sans — humanis, terbaca di tabel padat. Judul bagian: kata pertama bold, sisanya regular.">
-        <Card className="space-y-3 p-6">
+        <Card className="gap-3 p-6">
           <p className="text-display font-extrabold">Display 28 / ExtraBold</p>
           <p className="section-title">Performa <span>kehadiran</span> (Section title 18)</p>
           <p className="text-base">Body 16 — Teks isi untuk paragraf dan deskripsi.</p>
@@ -131,13 +130,8 @@ export default function DesignSystem() {
         </Card>
       </Section>
 
-      <Section title="Preview dashboard" hint="Contoh penerapan: sidebar, topbar, kartu hero, grafik, kuota, dan status harian.">
-        <div className="overflow-hidden rounded-3xl bg-card shadow-pop">
-          <div className="flex min-h-[640px]">
-            <Sidebar />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <Topbar />
-              <main className="flex-1 space-y-6 bg-background p-6">
+      <Section title="Preview dashboard" hint="Contoh penerapan kartu & grafik. Dashboard lengkap dengan sidebar shadcn ada di halaman utama.">
+        <div className="space-y-6 rounded-3xl bg-background p-6 ring-1 ring-border">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   <StatTile tone="info" label="Tepat Waktu" value="0 Karyawan" hint="0%" />
                   <StatTile tone="danger" label="Tidak Hadir" value="156 Karyawan" hint="102,63%" />
@@ -183,10 +177,8 @@ export default function DesignSystem() {
                     <QuotaCard title="Karyawan" icon={Users} tone="peach" total={5406} used={369} />
                   </div>
                 </div>
-              </main>
-            </div>
-          </div>
-        </div>
+              </div>
+        <Button asChild variant="soft"><a href="#/">Buka dashboard lengkap →</a></Button>
       </Section>
     </div>
   )

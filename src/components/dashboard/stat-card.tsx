@@ -63,7 +63,7 @@ export function HeroStatCard({
 export function StatTile({ label, value, hint, tone }: { label: string; value: string; hint?: string; tone: "info" | "danger" | "warning" | "success" }) {
   const dot = { info: "bg-info", danger: "bg-danger", warning: "bg-warning", success: "bg-success" }[tone]
   return (
-    <Card className="flex items-start gap-3 p-4">
+    <Card className="flex-row items-start gap-3 p-4">
       <span className={cn("mt-1.5 size-2.5 rounded-full", dot)} />
       <div>
         <p className="text-xs text-muted-foreground">{label}</p>

@@ -1,5 +1,6 @@
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { dailyMonitoring } from "@/data/mock"
 
 export function DailyMonitoring() {
@@ -23,11 +24,14 @@ export function DailyMonitoring() {
             <p className="text-xs text-muted-foreground">Total Karyawan</p>
           </div>
         </div>
-        <select aria-label="Kantor" className="h-10 w-full rounded-xl border border-input bg-card px-3 text-sm outline-none">
-          <option>Semua Kantor</option>
-          <option>Kantor Pusat</option>
-          <option>Kantor Jogjakarta</option>
-        </select>
+        <Select defaultValue="all">
+          <SelectTrigger className="w-full rounded-xl" aria-label="Kantor"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Kantor</SelectItem>
+            <SelectItem value="pusat">Kantor Pusat</SelectItem>
+            <SelectItem value="jogja">Kantor Jogjakarta</SelectItem>
+          </SelectContent>
+        </Select>
         <ul className="space-y-3">
           {items.map((i) => (
             <li key={i.key} className="flex items-center gap-3 text-sm">

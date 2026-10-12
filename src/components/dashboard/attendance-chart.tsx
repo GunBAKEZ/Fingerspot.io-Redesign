@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { Line, LineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { attendanceTrend, offices } from "@/data/mock"
 import { cn } from "@/lib/utils"
 
@@ -13,15 +14,18 @@ export function AttendanceChart() {
     <Card>
       <CardHeader>
         <CardTitle>Performa <span>kehadiran karyawan</span></CardTitle>
-        <select
-          aria-label="Bulan"
-          className="h-9 rounded-xl bg-primary-soft px-3 text-sm font-semibold text-primary outline-none"
-          defaultValue="2026-10"
-        >
-          <option value="2026-10">Oktober 2026</option>
-          <option value="2026-09">September 2026</option>
-          <option value="2026-08">Agustus 2026</option>
-        </select>
+        <CardAction>
+          <Select defaultValue="2026-10">
+            <SelectTrigger size="sm" className="rounded-xl border-0 bg-primary-soft font-semibold text-primary shadow-none" aria-label="Bulan">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2026-10">Oktober 2026</SelectItem>
+              <SelectItem value="2026-09">September 2026</SelectItem>
+              <SelectItem value="2026-08">Agustus 2026</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardAction>
       </CardHeader>
       <CardContent>
         <div className="h-64">
@@ -44,10 +48,7 @@ export function AttendanceChart() {
             <button
               key={o.name}
               onClick={() => toggle(o.name)}
-              className={cn(
-                "flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium transition",
-                hidden.includes(o.name) && "opacity-40"
-              )}
+              className={cn("flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium transition", hidden.includes(o.name) && "opacity-40")}
             >
               <span className="size-2 rounded-full" style={{ background: o.color }} /> {o.name}
             </button>

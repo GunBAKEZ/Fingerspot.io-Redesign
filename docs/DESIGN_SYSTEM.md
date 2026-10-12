@@ -26,16 +26,18 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 **Spacing** – skala 4px; padding kartu `p-6`, jarak antar kartu `gap-4`/`gap-6`.
 
 ## Komponen
-| Komponen | File | Catatan |
-|---|---|---|
-| Button (default, soft, secondary, outline, ghost, destructive) | `ui/button.tsx` | Tinggi 40px, sm 32px |
-| Card, CardHeader, CardTitle | `ui/card.tsx` | |
-| Badge (+dot) | `ui/badge.tsx` | Varian status |
-| Input, Progress, Avatar | `ui/*` | |
-| Sidebar, Topbar | `dashboard/shell.tsx` | Item aktif: `sidebar-accent` |
-| QuotaCard, HeroStatCard, StatTile | `dashboard/stat-card.tsx` | Pengganti kartu kuota & ringkasan |
+Semua komponen berasal dari **registry resmi shadcn/ui** (`npx shadcn@latest add …`, style `new-york`, base `radix`, React 19) dan disesuaikan lewat token + beberapa varian tambahan.
 
-Komponen shadcn lain (Table, Select, Dialog, Calendar, Tabs, Dropdown): `npx shadcn@latest add <nama>` — otomatis memakai token ini.
+| Komponen | Sumber | Kustomisasi merek |
+|---|---|---|
+| Button | shadcn | `rounded-xl`, tinggi 40px, varian `soft` |
+| Card (+CardAction) | shadcn | tanpa border, `shadow-card`, `rounded-2xl`, judul `section-title` |
+| Badge | shadcn | varian `soft/success/info/warning/danger/muted` + prop `dot` |
+| Input, Progress, Avatar | shadcn | radius 12px, track `muted`, fallback `primary-soft` |
+| Select, Table, Calendar, Dropdown Menu, Sidebar, Sheet, Tooltip, Separator, Skeleton | shadcn | tanpa perubahan (mengikuti token) |
+| QuotaCard, HeroStatCard, StatTile | kustom (`dashboard/stat-card.tsx`) | komposisi dari Card |
+
+Komponen baru: `npx shadcn@latest add <nama>` — otomatis memakai token. Catatan: CLI saat ini menulis `import { cn } from "cn"`; ganti ke `@/lib/utils` dan hapus paket npm `cn` jika muncul.
 
 ## Pemetaan dashboard lama → baru
 - Sidebar panjang → sidebar putih, ikon + label, aktif berwarna teal-soft.
