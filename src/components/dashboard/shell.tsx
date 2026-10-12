@@ -1,7 +1,8 @@
+import { useState } from "react"
 import {
   Building2, CalendarCheck, ChevronDown, FileBarChart, Fingerprint, LayoutGrid,
   LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User, Moon, Sun,
-  PanelLeftClose, PanelLeftOpen,
+  PanelLeftClose, PanelLeftOpen, ClipboardCheck, Inbox, Languages, ShoppingCart, UserPlus, Wallet,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
-  DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { nav } from "@/components/dashboard/nav"
+import { useUnreadCount } from "@/hooks/use-read-announcements"
 
 
 /** Tombol collapse/expand: ikon berganti sesuai kondisi sidebar (tutup saat terbuka, buka saat ciut). */
@@ -81,11 +83,78 @@ export function AppSidebar({ path }: { path: string }) {
   )
 }
 
+/** Lencana angka kecil di pojok tombol ikon. */
+function CountBadge({ count, variant = "default" }: { count: number; variant?: "default" | "danger" }) {
+  if (count <= 0) return null
+  return (
+    <Badge variant={variant === "danger" ? "destructive" : "default"} className="absolute -right-1.5 -top-1.5 h-4 min-w-4 justify-center rounded-full px-1 text-[10px]">
+      {count > 99 ? "99+" : count}
+    </Badge>
+  )
+}
+
+const tasks = [
+  { icon: UserPlus, title: "Karyawan Baru", source: "Dari Perangkat Absensi", count: 309, tone: "bg-tint-sky text-info", href: "#/karyawan" },
+  { icon: ClipboardCheck, title: "Persetujuan Karyawan", source: "Dari Perangkat Absensi", count: 73, tone: "bg-tint-peach text-warning", href: "#/karyawan" },
+]
+
+/** Dropdown tugas yang menunggu tindakan (Karyawan Baru, Persetujuan Karyawan). */
+function TasksMenu() {
+  const total = tasks.reduce((n, t) => n + t.count, 0)
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" aria-label={`Tugas menunggu (${total})`} className="relative">
+          <Bell className="size-5" />
+          <CountBadge count={total} variant="danger" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-80 rounded-2xl p-2">
+        <DropdownMenuLabel className="text-xs text-muted-foreground">Perlu tindakan</DropdownMenuLabel>
+        {tasks.map(({ icon: Icon, title, source, count, tone, href }) => (
+          <DropdownMenuItem key={title} asChild className="cursor-pointer gap-3 rounded-xl p-3">
+            <a href={href}>
+              <span className={cn("grid size-11 shrink-0 place-items-center rounded-xl", tone)}><Icon className="size-5" /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">{title}</span>
+                <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{source}</span>
+              </span>
+              <Badge variant="danger">{count}</Badge>
+            </a>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+/** Pilihan bahasa (tampilan saja; i18n belum dipasang). */
+function LanguageMenu() {
+  const [lang, setLang] = useState("id")
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" aria-label="Bahasa" className="gap-1.5 px-2.5">
+          <Languages className="size-5" /> <span className="text-xs font-bold uppercase">{lang}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44 rounded-xl">
+        <DropdownMenuLabel>Bahasa</DropdownMenuLabel>
+        <DropdownMenuRadioGroup value={lang} onValueChange={setLang}>
+          <DropdownMenuRadioItem value="id">Indonesia</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 export function Topbar() {
   const { theme, toggle } = useTheme()
   const { isMobile } = useSidebar()
+  const unread = useUnreadCount()
   return (
-    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
+    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-2 border-b bg-card pr-4 md:gap-3 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
       {/* Desktop: tombol collapse/expand ada di header sidebar. Mobile: sidebar berupa Sheet, jadi tombol di sini. */}
       {isMobile && (
         <>
@@ -98,17 +167,25 @@ export function Topbar() {
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
       <div className="hidden flex-1 md:block" />
+
+      {/* Saldo, keranjang, bahasa: hanya di layar lebar */}
+      <Button asChild variant="outline" size="sm" className="hidden rounded-full lg:inline-flex">
+        <a href="#/saldo"><Wallet /> Rp 0</a>
+      </Button>
+      <Button asChild variant="ghost" size="icon" aria-label="Keranjang" className="hidden md:inline-flex">
+        <a href="#/keranjang"><ShoppingCart className="size-5" /></a>
+      </Button>
+      <div className="hidden md:block"><LanguageMenu /></div>
+
+      <TasksMenu />
+      <Button asChild variant="ghost" size="icon" aria-label={`Pemberitahuan (${unread} belum dibaca)`} className="relative hidden md:inline-flex">
+        <a href="#/pemberitahuan"><Inbox className="size-5" /><CountBadge count={unread} /></a>
+      </Button>
       <Button variant="ghost" size="icon" aria-label="Ganti tema" onClick={toggle}>
         {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
       </Button>
-      <Button asChild variant="ghost" size="icon" aria-label="Pemberitahuan" className="relative">
-        <a href="#/pemberitahuan">
-          <Bell className="size-5" />
-          <Badge className="absolute -right-0.5 -top-0.5 size-4 justify-center rounded-full p-0 text-[10px]">4</Badge>
-        </a>
-      </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-4 outline-none">
+        <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-3 outline-none md:pl-4">
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>
           <span className="hidden text-sm font-semibold sm:block">Demo Admin</span>
           <ChevronDown className="size-4 text-muted-foreground" />
@@ -117,7 +194,7 @@ export function Topbar() {
           <DropdownMenuLabel>Akun saya</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem><User /> Profil</DropdownMenuItem>
-          <DropdownMenuItem><Settings /> Pengaturan</DropdownMenuItem>
+          <DropdownMenuItem asChild><a href="#/pengaturan"><Settings /> Pengaturan</a></DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive"><LogOut /> Keluar</DropdownMenuItem>
         </DropdownMenuContent>

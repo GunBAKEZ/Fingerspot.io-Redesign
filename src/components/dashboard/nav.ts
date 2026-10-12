@@ -18,3 +18,9 @@ export const nav: NavItem[] = [
   { icon: Download, label: "Unduh", path: "/unduh" },
   { icon: Settings, label: "Pengaturan", path: "/pengaturan" },
 ]
+
+/** Rute di luar menu sidebar (diakses dari Topbar). */
+export const extraRoutes: Record<string, string> = {
+  "/keranjang": "Keranjang",
+  "/saldo": "Saldo",
+}

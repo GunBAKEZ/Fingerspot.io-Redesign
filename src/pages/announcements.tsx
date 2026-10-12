@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { announcements, type Announcement } from "@/data/announcements"
 import { useFakeLoading } from "@/hooks/use-fake-loading"
+import { markRead, useReadSet } from "@/hooks/use-read-announcements"
 import { cn } from "@/lib/utils"
 
 const PAGE_SIZE = 10
@@ -25,7 +26,7 @@ export default function Announcements() {
   const loading = useFakeLoading(600)
   const [tab, setTab] = useState<Category>("umum")
   const [page, setPage] = useState(0)
-  const [read, setRead] = useState<Set<number>>(() => new Set(announcements.filter((a) => !a.unread).map((a) => a.id)))
+  const read = useReadSet()
   const [open, setOpen] = useState<Announcement | null>(null)
 
   const unreadIn = (c: Category) => announcements.filter((a) => a.category === c && !read.has(a.id)).length
@@ -36,8 +37,8 @@ export default function Announcements() {
   const pages = Math.max(1, Math.ceil(items.length / PAGE_SIZE))
   const slice = items.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
 
-  const show = (a: Announcement) => { setOpen(a); setRead((r) => new Set(r).add(a.id)) }
-  const markAll = () => setRead((r) => new Set([...r, ...items.map((a) => a.id)]))
+  const show = (a: Announcement) => { setOpen(a); markRead([a.id]) }
+  const markAll = () => markRead(items.map((a) => a.id))
 
   return (
     <>

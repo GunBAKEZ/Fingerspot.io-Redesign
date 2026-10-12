@@ -2,7 +2,7 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import "./index.css"
 import { AppLayout } from "./components/dashboard/app-layout"
-import { nav } from "./components/dashboard/nav"
+import { extraRoutes, nav } from "./components/dashboard/nav"
 import { useHashRoute } from "./hooks/use-hash-route"
 import Announcements from "./pages/announcements"
 import ComingSoon from "./pages/coming-soon"
@@ -16,7 +16,7 @@ function App() {
   const page =
     path === "/" ? <Dashboard /> :
     path === "/pemberitahuan" ? <Announcements /> :
-    <ComingSoon title={nav.find((n) => n.path === path)?.label ?? "Halaman tidak ditemukan"} />
+    <ComingSoon title={nav.find((n) => n.path === path)?.label ?? extraRoutes[path] ?? "Halaman tidak ditemukan"} />
 
   return <AppLayout path={path}>{page}</AppLayout>
 }
