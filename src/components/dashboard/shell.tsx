@@ -54,13 +54,14 @@ export function AppSidebar() {
   const collapsed = !isMobile && state === "collapsed"
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
+      <SidebarHeader className="h-[72px] justify-center border-b px-3 group-data-[collapsible=icon]:px-0">
         {collapsed ? (
           <SidebarToggle className="mx-auto size-10" />
         ) : (
           <div className="flex items-center gap-3">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">f</span>
-            <span className="text-xs font-bold tracking-[0.2em]">DEMO ACCOUNT</span>
+            <span className="min-w-0 flex-1 truncate text-xs font-bold tracking-[0.12em]">DEMO ACCOUNT</span>
+            {!isMobile && <SidebarToggle className="size-8" />}
           </div>
         )}
       </SidebarHeader>
@@ -90,17 +91,17 @@ export function AppSidebar() {
 
 export function Topbar() {
   const { theme, toggle } = useTheme()
-  const { state, isMobile } = useSidebar()
-  const collapsed = !isMobile && state === "collapsed" // tombol sudah pindah ke header sidebar
+  const { isMobile } = useSidebar()
   return (
-    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6", collapsed && "pl-4 md:pl-6")}>
-      {!collapsed && (
+    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
+      {/* Desktop: tombol collapse/expand ada di header sidebar. Mobile: sidebar berupa Sheet, jadi tombol di sini. */}
+      {isMobile && (
         <>
           <SidebarToggle className="ml-[11px] mr-0 size-8" />
           <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
         </>
       )}
-      <InputGroup className={cn("h-10 max-w-md flex-1 rounded-xl bg-background", !collapsed && "ml-1")}>
+      <InputGroup className={cn("h-10 max-w-md flex-1 rounded-xl bg-background", isMobile && "ml-1")}>
         <InputGroupAddon><Search /></InputGroupAddon>
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
