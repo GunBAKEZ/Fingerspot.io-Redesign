@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { DatePicker } from "@/components/ui/date-picker"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { leaveRequests, type LeaveStatus } from "@/data/mock"
 
@@ -12,6 +12,8 @@ const initials = (n: string) => n.split(" ").map((w) => w[0]).slice(0, 2).join("
 
 export function LeaveRequests() {
   const [rows, setRows] = useState(leaveRequests)
+  const [from, setFrom] = useState<Date>()
+  const [to, setTo] = useState<Date>()
   const decide = (name: string, status: LeaveStatus) =>
     setRows((r) => r.map((x) => (x.name === name ? { ...x, status } : x)))
 
@@ -23,9 +25,9 @@ export function LeaveRequests() {
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="flex flex-wrap items-center gap-3">
-          <Input type="date" aria-label="Tanggal mulai" className="w-44" />
+          <DatePicker value={from} onChange={setFrom} placeholder="Tanggal mulai" />
           <ArrowRight className="size-4 text-primary" />
-          <Input type="date" aria-label="Tanggal selesai" className="w-44" />
+          <DatePicker value={to} onChange={setTo} placeholder="Tanggal selesai" disabled={from ? { before: from } : undefined} />
           <Button variant="secondary">Tampilkan</Button>
         </div>
         <Table>
