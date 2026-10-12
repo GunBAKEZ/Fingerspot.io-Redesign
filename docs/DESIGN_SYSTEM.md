@@ -1,7 +1,7 @@
 # Fingerspot Design System (v0.1)
 
 Stack: React 18 · Vite · Tailwind CSS v4 · shadcn/ui (style `new-york`, CSS variables).
-Demo: `npm run dev` → halaman `src/pages/design-system.tsx`.
+Demo: `npm run dev` → dashboard di `/`, showcase design system di `/#/design-system`.
 
 ## Prinsip
 1. **Tenang & lapang** – kanvas `background`, konten di kartu putih `rounded-2xl` dengan `shadow-card`; hindari border tebal.
