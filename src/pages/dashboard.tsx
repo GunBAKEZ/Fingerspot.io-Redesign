@@ -1,4 +1,6 @@
 import { Fingerprint, MapPin, Users } from "lucide-react"
+import { useFakeLoading } from "@/hooks/use-fake-loading"
+import { CalendarSkeleton, ChartCardSkeleton, ListCardSkeleton, QuotaSkeleton } from "@/components/dashboard/skeletons"
 import { AttendanceChart } from "@/components/dashboard/attendance-chart"
 import { CalendarCard } from "@/components/dashboard/calendar-card"
 import { DailyMonitoring } from "@/components/dashboard/daily-monitoring"
@@ -17,9 +19,10 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { disciplineList, incompleteData } from "@/data/mock"
 
 export default function Dashboard() {
+  const loading = useFakeLoading()
   return (
     <TooltipProvider>
-      <SidebarProvider>
+      <SidebarProvider style={{ "--sidebar-width-icon": "4rem" } as React.CSSProperties}>
         <AppSidebar />
         <SidebarInset className="bg-background">
           <Topbar />
@@ -30,15 +33,16 @@ export default function Dashboard() {
             </div>
 
             <div className="grid gap-6 xl:grid-cols-3">
-              <div className="xl:col-span-2"><AttendanceChart /></div>
-              <CalendarCard />
+              <div className="xl:col-span-2">{loading ? <ChartCardSkeleton /> : <AttendanceChart />}</div>
+              {loading ? <CalendarSkeleton /> : <CalendarCard />}
             </div>
 
             <div className="grid gap-6 xl:grid-cols-3">
-              <div className="xl:col-span-2"><LeaveRequests /></div>
-              <DailyMonitoring />
+              <div className="xl:col-span-2">{loading ? <ListCardSkeleton rows={4} /> : <LeaveRequests />}</div>
+              {loading ? <ListCardSkeleton rows={4} ring /> : <DailyMonitoring />}
             </div>
 
+            {loading ? <QuotaSkeleton /> : (
             <Card>
               <CardHeader>
                 <CardTitle>Detail <span>kuota yang Anda miliki</span></CardTitle>
@@ -50,8 +54,10 @@ export default function Dashboard() {
                 <QuotaCard title="Karyawan" icon={Users} tone="peach" total={5406} used={369} />
               </CardContent>
             </Card>
+            )}
 
             <div className="grid gap-6 lg:grid-cols-2">
+              {loading ? <><ListCardSkeleton rows={5} /><ListCardSkeleton rows={5} /></> : <>
               <PagedCard
                 title="Karyawan" titleRest="indisipliner"
                 action={<span className="text-xs text-muted-foreground">Senin, 12 Oktober 2026</span>}
@@ -81,6 +87,7 @@ export default function Dashboard() {
                   </Item>
                 )}
               />
+              </>}
             </div>
           </main>
         </SidebarInset>

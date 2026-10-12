@@ -1,6 +1,6 @@
 import {
   Building2, CalendarCheck, ChevronDown, FileBarChart, Fingerprint, LayoutGrid,
-  LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User,
+  LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User, Moon, Sun,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -10,6 +10,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader,
@@ -33,9 +34,9 @@ const nav = [
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="h-[72px] justify-center border-b px-4">
-        <div className="flex items-center gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary font-extrabold text-primary-foreground">f</span>
+      <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
+        <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
+          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">f</span>
           <span className="text-xs font-bold tracking-[0.2em] group-data-[collapsible=icon]:hidden">DEMO ACCOUNT</span>
         </div>
       </SidebarHeader>
@@ -64,6 +65,7 @@ export function AppSidebar() {
 }
 
 export function Topbar() {
+  const { theme, toggle } = useTheme()
   return (
     <header className="sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card px-4 md:px-6">
       <SidebarTrigger className="-ml-1" />
@@ -73,6 +75,9 @@ export function Topbar() {
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
       <div className="flex-1" />
+      <Button variant="ghost" size="icon" aria-label="Ganti tema" onClick={toggle}>
+        {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+      </Button>
       <Button variant="ghost" size="icon" aria-label="Notifikasi" className="relative">
         <Bell className="size-5" />
         <Badge className="absolute -right-0.5 -top-0.5 size-4 justify-center rounded-full p-0 text-[10px]">4</Badge>
