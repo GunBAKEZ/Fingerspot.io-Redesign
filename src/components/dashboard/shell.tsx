@@ -100,7 +100,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
 function UnreadMenuBadge() {
   const unread = useUnreadCount()
   if (unread === 0) return null
-  return <SidebarMenuBadge className="right-2 top-2.5 peer-data-[size=default]/menu-button:top-2.5 rounded-full bg-primary px-1.5 text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">{unread}</SidebarMenuBadge>
+  return <SidebarMenuBadge className="right-2 top-2.5 peer-data-[size=default]/menu-button:top-2.5 rounded-full bg-primary px-1.5 text-primary-foreground peer-hover/menu-button:text-primary-foreground peer-data-[active=true]/menu-button:text-primary-foreground">{unread}</SidebarMenuBadge>
 }
 
 /** Tombol ikon dengan tooltip (Topbar). */
