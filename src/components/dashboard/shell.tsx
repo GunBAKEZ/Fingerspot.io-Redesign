@@ -1,6 +1,7 @@
 import {
   Building2, CalendarCheck, ChevronDown, FileBarChart, Fingerprint, LayoutGrid,
   LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User, Moon, Sun,
+  PanelLeftClose, PanelLeftOpen,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -14,8 +15,9 @@ import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarTrigger,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar,
 } from "@/components/ui/sidebar"
+import { cn } from "@/lib/utils"
 
 const nav = [
   { icon: LayoutGrid, label: "Dashboard", active: true },
@@ -30,15 +32,37 @@ const nav = [
   { icon: Settings, label: "Pengaturan" },
 ]
 
+/** Tombol collapse/expand: ikon berganti sesuai kondisi sidebar (tutup saat terbuka, buka saat ciut). */
+function SidebarToggle({ className }: { className?: string }) {
+  const { state, isMobile, toggleSidebar } = useSidebar()
+  const expanded = !isMobile && state === "expanded"
+  const label = expanded ? "Ciutkan sidebar" : "Buka sidebar"
+  return (
+    <Button
+      variant="ghost" size="icon" title={label} aria-label={label}
+      data-sidebar="trigger" data-slot="sidebar-trigger"
+      onClick={toggleSidebar} className={cn("shrink-0", className)}
+    >
+      {expanded ? <PanelLeftClose /> : <PanelLeftOpen />}
+    </Button>
+  )
+}
+
 /** Sidebar resmi shadcn: otomatis menjadi Sheet di mobile dan bisa diciutkan ke ikon di desktop. */
 export function AppSidebar() {
+  const { state, isMobile } = useSidebar()
+  const collapsed = !isMobile && state === "collapsed"
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-[72px] justify-center border-b px-4 group-data-[collapsible=icon]:px-0">
-        <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">f</span>
-          <span className="text-xs font-bold tracking-[0.2em] group-data-[collapsible=icon]:hidden">DEMO ACCOUNT</span>
-        </div>
+        {collapsed ? (
+          <SidebarToggle className="mx-auto size-10" />
+        ) : (
+          <div className="flex items-center gap-3">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">f</span>
+            <span className="text-xs font-bold tracking-[0.2em]">DEMO ACCOUNT</span>
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -66,11 +90,17 @@ export function AppSidebar() {
 
 export function Topbar() {
   const { theme, toggle } = useTheme()
+  const { state, isMobile } = useSidebar()
+  const collapsed = !isMobile && state === "collapsed" // tombol sudah pindah ke header sidebar
   return (
-    <header className="sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6">
-      <SidebarTrigger className="ml-[11px] mr-0 size-8 shrink-0" />
-      <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
-      <InputGroup className="ml-1 h-10 max-w-md flex-1 rounded-xl bg-background">
+    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card pr-4 md:pr-6", collapsed && "pl-4 md:pl-6")}>
+      {!collapsed && (
+        <>
+          <SidebarToggle className="ml-[11px] mr-0 size-8" />
+          <Separator orientation="vertical" className="data-[orientation=vertical]:h-full" />
+        </>
+      )}
+      <InputGroup className={cn("h-10 max-w-md flex-1 rounded-xl bg-background", !collapsed && "ml-1")}>
         <InputGroupAddon><Search /></InputGroupAddon>
         <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
       </InputGroup>
