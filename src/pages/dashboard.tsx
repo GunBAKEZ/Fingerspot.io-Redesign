@@ -1,4 +1,5 @@
-import { Fingerprint, MapPin, Users } from "lucide-react"
+import { useState } from "react"
+import { Fingerprint, MapPin, UserCheck, Users } from "lucide-react"
 import { useFakeLoading } from "@/hooks/use-fake-loading"
 import { CalendarSkeleton, ChartCardSkeleton, ListCardSkeleton, QuotaSkeleton } from "@/components/dashboard/skeletons"
 import { AttendanceChart } from "@/components/dashboard/attendance-chart"
@@ -12,15 +13,18 @@ import { QuotaCard } from "@/components/dashboard/stat-card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { DatePicker } from "@/components/ui/date-picker"
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { Progress } from "@/components/ui/progress"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { disciplineList, incompleteData } from "@/data/mock"
+import { disciplineFor, incompleteData } from "@/data/mock"
 
 export default function Dashboard() {
   const loading = useFakeLoading()
+  const [disciplineDate, setDisciplineDate] = useState<Date | undefined>(new Date())
   return (
     <TooltipProvider>
       <SidebarProvider style={{ "--sidebar-width-icon": "4rem" } as React.CSSProperties}>
@@ -60,8 +64,17 @@ export default function Dashboard() {
               {loading ? <><ListCardSkeleton rows={5} /><ListCardSkeleton rows={5} /></> : <>
               <PagedCard
                 title="Karyawan" titleRest="indisipliner"
-                action={<span className="text-xs text-muted-foreground">Senin, 12 Oktober 2026</span>}
-                items={disciplineList}
+                action={<DatePicker value={disciplineDate} onChange={setDisciplineDate} placeholder="Pilih tanggal" className="h-9 w-40" />}
+                items={disciplineDate ? disciplineFor(disciplineDate) : []}
+                empty={
+                  <Empty className="py-8">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon"><UserCheck /></EmptyMedia>
+                      <EmptyTitle>Tidak ada karyawan indisipliner</EmptyTitle>
+                      <EmptyDescription>Semua karyawan disiplin, atau tanggal ini adalah hari libur.</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
+                }
                 render={(e) => (
                   <Item size="sm" className="px-0">
                     <ItemMedia><Avatar><AvatarFallback>{e.name[0].toUpperCase()}</AvatarFallback></Avatar></ItemMedia>

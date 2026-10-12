@@ -7,7 +7,7 @@ import { Fragment } from "react"
 
 /** Kartu dengan daftar berhalaman — dipakai Indisipliner & Data Belum Lengkap. `render` mengembalikan <Item>. */
 export function PagedCard<T>({
-  title, titleRest, action, items, pageSize = 5, render,
+  title, titleRest, action, items, pageSize = 5, render, empty,
 }: {
   title: string
   titleRest: string
@@ -15,9 +15,11 @@ export function PagedCard<T>({
   items: T[]
   pageSize?: number
   render: (item: T) => React.ReactNode
+  empty?: React.ReactNode
 }) {
-  const [page, setPage] = useState(0)
+  const [rawPage, setPage] = useState(0)
   const pages = Math.max(1, Math.ceil(items.length / pageSize))
+  const page = Math.min(rawPage, pages - 1)
   const slice = items.slice(page * pageSize, page * pageSize + pageSize)
   const go = (n: number) => (e: React.MouseEvent) => { e.preventDefault(); setPage(Math.min(pages - 1, Math.max(0, n))) }
 
@@ -28,6 +30,7 @@ export function PagedCard<T>({
         {action && <CardAction>{action}</CardAction>}
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-between gap-4">
+        {items.length === 0 && empty}
         <ItemGroup>
           {slice.map((it, i) => (
             <Fragment key={i}>
@@ -36,7 +39,7 @@ export function PagedCard<T>({
             </Fragment>
           ))}
         </ItemGroup>
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
+        {items.length > 0 && <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>Halaman {page + 1} dari {pages}</span>
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
@@ -53,7 +56,7 @@ export function PagedCard<T>({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-        </div>
+        </div>}
       </CardContent>
     </Card>
   )

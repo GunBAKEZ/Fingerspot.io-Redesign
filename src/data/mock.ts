@@ -61,3 +61,11 @@ export const incompleteData = [
 export const holidays: Record<string, string> = {
   "2026-10-20": "Cuti bersama (contoh)",
 }
+
+/** Data contoh: daftar indisipliner berbeda per hari (diputar berdasarkan tanggal); akhir pekan kosong. */
+export function disciplineFor(date: Date) {
+  const day = date.getDay()
+  if (day === 0 || day === 6) return []
+  const n = date.getDate() % disciplineList.length
+  return [...disciplineList.slice(n), ...disciplineList.slice(0, n)].slice(0, 7)
+}
