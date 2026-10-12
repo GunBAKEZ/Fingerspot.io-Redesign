@@ -19,7 +19,11 @@ export function PageHeader({ crumbs, children }: { crumbs: Crumb[]; children: Re
                 {i === crumbs.length - 1 ? (
                   <BreadcrumbPage className="font-semibold">{c.label}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={c.href ?? "#/"} className="hover:text-primary">{c.label}</BreadcrumbLink>
+                  c.href ? (
+                  <BreadcrumbLink href={c.href} className="hover:text-primary">{c.label}</BreadcrumbLink>
+                ) : (
+                  <span>{c.label}</span>
+                )
                 )}
               </BreadcrumbItem>
             </Fragment>

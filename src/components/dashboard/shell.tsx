@@ -2,7 +2,7 @@ import { useState } from "react"
 import {
   Building2, CalendarCheck, ChevronDown, FileBarChart, Fingerprint, LayoutGrid,
   LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User, Moon, Sun,
-  PanelLeftClose, PanelLeftOpen, ClipboardCheck, Inbox, Languages, ShoppingCart, UserPlus, Wallet,
+  PanelLeftClose, PanelLeftOpen, ChevronRight, ClipboardCheck, Inbox, Languages, ShoppingCart, UserPlus, Wallet,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -16,10 +16,11 @@ import { useTheme } from "@/hooks/use-theme"
 import { Separator } from "@/components/ui/separator"
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarRail, useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { nav } from "@/components/dashboard/nav"
+import { isActive, nav, type NavItem } from "@/components/dashboard/nav"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useUnreadCount } from "@/hooks/use-read-announcements"
 
 
@@ -39,10 +40,66 @@ function SidebarToggle({ className }: { className?: string }) {
   )
 }
 
+const menuButton =
+  "h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>span]:hidden"
+
+/** Menu bersubmenu: Collapsible saat sidebar terbuka; dropdown (flyout) saat sidebar ciut. */
+function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: string; collapsed: boolean; onNavigate: () => void }) {
+  const active = isActive(item, path)
+  const Icon = item.icon
+
+  if (collapsed) {
+    return (
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton isActive={active} tooltip={item.label} className={menuButton}>
+              <Icon /> <span>{item.label}</span>
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="start" sideOffset={8} className="w-56 rounded-xl">
+            <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
+            {item.children!.map((c) => (
+              <DropdownMenuItem key={c.path} asChild className={cn("cursor-pointer rounded-lg", c.path === path && "bg-sidebar-accent font-semibold text-sidebar-accent-foreground")}>
+                <a href={`#${c.path}`}>{c.label}</a>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    )
+  }
+
+  return (
+    <Collapsible defaultOpen={active} className="group/collapsible">
+      <SidebarMenuItem>
+        <CollapsibleTrigger asChild>
+          <SidebarMenuButton isActive={active} tooltip={item.label} className={menuButton}>
+            <Icon /> <span>{item.label}</span>
+            <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <SidebarMenuSub>
+            {item.children!.map((c) => (
+              <SidebarMenuSubItem key={c.path}>
+                <SidebarMenuSubButton asChild isActive={c.path === path || (c.path === item.children![0].path && path === item.path)} className="h-9 rounded-lg">
+                  <a href={`#${c.path}`} onClick={onNavigate}>{c.label}</a>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  )
+}
+
 /** Sidebar resmi shadcn: otomatis menjadi Sheet di mobile dan bisa diciutkan ke ikon di desktop. */
 export function AppSidebar({ path }: { path: string }) {
   const { state, isMobile, setOpenMobile } = useSidebar()
   const collapsed = !isMobile && state === "collapsed"
+  const closeSheet = () => { if (isMobile) setOpenMobile(false) }
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-[72px] justify-center border-b px-3 group-data-[collapsible=icon]:px-0">
@@ -60,20 +117,19 @@ export function AppSidebar({ path }: { path: string }) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
-              {nav.map(({ icon: Icon, label, path: to }) => (
-                <SidebarMenuItem key={label}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={to === path}
-                    tooltip={label}
-                    className="h-10 rounded-xl font-medium data-[active=true]:font-semibold [&>svg]:size-5 group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>span]:hidden"
-                  >
-                    <a href={`#${to}`} onClick={() => isMobile && setOpenMobile(false)}>
-                      <Icon /> <span>{label}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {nav.map((item) =>
+                item.children ? (
+                  <NavGroup key={item.label} item={item} path={path} collapsed={collapsed} onNavigate={closeSheet} />
+                ) : (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton asChild isActive={item.path === path} tooltip={item.label} className={menuButton}>
+                      <a href={`#${item.path}`} onClick={closeSheet}>
+                        <item.icon /> <span>{item.label}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

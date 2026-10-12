@@ -19,6 +19,14 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (teal), warna status y
 - Status baru/terbaca, klik untuk membuka detail (`Dialog`), dan tombol **Tandai semua dibaca**.
 - Empty state dan skeleton loading.
 
+**Struktur Organisasi** (`/#/organisasi/struktur`)
+
+- Pohon struktur dan jabatan yang bisa diperluas/diciutkan, dengan pencarian (kata yang cocok disorot) dan tombol Perluas/Ciutkan semua.
+- Aksi per node: **Tambah** (Struktur/Jabatan/Kantor), **Ubah** (nama, kantor), **Hapus** dengan konfirmasi dan jumlah turunan; node akar tidak bisa dihapus. Ikon gedung + tooltip menunjukkan kantor yang terhubung.
+- Di layar kecil aksi dilipat dalam satu menu “⋯”.
+- Perubahan tersimpan di memori (belum ke API). Logika pohon ada di `src/lib/org-tree.ts`.
+- Menu **Organisasi** di sidebar memiliki submenu (Collapsible; flyout saat sidebar ciut). *Jabatan Fungsional* belum dibangun.
+
 **Dashboard** (`/`)
 
 - **Performa kehadiran** — grafik garis per kantor; legenda (`ToggleGroup`) menyalakan/mematikan seri.
@@ -51,6 +59,7 @@ Halaman:
 
 - `/` — Dashboard
 - `/#/pemberitahuan` — Pemberitahuan
+- `/#/organisasi/struktur` — Struktur Organisasi
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
 - Menu sidebar lain (Karyawan, Kantor, dst.) menampilkan halaman *“sedang dibangun”* sampai dikerjakan
 
@@ -72,11 +81,12 @@ Halaman:
 src/
 ├── components/
 │   ├── ui/               # komponen shadcn (dari registry resmi + kustomisasi merek)
+│   ├── organization/     # pohon organisasi + dialog tambah/ubah
 │   └── dashboard/        # komposisi aplikasi: app-layout, shell (sidebar/topbar), nav, kartu, grafik, filter
 ├── data/                 # mock.ts (dashboard), announcements.ts (pemberitahuan) — data contoh
 ├── hooks/                # use-theme, use-hash-route, use-fake-loading, use-mobile
 ├── pages/                # dashboard, announcements, coming-soon, design-system
-├── lib/utils.ts          # helper cn()
+├── lib/                  # utils.ts (cn), org-tree.ts (data & fungsi pohon organisasi)
 └── index.css             # design token (warna, radius, shadow, font)
 docs/
 ├── DESIGN_SYSTEM.md      # dokumentasi design system lengkap
@@ -122,6 +132,8 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 
 - [ ] Sambungan ke API Fingerspot
 - [x] Halaman Pemberitahuan
+- [x] Struktur Organisasi
+- [ ] Jabatan Fungsional
 - [ ] Halaman Karyawan (tabel, filter, dialog tambah/edit)
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
