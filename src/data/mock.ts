@@ -1,18 +1,18 @@
 export const offices = [
-  { name: "Kantor Pusat", color: "var(--chart-3)" },
-  { name: "Kantor Jogjakarta", color: "var(--chart-2)" },
-  { name: "Kantor Purwokerto", color: "var(--chart-1)" },
-  { name: "Kantor Harco Glodok", color: "var(--chart-5)" },
-  { name: "Kantor Balikpapan", color: "var(--chart-4)" },
+  { key: "pusat", name: "Kantor Pusat", color: "var(--chart-3)" },
+  { key: "jogja", name: "Kantor Jogjakarta", color: "var(--chart-2)" },
+  { key: "purwokerto", name: "Kantor Purwokerto", color: "var(--chart-1)" },
+  { key: "glodok", name: "Kantor Harco Glodok", color: "var(--chart-5)" },
+  { key: "balikpapan", name: "Kantor Balikpapan", color: "var(--chart-4)" },
 ] as const
 
 export const attendanceTrend = ["Minggu ke-1", "Minggu ke-2", "Minggu ke-3", "Minggu ke-4"].map((week, i) => ({
   week,
-  "Kantor Pusat": [92, 96, 94, 97][i],
-  "Kantor Jogjakarta": [81, 88, 85, 90][i],
-  "Kantor Purwokerto": [74, 79, 83, 80][i],
-  "Kantor Harco Glodok": [66, 72, 70, 78][i],
-  "Kantor Balikpapan": [58, 64, 61, 69][i],
+  pusat: [92, 96, 94, 97][i],
+  jogja: [81, 88, 85, 90][i],
+  purwokerto: [74, 79, 83, 80][i],
+  glodok: [66, 72, 70, 78][i],
+  balikpapan: [58, 64, 61, 69][i],
 }))
 
 export const dailyMonitoring = {

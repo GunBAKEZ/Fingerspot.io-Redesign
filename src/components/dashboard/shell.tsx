@@ -3,6 +3,9 @@ import {
   LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -65,17 +68,15 @@ export function Topbar() {
     <header className="sticky top-0 z-10 flex h-[72px] items-center gap-3 border-b bg-card px-4 md:px-6">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="h-6" />
-      <div className="flex flex-1 items-center gap-3 text-muted-foreground">
-        <Search className="size-5 shrink-0 text-foreground" />
-        <input
-          placeholder="Cari karyawan, kantor, atau laporan…"
-          className="w-full max-w-md bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-        />
-      </div>
-      <button aria-label="Notifikasi" className="relative grid size-10 place-items-center rounded-xl hover:bg-muted">
+      <InputGroup className="max-w-md flex-1 border-0 bg-transparent shadow-none has-[[data-slot=input-group-control]:focus-visible]:ring-0">
+        <InputGroupAddon><Search className="text-foreground" /></InputGroupAddon>
+        <InputGroupInput placeholder="Cari karyawan, kantor, atau laporan…" />
+      </InputGroup>
+      <div className="flex-1" />
+      <Button variant="ghost" size="icon" aria-label="Notifikasi" className="relative">
         <Bell className="size-5" />
-        <span className="absolute right-1.5 top-1.5 grid size-4 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">4</span>
-      </button>
+        <Badge className="absolute -right-0.5 -top-0.5 size-4 justify-center rounded-full p-0 text-[10px]">4</Badge>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-4 outline-none">
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>

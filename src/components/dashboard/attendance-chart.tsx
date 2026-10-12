@@ -1,14 +1,18 @@
 import { useState } from "react"
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { attendanceTrend, offices } from "@/data/mock"
-import { cn } from "@/lib/utils"
 
-/** Grafik performa kehadiran per kantor; legenda dapat diklik untuk menyalakan/mematikan seri. */
+const config = Object.fromEntries(
+  offices.map((o) => [o.key, { label: o.name, color: o.color }])
+) satisfies ChartConfig
+
+/** Grafik performa kehadiran per kantor; ToggleGroup menyalakan/mematikan seri. */
 export function AttendanceChart() {
-  const [hidden, setHidden] = useState<string[]>([])
-  const toggle = (n: string) => setHidden((h) => (h.includes(n) ? h.filter((x) => x !== n) : [...h, n]))
+  const [visible, setVisible] = useState<string[]>(offices.map((o) => o.key))
 
   return (
     <Card>
@@ -27,33 +31,27 @@ export function AttendanceChart() {
           </Select>
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={attendanceTrend} margin={{ left: -16, right: 8 }}>
-              <CartesianGrid vertical={false} stroke="var(--border)" />
-              <XAxis dataKey="week" tickLine={false} axisLine={false} fontSize={12} stroke="var(--muted-foreground)" />
-              <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} unit="%" tickLine={false} axisLine={false} fontSize={12} stroke="var(--muted-foreground)" />
-              <Tooltip formatter={(v) => `${v}%`} contentStyle={{ borderRadius: 12, border: 0, boxShadow: "var(--shadow-pop)", background: "var(--popover)" }} />
-              {offices.map((o) =>
-                hidden.includes(o.name) ? null : (
-                  <Line key={o.name} type="monotone" dataKey={o.name} stroke={o.color} strokeWidth={2.5} dot={{ r: 3, strokeWidth: 0, fill: o.color }} />
-                )
-              )}
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
+      <CardContent className="space-y-4">
+        <ChartContainer config={config} className="h-64 w-full">
+          <LineChart data={attendanceTrend} margin={{ left: -16, right: 8 }}>
+            <CartesianGrid vertical={false} />
+            <XAxis dataKey="week" tickLine={false} axisLine={false} tickMargin={8} />
+            <YAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} unit="%" tickLine={false} axisLine={false} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            {offices.map((o) =>
+              visible.includes(o.key) ? (
+                <Line key={o.key} type="monotone" dataKey={o.key} stroke={`var(--color-${o.key})`} strokeWidth={2.5} dot={{ r: 3, strokeWidth: 0, fill: `var(--color-${o.key})` }} />
+              ) : null
+            )}
+          </LineChart>
+        </ChartContainer>
+        <ToggleGroup type="multiple" size="sm" spacing={8} value={visible} onValueChange={setVisible} className="flex-wrap justify-start">
           {offices.map((o) => (
-            <button
-              key={o.name}
-              onClick={() => toggle(o.name)}
-              className={cn("flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium transition", hidden.includes(o.name) && "opacity-40")}
-            >
+            <ToggleGroupItem key={o.key} value={o.key} aria-label={o.name} className="gap-2 rounded-full text-xs">
               <span className="size-2 rounded-full" style={{ background: o.color }} /> {o.name}
-            </button>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
       </CardContent>
     </Card>
   )

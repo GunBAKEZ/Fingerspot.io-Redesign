@@ -26,18 +26,26 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 **Spacing** – skala 4px; padding kartu `p-6`, jarak antar kartu `gap-4`/`gap-6`.
 
 ## Komponen
-Semua komponen berasal dari **registry resmi shadcn/ui** (`npx shadcn@latest add …`, style `new-york`, base `radix`, React 19) dan disesuaikan lewat token + beberapa varian tambahan.
+Semua komponen berasal dari **registry resmi shadcn/ui** (`npx shadcn@latest add …`, style `new-york`, base `radix`, React 19). Komponen kustom di `components/dashboard/` hanya **komposisi** dari komponen shadcn (tidak ada elemen HTML mentah untuk input/tombol/daftar/paginasi/grafik).
 
-| Komponen | Sumber | Kustomisasi merek |
-|---|---|---|
-| Button | shadcn | `rounded-xl`, tinggi 40px, varian `soft` |
-| Card (+CardAction) | shadcn | tanpa border, `shadow-card`, `rounded-2xl`, judul `section-title` |
-| Badge | shadcn | varian `soft/success/info/warning/danger/muted` + prop `dot` |
-| Input, Progress, Avatar | shadcn | radius 12px, track `muted`, fallback `primary-soft` |
-| Select, Table, Calendar, Dropdown Menu, Sidebar, Sheet, Tooltip, Separator, Skeleton | shadcn | tanpa perubahan (mengikuti token) |
-| QuotaCard, HeroStatCard, StatTile | kustom (`dashboard/stat-card.tsx`) | komposisi dari Card |
+| Kebutuhan | Komponen shadcn |
+|---|---|
+| Layout & navigasi | Sidebar (mobile = Sheet), Separator, Tooltip, Dropdown Menu |
+| Kartu & daftar | Card (+CardAction), Item, Table, Empty, Skeleton |
+| Form | Button, Input, InputGroup, Select, Label, Textarea, Popover + Calendar (`date-picker.tsx`) |
+| Status | Badge (varian status + `dot`), Progress, Avatar |
+| Grafik | Chart (pembungkus Recharts: `ChartContainer`, `ChartTooltip`) |
+| Filter & paging | Toggle / ToggleGroup, Pagination |
 
-Komponen baru: `npx shadcn@latest add <nama>` — otomatis memakai token. Catatan: CLI saat ini menulis `import { cn } from "cn"`; ganti ke `@/lib/utils` dan hapus paket npm `cn` jika muncul.
+Satu-satunya file di `ui/` yang bukan dari registry: `date-picker.tsx` (rakitan Popover + Calendar, pola dari dokumentasi shadcn).
+
+### Workflow menambah komponen
+```bash
+npx shadcn@latest add <nama> -o -y   # -o menimpa file yang sudah ada
+python3 scripts/apply-brand.py       # pasang ulang kustomisasi merek + perbaiki import `cn`
+npm uninstall cn                     # CLI kadang memasang paket npm "cn"; helper kita di @/lib/utils
+```
+`scripts/apply-brand.py` bersifat idempoten dan memuat semua kustomisasi merek: Button `rounded-xl` + varian `soft`, Card tanpa border + `shadow-card`, Input `rounded-xl`, Progress/Avatar berwarna merek.
 
 ## Pemetaan dashboard lama → baru
 - Sidebar panjang → sidebar putih, ikon + label, aktif berwarna teal-soft.

@@ -1,12 +1,13 @@
 import { useState } from "react"
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Fingerprint, MapPin, Moon, Sun, Users } from "lucide-react"
 import { HeroStatCard, QuotaCard, StatTile } from "@/components/dashboard/stat-card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import { DatePicker } from "@/components/ui/date-picker"
 import { Progress } from "@/components/ui/progress"
 
 const colors = [
@@ -28,6 +29,11 @@ const tintBg = { mint: "bg-tint-mint", lilac: "bg-tint-lilac", peach: "bg-tint-p
 const trend = ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"].map((w, i) => ({
   w, hadir: [72, 91, 84, 88][i], terlambat: [10, 6, 12, 7][i],
 }))
+
+const trendConfig = {
+  hadir: { label: "Hadir", color: "var(--chart-3)" },
+  terlambat: { label: "Terlambat", color: "var(--chart-1)" },
+} satisfies ChartConfig
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -117,7 +123,7 @@ export default function DesignSystem() {
               <Badge variant="muted">Draft</Badge>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <Input placeholder="Pilih tanggal mulai" />
+              <DatePicker placeholder="Pilih tanggal mulai" className="w-full" />
               <div className="flex items-center gap-3">
                 <Avatar><AvatarFallback>MH</AvatarFallback></Avatar>
                 <div className="flex-1 space-y-1.5">
@@ -143,19 +149,19 @@ export default function DesignSystem() {
                   <Card className="lg:col-span-2">
                     <CardHeader>
                       <CardTitle>Performa <span>kehadiran</span></CardTitle>
-                      <Button size="sm" variant="soft">Oktober 2026</Button>
+                      <CardAction><Button size="sm" variant="soft">Oktober 2026</Button></CardAction>
                     </CardHeader>
-                    <CardContent className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={trend}>
-                          <CartesianGrid vertical={false} stroke="var(--border)" />
-                          <XAxis dataKey="w" tickLine={false} axisLine={false} fontSize={12} stroke="var(--muted-foreground)" />
-                          <YAxis tickLine={false} axisLine={false} fontSize={12} stroke="var(--muted-foreground)" unit="%" />
-                          <Tooltip contentStyle={{ borderRadius: 12, border: 0, boxShadow: "var(--shadow-pop)" }} />
-                          <Area type="monotone" dataKey="hadir" stroke="var(--chart-3)" fill="var(--chart-3)" fillOpacity={0.12} strokeWidth={2} />
-                          <Area type="monotone" dataKey="terlambat" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.12} strokeWidth={2} />
+                    <CardContent>
+                      <ChartContainer config={trendConfig} className="h-64 w-full">
+                        <AreaChart data={trend} margin={{ left: -16 }}>
+                          <CartesianGrid vertical={false} />
+                          <XAxis dataKey="w" tickLine={false} axisLine={false} tickMargin={8} />
+                          <YAxis tickLine={false} axisLine={false} unit="%" />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <Area type="monotone" dataKey="hadir" stroke="var(--color-hadir)" fill="var(--color-hadir)" fillOpacity={0.12} strokeWidth={2} />
+                          <Area type="monotone" dataKey="terlambat" stroke="var(--color-terlambat)" fill="var(--color-terlambat)" fillOpacity={0.12} strokeWidth={2} />
                         </AreaChart>
-                      </ResponsiveContainer>
+                      </ChartContainer>
                     </CardContent>
                   </Card>
                   <HeroStatCard

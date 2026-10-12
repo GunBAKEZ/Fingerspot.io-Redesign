@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { Progress } from "@/components/ui/progress"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -56,14 +57,14 @@ export default function Dashboard() {
                 action={<span className="text-xs text-muted-foreground">Senin, 12 Oktober 2026</span>}
                 items={disciplineList}
                 render={(e) => (
-                  <div className="flex items-center gap-3">
-                    <Avatar><AvatarFallback>{e.name[0].toUpperCase()}</AvatarFallback></Avatar>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold">{e.name}</p>
-                      <p className="text-xs text-muted-foreground">{e.role}</p>
-                    </div>
-                    <Badge variant={e.status === "Alpha" ? "danger" : "warning"} dot>{e.status}</Badge>
-                  </div>
+                  <Item size="sm" className="px-0">
+                    <ItemMedia><Avatar><AvatarFallback>{e.name[0].toUpperCase()}</AvatarFallback></Avatar></ItemMedia>
+                    <ItemContent>
+                      <ItemTitle className="font-bold">{e.name}</ItemTitle>
+                      <ItemDescription>{e.role}</ItemDescription>
+                    </ItemContent>
+                    <ItemActions><Badge variant={e.status === "Alpha" ? "danger" : "warning"} dot>{e.status}</Badge></ItemActions>
+                  </Item>
                 )}
               />
               <PagedCard
@@ -71,13 +72,13 @@ export default function Dashboard() {
                 action={<Button variant="link" size="sm">Lihat semua →</Button>}
                 items={incompleteData}
                 render={(e) => (
-                  <div className="space-y-2">
+                  <Item size="sm" className="flex-col items-stretch gap-2 px-0">
                     <div className="flex justify-between text-sm">
-                      <span className="font-semibold">{e.name}</span>
+                      <ItemTitle>{e.name}</ItemTitle>
                       <span className="font-bold">{e.percent}%</span>
                     </div>
                     <Progress value={e.percent} />
-                  </div>
+                  </Item>
                 )}
               />
             </div>

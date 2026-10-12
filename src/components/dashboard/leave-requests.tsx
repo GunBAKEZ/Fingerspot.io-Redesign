@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { ArrowRight, Check, X } from "lucide-react"
+import { ArrowRight, Check, CalendarOff, X } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DatePicker } from "@/components/ui/date-picker"
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { leaveRequests, type LeaveStatus } from "@/data/mock"
 
@@ -41,7 +42,17 @@ export function LeaveRequests() {
           </TableHeader>
           <TableBody>
             {rows.length === 0 && (
-              <TableRow><TableCell colSpan={4} className="py-10 text-center text-muted-foreground">Tidak ada data</TableCell></TableRow>
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <Empty className="py-8">
+                    <EmptyHeader>
+                      <EmptyMedia variant="icon"><CalendarOff /></EmptyMedia>
+                      <EmptyTitle>Tidak ada data</EmptyTitle>
+                      <EmptyDescription>Belum ada pengajuan izin pada rentang tanggal ini.</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
+                </TableCell>
+              </TableRow>
             )}
             {rows.map((r) => (
               <TableRow key={r.name}>

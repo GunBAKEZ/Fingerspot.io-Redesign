@@ -1,5 +1,8 @@
 import type { LucideIcon } from "lucide-react"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@/components/ui/item"
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 type Tone = "mint" | "lilac" | "peach" | "sky" | "rose" | "cream"
@@ -16,47 +19,63 @@ const toneIcon: Record<Tone, string> = {
 export function QuotaCard({
   title, icon: Icon, tone, total, used,
 }: { title: string; icon: LucideIcon; tone: Tone; total: number; used: number }) {
+  const fmt = (n: number) => n.toLocaleString("id-ID")
   return (
-    <div className={cn("rounded-2xl p-5", toneBg[tone])}>
-      <div className="flex items-center gap-3">
-        <span className={cn("grid size-11 place-items-center rounded-xl text-white", toneIcon[tone])}>
-          <Icon className="size-5" />
-        </span>
-        <p className="font-bold">{title}</p>
-      </div>
-      <dl className="mt-5 space-y-1.5 text-sm">
-        <div className="flex justify-between"><dt className="text-muted-foreground">Kuota</dt><dd className="font-semibold">{total.toLocaleString("id-ID")}</dd></div>
-        <div className="flex justify-between"><dt className="text-muted-foreground">Terpakai</dt><dd className="font-semibold">{used.toLocaleString("id-ID")}</dd></div>
-      </dl>
-      <div className="mt-3 flex items-baseline justify-between border-t border-dashed border-foreground/15 pt-3">
-        <span className="text-sm font-semibold">Sisa Kuota</span>
-        <span className="text-xl font-extrabold">{(total - used).toLocaleString("id-ID")}</span>
-      </div>
-    </div>
+    <Card className={cn("gap-4 py-5 shadow-none", toneBg[tone])}>
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <span className={cn("grid size-11 place-items-center rounded-xl text-white", toneIcon[tone])}>
+            <Icon className="size-5" />
+          </span>
+          <CardTitle className="text-base font-bold">{title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ItemGroup>
+          <Item size="sm" className="px-0 py-1">
+            <ItemContent><ItemDescription>Kuota</ItemDescription></ItemContent>
+            <ItemActions className="font-semibold">{fmt(total)}</ItemActions>
+          </Item>
+          <Item size="sm" className="px-0 py-1">
+            <ItemContent><ItemDescription>Terpakai</ItemDescription></ItemContent>
+            <ItemActions className="font-semibold">{fmt(used)}</ItemActions>
+          </Item>
+        </ItemGroup>
+        <Separator className="my-3 bg-foreground/15" />
+        <Item size="sm" className="px-0 py-0">
+          <ItemContent><ItemTitle>Sisa Kuota</ItemTitle></ItemContent>
+          <ItemActions className="text-xl font-extrabold">{fmt(total - used)}</ItemActions>
+        </Item>
+      </CardContent>
+    </Card>
   )
 }
 
-/** Kartu hero hijau (seperti "Todays shooting") untuk ringkasan utama. */
+/** Kartu hero hijau untuk ringkasan utama. */
 export function HeroStatCard({
   label, value, total, rows,
 }: { label: string; value: number; total: number; rows: { label: string; value: number; max: number }[] }) {
   return (
-    <div className="rounded-2xl bg-primary p-6 text-primary-foreground shadow-card">
-      <p className="text-sm opacity-70">{label}</p>
-      <p className="mt-1 text-3xl font-extrabold">{value}<span className="opacity-50">/{total}</span></p>
-      <ul className="mt-5 space-y-3">
-        {rows.map((r) => (
-          <li key={r.label} className="flex items-center gap-2 text-sm">
-            <span className="w-20 shrink-0 text-xs opacity-80">{r.label}</span>
-            <span className="w-6 font-bold">{r.value}</span>
-            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/20">
-              <span className="block h-full rounded-full bg-white" style={{ width: `${(r.value / r.max) * 100}%` }} />
-            </span>
-            <span className="w-6 text-right opacity-50">{r.max}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Card className="bg-primary text-primary-foreground">
+      <CardHeader>
+        <div>
+          <p className="text-sm opacity-70">{label}</p>
+          <p className="mt-1 text-3xl font-extrabold">{value}<span className="opacity-50">/{total}</span></p>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ItemGroup className="gap-3">
+          {rows.map((r) => (
+            <Item key={r.label} size="sm" className="gap-2 p-0 text-primary-foreground">
+              <ItemContent className="max-w-20 flex-none"><span className="text-xs opacity-80">{r.label}</span></ItemContent>
+              <span className="w-6 text-sm font-bold">{r.value}</span>
+              <Progress value={(r.value / r.max) * 100} className="h-1.5 flex-1 bg-white/20 [&_[data-slot=progress-indicator]]:bg-white" />
+              <span className="w-6 text-right text-sm opacity-50">{r.max}</span>
+            </Item>
+          ))}
+        </ItemGroup>
+      </CardContent>
+    </Card>
   )
 }
 
