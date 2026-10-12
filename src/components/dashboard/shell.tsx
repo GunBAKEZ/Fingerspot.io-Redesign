@@ -2,7 +2,7 @@ import { useState } from "react"
 import {
   Building2, CalendarCheck, ChevronDown, FileBarChart, Fingerprint, LayoutGrid,
   LogOut, Megaphone, MapPin, Search, Settings, Users, Download, Bell, User, Moon, Sun,
-  PanelLeftClose, PanelLeftOpen, ChevronRight, ClipboardCheck, Inbox, Languages, ShoppingCart, UserPlus, Wallet,
+  PanelLeftClose, PanelLeftOpen, ChevronRight, ClipboardCheck, Inbox, ShoppingCart, UserPlus, Wallet,
 } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -205,6 +205,22 @@ function TasksMenu() {
   )
 }
 
+/** Bendera kecil (SVG, agar tampil di semua OS; emoji bendera tidak muncul di Windows). */
+function Flag({ lang }: { lang: string }) {
+  const cls = "h-3.5 w-5 shrink-0 rounded-[3px] ring-1 ring-border"
+  return lang === "id" ? (
+    <svg viewBox="0 0 20 14" className={cls} aria-hidden>
+      <rect width="20" height="7" fill="#e70011" /><rect y="7" width="20" height="7" fill="#fff" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 20 14" className={cls} aria-hidden>
+      <rect width="20" height="14" fill="#1a3a8f" />
+      <path d="M0 0l20 14M20 0L0 14" stroke="#fff" strokeWidth="2.4" /><path d="M0 0l20 14M20 0L0 14" stroke="#d3202f" strokeWidth="1" />
+      <path d="M10 0v14M0 7h20" stroke="#fff" strokeWidth="4" /><path d="M10 0v14M0 7h20" stroke="#d3202f" strokeWidth="2.2" />
+    </svg>
+  )
+}
+
 /** Pilihan bahasa (tampilan saja; i18n belum dipasang). */
 function LanguageMenu() {
   const [lang, setLang] = useState("id")
@@ -212,14 +228,14 @@ function LanguageMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" aria-label="Bahasa" className="gap-1.5 px-2.5">
-          <Languages className="size-5" /> <span className="text-xs font-bold uppercase">{lang}</span>
+          <Flag lang={lang} /> <span className="text-xs font-bold uppercase">{lang}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44 rounded-xl">
         <DropdownMenuLabel>Bahasa</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={lang} onValueChange={setLang}>
-          <DropdownMenuRadioItem value="id">Indonesia</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="id"><Flag lang="id" /> Indonesia</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="en"><Flag lang="en" /> English</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -244,21 +260,28 @@ export function Topbar() {
       </InputGroup>
       <div className="hidden flex-1 md:block" />
 
-      {/* Saldo, keranjang, bahasa: hanya di layar lebar */}
+      {/* Saldo (layar lebar), dipisah garis dari kelompok ikon */}
       <Button asChild variant="outline" size="sm" className="hidden rounded-full lg:inline-flex">
-        <a href="#/saldo"><Wallet /> Rp 0</a>
+        <a href="#/saldo"><Wallet className="text-primary" /> Saldo: Rp 0</a>
       </Button>
+      <Separator orientation="vertical" className="mx-2 hidden h-6 lg:block" />
+
+      {/* Kelompok ikon */}
       <IconTip label="Keranjang">
         <Button asChild variant="ghost" size="icon" aria-label="Keranjang" className="hidden md:inline-flex">
           <a href="#/keranjang"><ShoppingCart className="size-5" /></a>
         </Button>
       </IconTip>
       <div className="hidden md:block"><LanguageMenu /></div>
-
       <TasksMenu />
       <IconTip label="Inbox">
         <Button asChild variant="ghost" size="icon" aria-label="Inbox" className="hidden md:inline-flex">
           <a href="#/inbox"><Inbox className="size-5" /></a>
+        </Button>
+      </IconTip>
+      <IconTip label="Pengaturan">
+        <Button asChild variant="ghost" size="icon" aria-label="Pengaturan" className="hidden md:inline-flex">
+          <a href="#/pengaturan"><Settings className="size-5" /></a>
         </Button>
       </IconTip>
       <IconTip label={theme === "dark" ? "Mode terang" : "Mode gelap"}>
@@ -266,14 +289,19 @@ export function Topbar() {
           {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </Button>
       </IconTip>
+
+      {/* Akun: hanya avatar */}
+      <Separator orientation="vertical" className="mx-1 h-6 md:mx-2" />
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 border-l pl-3 outline-none md:pl-4">
+        <DropdownMenuTrigger aria-label="Akun saya" className="flex items-center gap-1 rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
           <Avatar><AvatarFallback>DA</AvatarFallback></Avatar>
-          <span className="hidden text-sm font-semibold sm:block">Demo Admin</span>
           <ChevronDown className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-52 rounded-xl">
-          <DropdownMenuLabel>Akun saya</DropdownMenuLabel>
+        <DropdownMenuContent align="end" className="w-56 rounded-xl">
+          <DropdownMenuLabel className="font-normal">
+            <p className="text-sm font-semibold">Demo Admin</p>
+            <p className="text-xs text-muted-foreground">admin@demo.id</p>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem><User /> Profil</DropdownMenuItem>
           <DropdownMenuItem asChild><a href="#/pengaturan"><Settings /> Pengaturan</a></DropdownMenuItem>
