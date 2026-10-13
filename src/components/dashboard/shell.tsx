@@ -170,7 +170,7 @@ export function AppSidebar({ path }: { path: string }) {
 function CountBadge({ count, variant = "default" }: { count: number; variant?: "default" | "danger" }) {
   if (count <= 0) return null
   return (
-    <Badge variant={variant === "danger" ? "destructive" : "default"} className="absolute -right-1.5 -top-1.5 h-4 min-w-4 justify-center rounded-full px-1 text-[10px] dark:bg-destructive">
+    <Badge variant={variant === "danger" ? "destructive" : "default"} className="absolute -right-1.5 -top-1.5 h-4 min-w-4 justify-center rounded-full px-1 text-[10px] bg-destructive text-white dark:bg-destructive dark:text-white">
       {count > 99 ? "99+" : count}
     </Badge>
   )

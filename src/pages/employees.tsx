@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, Clock, Download, Eye, MoreVertical, Pencil, Search, SearchX, Trash2, Upload, UserPlus, X,
+  ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Clock, Download, Eye, Info, ListChecks, ScanFace, ServerCog, MoreVertical, Pencil, Search, SearchX, Trash2, Upload, UserPlus, X,
 } from "lucide-react"
 import { ListPagination } from "@/components/dashboard/list-pagination"
 import { PageHeader } from "@/components/dashboard/page-header"
@@ -24,7 +24,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { employeeOffices, initialEmployees, initials, type Employee, type EmployeeStatus } from "@/data/employees"
+import { employeeOffices, initialEmployees, initials, schedules, scheduleLabel, type Employee, type EmployeeStatus } from "@/data/employees"
 import { format } from "date-fns"
 import { downloadCsv } from "@/lib/csv"
 import { csvHeader, employeeToRow } from "@/lib/employee-csv"
@@ -73,6 +73,8 @@ export default function Employees() {
   const [importing, setImporting] = useState(false)
   const [detail, setDetail] = useState<Employee | null>(null)
   const [deleting, setDeleting] = useState<Employee[] | null>(null)
+  const [notice, setNotice] = useState<{ title: string; text: string } | null>(null)
+  const [bulkSchedule, setBulkSchedule] = useState<string | null>(null)
 
   const q = query.trim().toLowerCase()
   const filtered = useMemo(() => {
@@ -118,6 +120,22 @@ export default function Employees() {
     setRows((r) => { let id = Math.max(0, ...r.map((x) => x.id)); return [...list.map((v) => ({ ...v, id: ++id })), ...r] })
     setStatus("all"); setOffice("all"); setQuery(""); setColFilter({}); reset()
   }
+  const resignDeleting = () => {
+    if (!deleting) return
+    const ids = new Set(deleting.map((e) => e.id))
+    setRows((r) => r.map((x) => (ids.has(x.id) ? { ...x, status: "Resign", updatedAt: stamp() } : x)))
+    setSelected((s) => new Set([...s].filter((id) => !ids.has(id))))
+    setDeleting(null)
+  }
+  const pushToDevice = (list: Employee[]) =>
+    setNotice({ title: "Turunkan data ke perangkat absensi", text: list.length > 1 ? `Data ${list.length} karyawan dikirim ke perangkat absensi.` : `Data ${list[0].name} dikirim ke perangkat absensi.` })
+  const selectedRows = () => rows.filter((e) => selected.has(e.id))
+  const applySchedule = () => {
+    if (!bulkSchedule) return
+    const ids = selected
+    setRows((r) => r.map((x) => (ids.has(x.id) ? { ...x, schedule: bulkSchedule, updatedAt: stamp() } : x)))
+    setBulkSchedule(null)
+  }
   const confirmDelete = () => {
     if (!deleting) return
     const ids = new Set(deleting.map((e) => e.id))
@@ -131,15 +149,15 @@ export default function Employees() {
   const RowMenu = ({ e, all = false }: { e: Employee; all?: boolean }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="ghost" size="icon-sm" aria-label={`Aksi lain untuk ${e.name}`}><MoreVertical /></Button></DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
+      <DropdownMenuContent align="end" className="w-72">
         {all && (<>
           <DropdownMenuItem onSelect={() => setDetail(e)}><Eye /> Lihat detail</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setForm({ employee: e, key: 0 })}><Pencil /> Ubah</DropdownMenuItem>
           <DropdownMenuSeparator />
         </>)}
-        {e.status !== "Aktif" && <DropdownMenuItem onSelect={() => setStatusOf(e, "Aktif")}>Aktifkan</DropdownMenuItem>}
-        {e.status === "Aktif" && <DropdownMenuItem onSelect={() => setStatusOf(e, "Nonaktif")}>Nonaktifkan</DropdownMenuItem>}
-        {e.status !== "Resign" && <DropdownMenuItem onSelect={() => setStatusOf(e, "Resign")}>Tandai resign</DropdownMenuItem>}
+        <DropdownMenuItem onSelect={() => setDetail(e)}><Info /> Info Umum</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => pushToDevice([e])}><ServerCog /> Turunkan data ke perangkat absensi</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setForm({ employee: e, key: 0 })}><ScanFace /> Tambah Verifikasi</DropdownMenuItem>
         {all && (<><DropdownMenuSeparator /><DropdownMenuItem variant="destructive" onSelect={() => setDeleting([e])}><Trash2 /> Hapus</DropdownMenuItem></>)}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -215,6 +233,14 @@ export default function Employees() {
               <span className="font-semibold text-primary">{selected.size} karyawan dipilih</span>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Batal pilih</Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <DropdownMenuItem onSelect={() => pushToDevice(selectedRows())}><ServerCog /> Turunkan data ke perangkat absensi</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => { setRows((r) => r.map((x) => (selected.has(x.id) ? { ...x, status: "Resign", updatedAt: stamp() } : x))); setSelected(new Set()) }}><Clock /> Resign</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setBulkSchedule(schedules[0])}><ListChecks /> Ubah Jadwal</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((e) => selected.has(e.id)))}><Trash2 /> Hapus terpilih</Button>
               </div>
             </div>
@@ -326,14 +352,44 @@ export default function Employees() {
       <EmployeeDetailSheet employee={detail} people={rows} onClose={() => setDetail(null)} onEdit={(e) => { setDetail(null); setForm({ employee: e, key: 0 }) }} />
 
       <AlertDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)}>
+        <AlertDialogContent className="rounded-2xl text-center sm:max-w-md">
+          <AlertDialogHeader className="items-center text-center">
+            <AlertDialogTitle className="text-xl text-primary">Hapus Karyawan</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleting && deleting.length > 1 ? `Apakah Anda ingin memindahkan ${deleting.length} karyawan ini` : `Apakah Anda ingin memindahkan karyawan ini${deleting?.[0] ? ` (${deleting[0].name})` : ""}`} ke halaman resign atau menghapus secara permanen?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-col sm:justify-center">
+            <AlertDialogAction className="w-full" onClick={resignDeleting}>Resign</AlertDialogAction>
+            <AlertDialogAction variant="destructive" className="w-full" onClick={confirmDelete}>Hapus permanen</AlertDialogAction>
+            <AlertDialogCancel className="w-full">Batal</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!notice} onOpenChange={(o) => !o && setNotice(null)}>
         <AlertDialogContent className="rounded-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>{deleting && deleting.length > 1 ? `Hapus ${deleting.length} karyawan?` : `Hapus “${deleting?.[0]?.name}”?`}</AlertDialogTitle>
-            <AlertDialogDescription>Data karyawan akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.</AlertDialogDescription>
+            <AlertDialogTitle>{notice?.title}</AlertDialogTitle>
+            <AlertDialogDescription>{notice?.text}</AlertDialogDescription>
           </AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogAction>OK</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!bulkSchedule} onOpenChange={(o) => !o && setBulkSchedule(null)}>
+        <AlertDialogContent className="rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Ubah Jadwal</AlertDialogTitle>
+            <AlertDialogDescription>Pilih jadwal baru untuk {selected.size} karyawan terpilih.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <Select value={bulkSchedule ?? undefined} onValueChange={setBulkSchedule}>
+            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectContent>{schedules.map((n) => <SelectItem key={n} value={n}>{scheduleLabel(n)}</SelectItem>)}</SelectContent>
+          </Select>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/90" onClick={confirmDelete}>Hapus</AlertDialogAction>
+            <AlertDialogAction onClick={applySchedule}>Simpan</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

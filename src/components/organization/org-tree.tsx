@@ -39,7 +39,7 @@ export function OrgTreeNode({
     <li role="treeitem" aria-expanded={hasKids ? open : undefined} aria-label={node.name}>
       <div className="group flex items-center gap-1 rounded-xl py-0.5 pr-1 transition-colors hover:bg-primary-soft/70">
         {hasKids ? (
-          <Button variant="ghost" size="icon-sm" className="size-7 shrink-0 pointer-coarse:size-9" aria-label={open ? `Ciutkan ${node.name}` : `Perluas ${node.name}`} onClick={() => onToggle(node.id)}>
+          <Button variant="ghost" size="icon-sm" className="size-7 shrink-0 pointer-coarse:size-10" aria-label={open ? `Ciutkan ${node.name}` : `Perluas ${node.name}`} onClick={() => onToggle(node.id)}>
             <ChevronRight className={cn("transition-transform", open && "rotate-90")} />
           </Button>
         ) : (
@@ -103,7 +103,7 @@ export function OrgTreeNode({
         {/* Layar kecil: semua aksi dalam satu menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" className="size-7 shrink-0 pointer-coarse:size-9 sm:hidden" aria-label={`Aksi untuk ${node.name}`}><MoreHorizontal /></Button>
+            <Button variant="ghost" size="icon-sm" className="size-7 shrink-0 pointer-coarse:size-10 sm:hidden" aria-label={`Aksi untuk ${node.name}`}><MoreHorizontal /></Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             {struktur ? (

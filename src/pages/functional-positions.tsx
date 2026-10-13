@@ -155,7 +155,7 @@ export default function FunctionalPositions() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/90" onClick={() => { if (deleting) setRows((r) => r.filter((x) => x.id !== deleting.id)); setDeleting(null) }}>Hapus</AlertDialogAction>
+            <AlertDialogAction variant="destructive" onClick={() => { if (deleting) setRows((r) => r.filter((x) => x.id !== deleting.id)); setDeleting(null) }}>Hapus</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

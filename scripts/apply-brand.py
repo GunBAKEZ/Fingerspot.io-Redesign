@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Pasang kembali kustomisasi merek Fingerspot di atas komponen shadcn resmi.
+"""Pasang kembali kustomisasi proyek di atas komponen shadcn resmi (preset b5JNeciq8).
 
-Jalankan setelah `npx shadcn@latest add <komponen> -o` (yang menimpa file di
-src/components/ui). Aman dijalankan berulang kali (idempoten).
+Jalankan setelah `npx shadcn@latest add <komponen> -o` atau `shadcn apply` (yang
+menimpa file di src/components/ui). Aman dijalankan berulang kali (idempoten).
+Hanya menambah hal yang tidak ada di preset; tampilan dasar tetap milik preset.
 """
-import re, pathlib
+import pathlib
 ui = pathlib.Path("src/components/ui")
 
 def edit(name, fn):
@@ -12,89 +13,64 @@ def edit(name, fn):
     s = p.read_text(); n = fn(s)
     if n != s: p.write_text(n)
 
-# 1. import `cn` yang salah dari CLI -> helper project
+# 1. impor `cn` yang salah dari CLI -> helper project (lalu `npm uninstall cn`)
 for p in ui.glob("*.tsx"):
     s = p.read_text()
     if 'from "cn"' in s: p.write_text(s.replace('from "cn"', 'from "@/lib/utils"'))
 
-# 2. Button: rounded-xl, tinggi 40px, varian soft
+# 2. Button: varian `soft` + target sentuh 40px di layar sentuh
 def button(s):
-    s = s.replace("rounded-md text-sm font-medium", "rounded-xl text-sm font-semibold", 1)
-    s = s.replace('default: "h-9 px-4', 'default: "h-10 px-4')
     if "soft:" not in s:
         s = s.replace('        link: "text-primary', '        soft: "bg-primary-soft text-primary hover:bg-primary-soft/70",\n        link: "text-primary', 1)
+    for a, b in [('default:\n          "h-9 ', 'default:\n          "h-9 pointer-coarse:h-10 '),
+                 ('sm: "h-8 ', 'sm: "h-8 pointer-coarse:h-10 '),
+                 ('icon: "size-9"', 'icon: "size-9 pointer-coarse:size-10"'),
+                 ('"icon-sm":\n          "size-8 ', '"icon-sm":\n          "size-8 pointer-coarse:size-10 ')]:
+        if b not in s: s = s.replace(a, b, 1)
     return s
 edit("button.tsx", button)
 
-# 3. Card: tanpa border, shadow lembut, judul section-title
-def card(s):
-    s = s.replace("rounded-xl border bg-card py-6 text-card-foreground shadow-sm", "rounded-2xl bg-card py-6 text-card-foreground shadow-card")
-    return s.replace("leading-none font-semibold", "section-title")
-edit("card.tsx", card)
+# 3. Badge: varian status (success/info/warning/danger/muted/soft) + prop `dot`
+def badge(s):
+    if "success:" not in s:
+        s = s.replace('        link: "text-primary underline-offset-4 hover:underline",\n      },', '''        link: "text-primary underline-offset-4 hover:underline",
+        soft: "bg-primary-soft text-primary",
+        success: "bg-success/12 text-success",
+        info: "bg-info/12 text-info",
+        warning: "bg-warning/15 text-warning",
+        danger: "bg-danger/12 text-danger",
+        muted: "bg-muted text-muted-foreground",
+      },''', 1)
+    if "dot" not in s:
+        s = s.replace('  asChild = false,\n  ...props\n}: React.ComponentProps<"span"> &\n  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {',
+                      '  asChild = false,\n  dot = false,\n  children,\n  ...props\n}: React.ComponentProps<"span"> &\n  VariantProps<typeof badgeVariants> & { asChild?: boolean; dot?: boolean }) {', 1)
+        s = s.replace('      {...props}\n    />\n  )\n}\n\nexport { Badge',
+                      '      {...props}\n    >\n      {dot && <span className="size-1.5 rounded-full bg-current" />}\n      {children}\n    </Comp>\n  )\n}\n\nexport { Badge', 1)
+    return s
+edit("badge.tsx", badge)
 
-# 4. Input: rounded-xl, tinggi 40px
-edit("input.tsx", lambda s: s.replace("h-9 w-full min-w-0 rounded-md", "h-10 w-full min-w-0 rounded-xl"))
-# 5. Progress / Avatar fallback
-edit("progress.tsx", lambda s: s.replace("bg-primary/20", "bg-muted"))
-edit("avatar.tsx", lambda s: s.replace("rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs", "rounded-full bg-primary-soft text-sm font-bold text-primary group-data-[size=sm]/avatar:text-xs"))
-# 6. Dropdown & Select: kotak rounded-2xl p-2 (jarak hover ke tepi 8px), baris rounded-lg px-3 py-2
-def dropdown(s):
-    s = s.replace("rounded-md border bg-popover p-1", "rounded-2xl border bg-popover p-2")
-    s = s.replace("gap-2 rounded-sm px-2 py-1.5", "gap-2.5 rounded-lg px-3 py-2")
-    s = s.replace("rounded-sm px-2 py-1.5", "rounded-lg px-3 py-2")
-    s = s.replace("gap-2 rounded-sm py-1.5 pr-2 pl-8", "gap-2.5 rounded-lg py-2 pr-3 pl-9")
-    s = s.replace("absolute left-2 flex size-3.5", "absolute left-3 flex size-3.5")
-    s = s.replace("px-2 py-1.5 text-sm font-medium", "px-3 py-1.5 text-sm font-medium")
-    return s.replace("-mx-1 my-1", "-mx-2 my-1.5")
-edit("dropdown-menu.tsx", dropdown)
-
-def select(s):
-    s = s.replace("rounded-md border bg-popover", "rounded-2xl border bg-popover")
-    s = s.replace('"p-1",', '"p-2",')
-    s = s.replace("gap-2 rounded-sm py-1.5 pr-8 pl-2", "gap-2.5 rounded-lg py-2 pr-9 pl-3")
-    s = s.replace("absolute right-2 flex size-3.5", "absolute right-3 flex size-3.5")
-    return s.replace("-mx-1 my-1", "-mx-2 my-1.5")
-edit("select.tsx", select)
-# 7. Area sentuh: pada perangkat sentuh (pointer: coarse) kontrol minimal 40px; desktop tetap padat
-def touch_button(s):
-    if "pointer-coarse" in s: return s
-    s = s.replace('sm: "h-8 gap-1.5', 'sm: "h-8 pointer-coarse:h-10 gap-1.5')
-    s = s.replace('icon: "size-9"', 'icon: "size-9 pointer-coarse:size-10"')
-    return s.replace('"icon-sm": "size-8"', '"icon-sm": "size-8 pointer-coarse:size-10"')
-edit("button.tsx", touch_button)
-
-def touch_toggle(s):
-    if "pointer-coarse" in s: return s
-    s = s.replace('default: "h-9 min-w-9 px-2"', 'default: "h-9 min-w-9 px-2 pointer-coarse:h-10 pointer-coarse:min-w-10"')
-    return s.replace('sm: "h-8 min-w-8 px-1.5"', 'sm: "h-8 min-w-8 px-1.5 pointer-coarse:h-10 pointer-coarse:min-w-10"')
-edit("toggle.tsx", touch_toggle)
-
-def touch_select(s):
-    if "pointer-coarse" in s: return s
-    return s.replace("data-[size=default]:h-9", "data-[size=default]:h-9 pointer-coarse:data-[size=default]:h-10").replace("data-[size=sm]:h-8", "data-[size=sm]:h-8 pointer-coarse:data-[size=sm]:h-10")
-edit("select.tsx", touch_select)
-
-def touch_tabs(s):
-    if "pointer-coarse" in s: return s
-    return s.replace("group-data-[orientation=horizontal]/tabs:h-9", "group-data-[orientation=horizontal]/tabs:h-9 pointer-coarse:group-data-[orientation=horizontal]/tabs:h-11", 1)
-edit("tabs.tsx", touch_tabs)
-# 8. Calendar: tanggal terpilih simetris (selaras radius tombol), tanpa kotak "today" di belakangnya
-def calendar(s):
-    s = s.replace("[&:last-child[data-selected=true]_button]:rounded-r-md", "[&:last-child[data-selected=true]_button]:rounded-r-xl")
-    s = s.replace("[&:nth-child(2)[data-selected=true]_button]:rounded-l-md", "[&:nth-child(2)[data-selected=true]_button]:rounded-l-xl")
-    s = s.replace("[&:first-child[data-selected=true]_button]:rounded-l-md", "[&:first-child[data-selected=true]_button]:rounded-l-xl")
-    return s.replace("text-accent-foreground data-[selected=true]:rounded-none", "text-accent-foreground data-[selected=true]:bg-transparent")
-edit("calendar.tsx", calendar)
-# 9. Checkbox & Radio: garis tepi kontras >= 3:1 (--input terlalu pucat untuk kontrol pilihan)
-def choice_border(s):
-    return s.replace("border border-input", "border border-muted-foreground")
-edit("checkbox.tsx", choice_border)
-edit("radio-group.tsx", choice_border)
-# 10. Input file: tombol "Browse" bergaya tombol soft; inset 4px merata dalam pil, jarak 12px ke teks
+# 4. Input: tinggi 40px di layar sentuh; tombol "Browse" bergaya soft (inset merata 4px, jarak 12px ke nama berkas)
 def file_input(s):
-    old = "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground"
-    new = ("file:mr-3 file:inline-flex file:h-8 file:cursor-pointer file:items-center file:rounded-lg file:border-0 file:bg-primary-soft file:px-3 "
-           "file:text-sm file:font-semibold file:text-primary hover:file:bg-primary-soft/70 [&[type=file]]:py-0 [&[type=file]]:pr-3 [&[type=file]]:pl-[3px]")
-    return s.replace(old, new)
+    s = s.replace("file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
+                  "file:mr-3 file:inline-flex file:h-7 file:cursor-pointer file:items-center file:rounded-sm file:border-0 file:bg-primary-soft file:px-3 file:text-sm file:font-semibold file:text-primary hover:file:bg-primary-soft/70 [&[type=file]]:py-0 [&[type=file]]:pr-3 [&[type=file]]:pl-[3px]")
+    if "pointer-coarse:h-10" not in s:
+        s = s.replace('"h-9 w-full', '"h-9 pointer-coarse:h-10 w-full', 1)
+    return s
 edit("input.tsx", file_input)
-print("brand customizations applied")
+
+# 5. Select: tinggi 40px di layar sentuh
+def select(s):
+    if "pointer-coarse:data-[size=default]" not in s:
+        s = s.replace("data-[size=default]:h-9", "data-[size=default]:h-9 pointer-coarse:data-[size=default]:h-10", 1)
+    if "pointer-coarse:data-[size=sm]" not in s:
+        s = s.replace("data-[size=sm]:h-8", "data-[size=sm]:h-8 pointer-coarse:data-[size=sm]:h-10", 1)
+    return s
+edit("select.tsx", select)
+
+# 6. Toggle: 40px di layar sentuh
+def toggle(s):
+    if "pointer-coarse" not in s:
+        s = s.replace('"h-9 min-w-9 ', '"h-9 min-w-9 pointer-coarse:h-10 pointer-coarse:min-w-10 ', 1)
+        s = s.replace('sm: "h-8 min-w-8 ', 'sm: "h-8 min-w-8 pointer-coarse:h-10 pointer-coarse:min-w-10 ', 1)
+    return s
+edit("toggle.tsx", toggle)

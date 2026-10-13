@@ -1,11 +1,11 @@
 # Fingerspot Design System (v0.1)
 
-Stack: React 18 · Vite · Tailwind CSS v4 · shadcn/ui (style `new-york`, CSS variables).
+Stack: React 18 · Vite · Tailwind CSS v4 · shadcn/ui (preset `b5JNeciq8` = `radix-vega`, base `neutral`; CSS variables).
 Demo: `npm run dev` → dashboard di `/`, showcase design system di `/#/design-system`.
 
 ## Prinsip
-1. **Tenang & lapang** – kanvas `background`, konten di kartu putih `rounded-2xl` dengan `shadow-card`; hindari border tebal.
-2. **Satu warna aksi** – `primary` (cyan), dipakai hanya pada komponen (tombol, state aktif, fokus, grafik); latar halaman tetap netral. Hijau hanya untuk makna sukses. Warna lain hanya untuk *makna* (status) atau kartu pastel.
+1. **Tenang & lapang** – kanvas `background` netral, konten di kartu bawaan preset; hindari border tebal.
+2. **Satu warna aksi** – `primary` (sky), dipakai hanya pada komponen (tombol, state aktif, fokus, grafik); latar halaman tetap netral. Hijau hanya untuk makna sukses. Warna lain hanya untuk *makna* (status) atau kartu pastel.
 3. **Warna status konsisten** di grafik, badge, dan dot: info = Tepat waktu, danger = Tidak hadir/Alpha, warning = Terlambat, success = Izin/Hadir.
 4. **Data dulu** – angka besar & tebal (`font-extrabold`), label kecil `muted-foreground`.
 
@@ -14,31 +14,31 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 
 | Kategori | Token |
 |---|---|
-| Surface | `background #F6F7FB`, `card #FFF`, `muted #F0F2F8`, `border #E8EAF3` |
-| Teks | `foreground #1B2559`, `muted-foreground #8790AD` |
-| Brand | `primary` cyan-700 (terang) / cyan-500 (gelap), `primary-soft #E3F6FA` / `#0E3A45` |
+| Surface | `background` putih, `card` putih, `muted`/`border` netral (`oklch`), sidebar `0.985` |
+| Teks | `foreground oklch(0.145 0 0)`, `muted-foreground oklch(0.556 0 0)` |
+| Brand | `primary` sky-700 (terang) / sky-500 (gelap), `primary-soft` sky-100 / sky-900 |
 | Status | `info #3B5BDB`, `success #1F9D6B`, `warning #F59F00`, `danger #E5484D` |
 | Pastel | `tint-cyan / lilac / peach / sky / rose / cream` |
-| Chart | `chart-1…5` (kuning, biru, cyan, merah, ungu) |
+| Chart | `chart-1…5` skala sky (dark: dinaikkan agar kontras) |
 
-**Menu (Dropdown/Select)** — kotak `rounded-2xl p-2` (jarak sorotan hover ke tepi 8px), baris `rounded-lg px-3 py-2` (tinggi 36px). Radius baris = radius kotak − padding supaya sudut serasi. Diatur di `scripts/apply-brand.py`; jangan beri override `rounded-*` per menu.
+**Menu (Dropdown/Select)** — memakai bentuk bawaan preset; jangan beri override `rounded-*` per menu.
 
 **Tabel data padat (mis. Daftar Karyawan)** — kolom diberi lebar eksplisit (`min-w-*`) dan tabel `min-w` tertentu agar menggulir di dalam kartu, bukan melebarkan halaman (area utama `min-w-0`). Header kolom disusun vertikal (judul/urut di atas, filter di bawah). Di mobile tabel diganti kartu (`md:hidden`).
 
 **Kontrol pilihan** — Checkbox dan RadioGroup memakai garis tepi `muted-foreground` (kontras ≥ 3:1) karena `--input` terlalu pucat untuk kontrol yang harus terlihat saat belum dipilih.
 
-**Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `sm`/`icon`/`icon-sm`, Toggle, Select, dan Tabs diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.
+**Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `default`/`sm`/`icon`/`icon-sm`, Input, Select, dan Toggle diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.
 
 **Sidebar** — lebar ciut 3.5rem; ikon **tidak pernah berpindah** saat animasi collapse (tombol tidak dipusatkan ulang, label memudar dan terpotong oleh lebar yang menyempit). Tanpa scroll horizontal; scrollbar vertikal disembunyikan.
 
-**Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen cyan (`primary` cyan-500, `primary-soft #0E3A45`). Token ada di blok `.dark` di `src/index.css`.
+**Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen sky (`primary` sky-500 — preset memakai sky-800 yang terlalu redup untuk teks — dan `primary-soft` sky-900). Token ada di blok `.dark` di `src/index.css`.
 
-**Tipografi** – Plus Jakarta Sans. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.
-**Radius** – kartu `2xl` (16px+8), kontrol `xl` (12px), badge `full`. **Shadow** – `shadow-card`, `shadow-pop` (overlay/popover).
+**Tipografi** – Inter Variable. Display 28/800, Section title 18/700 (`.section-title`, kata pertama bold + `<span>` regular), Body 14 default, Caption 12.
+**Radius** – `--radius: 0.625rem` (preset); badge `full`.
 **Spacing** – skala 4px; padding kartu `p-6`, jarak antar kartu `gap-4`/`gap-6`.
 
 ## Komponen
-Semua komponen berasal dari **registry resmi shadcn/ui** (`npx shadcn@latest add …`, style `new-york`, base `radix`, React 19). Komponen kustom di `components/dashboard/` hanya **komposisi** dari komponen shadcn (tidak ada elemen HTML mentah untuk input/tombol/daftar/paginasi/grafik).
+Semua komponen berasal dari **registry resmi shadcn/ui** (`npx shadcn@latest add …`, preset `b5JNeciq8`, base `radix`, React 19). Komponen kustom di `components/dashboard/` hanya **komposisi** dari komponen shadcn (tidak ada elemen HTML mentah untuk input/tombol/daftar/paginasi/grafik).
 
 | Kebutuhan | Komponen shadcn |
 |---|---|
@@ -57,10 +57,10 @@ npx shadcn@latest add <nama> -o -y   # -o menimpa file yang sudah ada
 python3 scripts/apply-brand.py       # pasang ulang kustomisasi merek + perbaiki import `cn`
 npm uninstall cn                     # CLI kadang memasang paket npm "cn"; helper kita di @/lib/utils
 ```
-`scripts/apply-brand.py` bersifat idempoten dan memuat semua kustomisasi merek: Button `rounded-xl` + varian `soft`, Card tanpa border + `shadow-card`, Input `rounded-xl`, Progress/Avatar berwarna merek.
+`scripts/apply-brand.py` bersifat idempoten dan hanya memasang tambahan proyek: Button `soft`, Badge `soft/success/info/warning/danger/muted` + `dot`, target sentuh 40px (Button/Input/Select/Toggle), tombol “Browse” pada input file, dan perbaikan impor `cn`. Tampilan dasar tetap milik preset.
 
 ## Pemetaan dashboard lama → baru
-- Sidebar panjang → sidebar putih, ikon + label, aktif berwarna cyan-soft; dua kelompok (Dashboard & Pemberitahuan, lalu Menu Utama).
+- Sidebar panjang → sidebar putih, ikon + label, aktif berwarna primary-soft; dua kelompok (Dashboard & Pemberitahuan, lalu Menu Utama).
 - Performa Kehadiran → `Card` + area chart `chart-*`, filter bulan sebagai tombol `soft`.
 - Daily Monitoring (donut) → `HeroStatCard`/`StatTile` dengan dot status.
 - Detail Kuota → `QuotaCard` pastel (lilac / cyan / peach).

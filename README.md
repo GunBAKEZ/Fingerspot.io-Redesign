@@ -1,7 +1,7 @@
 # Fingerspot.io — Redesign Dashboard
 
 Redesign dashboard [fingerspot.io](https://fingerspot.io) dengan **React 19 + Tailwind CSS v4 + shadcn/ui**.
-Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status yang konsisten, mode gelap, dan semua komponen berasal dari **registry resmi shadcn/ui**.
+Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (biru sky, dari preset shadcn), warna status yang konsisten, mode gelap, dan semua komponen berasal dari **registry resmi shadcn/ui**.
 
 > Status: **prototipe UI**. Seluruh data masih berupa data contoh (`src/data/mock.ts`) dan belum terhubung ke API Fingerspot.
 
@@ -23,7 +23,9 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status y
 
 - Tabel karyawan dengan **filter per kolom**, urut (A–Z / Z–A), filter Kantor dan Status, pencarian global, *Tampilkan N data*, dan paginasi.
 - Pilih baris (satu atau semua di halaman) dengan aksi massal **Hapus terpilih**.
-- Aksi per baris: **Lihat detail** (Sheet), **Ubah** (Dialog), **Hapus** (konfirmasi), serta menu ⋮ (Aktifkan / Nonaktifkan / Tandai resign).
+- Aksi per baris: **Lihat detail** (Sheet), **Ubah** (Dialog), **Hapus**, serta menu ⋮ (Info Umum / Turunkan data ke perangkat absensi / Tambah Verifikasi).
+- **Hapus Karyawan** menawarkan dua pilihan: **Resign** (memindahkan ke status Resign) atau **Hapus permanen**.
+- **Aksi untuk terpilih** (setelah memilih baris): Turunkan data ke perangkat absensi, Resign, Ubah Jadwal; plus Hapus terpilih.
 - **Tambah / Ubah Karyawan**: dialog dua kolom (foto karyawan & foto verifikasi perangkat di kiri; kantor, nama depan/belakang, nama di perangkat maks. 15 karakter, ID & NIK, jabatan, tanggal mulai, PIN, jenis kelamin, kode QR, verifikasi perangkat di kanan). ID default = angka terkecil yang belum dipakai; tersedia **Simpan** dan **Simpan & Buat Baru**.
 - **Ubah Karyawan** berbeda dari Tambah: ada Status, password perangkat, PIN fingerspot.io tersembunyi (ikon mata), jadwal saat ini dengan tombol Ubah, peringatan bila jadwal berbeda dari jadwal jabatan (pilih tetap pakai jadwal khusus atau ubah ke jadwal jabatan), tanggal tambah/diperbarui, dan **Atasan Lain** (maks. 3, dipilih dari daftar karyawan aktif).
 - **Foto Verifikasi Perangkat** menampilkan catatan (perangkat VIDA/VIVO) dan membatasi ukuran foto 100KB.
@@ -90,11 +92,11 @@ Halaman:
 |---|---|
 | Framework & build | React 19, Vite 6, TypeScript |
 | Styling | Tailwind CSS v4 (token lewat variabel CSS) |
-| Komponen | shadcn/ui (style `new-york`, base `radix`) |
+| Komponen | shadcn/ui (preset `b5JNeciq8`: style `radix-vega`, base `neutral`, base `radix`) |
 | Grafik | Recharts via komponen `Chart` shadcn |
 | Tanggal | react-day-picker, date-fns (locale `id`) |
 | Ikon | lucide-react |
-| Font | Plus Jakarta Sans |
+| Font | Inter Variable |
 
 ## Struktur proyek
 
@@ -113,7 +115,7 @@ src/
 docs/
 ├── DESIGN_SYSTEM.md      # dokumentasi design system lengkap
 └── screenshots/
-scripts/apply-brand.py    # memasang ulang kustomisasi merek setelah `shadcn add`
+scripts/apply-brand.py    # memasang ulang tambahan proyek (varian soft/status, target sentuh) setelah `shadcn add`
 ```
 
 Komponen di `components/dashboard/` hanya **menyusun** komponen shadcn (tanpa elemen HTML mentah untuk input, tombol, daftar, paginasi, atau grafik). Satu-satunya file di `components/ui/` yang bukan dari registry adalah `date-picker.tsx` (rakitan Popover + Calendar).
@@ -122,10 +124,10 @@ Komponen di `components/dashboard/` hanya **menyusun** komponen shadcn (tanpa el
 
 Ringkas:
 
-- **Warna aksi:** cyan (skala Tailwind cyan yang dipakai tema shadcn: `cyan-700` terang, `cyan-500` gelap), hanya untuk komponen; latar halaman tetap netral. Teks navy `#1B2559`; kanvas `#F6F7FB`.
+- **Tema:** preset shadcn `b5JNeciq8` (`npx shadcn@latest apply b5JNeciq8`): `radix-vega`, base `neutral`, aksen **sky** (`sky-700` terang; `sky-500` gelap agar teks aksen terbaca), font Inter, radius `0.625rem`. Latar halaman netral.
 - **Status:** biru = tepat waktu, hijau = hadir/izin, oranye = terlambat, merah = tidak hadir/alpha.
-- **Bentuk:** kartu `rounded-2xl` tanpa border dengan `shadow-card`; kontrol `rounded-xl`.
-- **Mode gelap:** palet netral bawaan shadcn (hampir hitam) dengan aksen cyan.
+- **Bentuk:** mengikuti preset (kartu dengan ring tipis, kontrol `rounded-md`, badge pil).
+- **Mode gelap:** palet netral bawaan shadcn (hampir hitam) dengan aksen sky-500; seri grafik 1–5 memakai skala sky yang dinaikkan agar terlihat di latar gelap.
 - **Token** ada di `src/index.css` dan otomatis tersedia sebagai utility Tailwind (`bg-primary`, `text-danger`, `bg-tint-cyan`, …).
 
 Dokumentasi lengkap: [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
@@ -138,7 +140,7 @@ python3 scripts/apply-brand.py       # pasang ulang kustomisasi merek
 npm uninstall cn                     # jika CLI memasang paket npm "cn"
 ```
 
-Catatan: `shadcn add -o` menimpa file di `src/components/ui/`, termasuk kustomisasi merek (Button `soft`, Card tanpa border, Input `rounded-xl`, dll.). `scripts/apply-brand.py` memasangnya kembali dan juga memperbaiki impor `cn` yang kadang salah dihasilkan CLI (`from "cn"` → `@/lib/utils`). Skrip ini aman dijalankan berulang kali.
+Catatan: `shadcn add -o` dan `shadcn apply` menimpa file di `src/components/ui/`. `scripts/apply-brand.py` memasang kembali hanya tambahan proyek: varian Button `soft`, varian Badge `soft/success/info/warning/danger/muted` + prop `dot`, target sentuh 40px (`pointer-coarse:`) pada Button/Input/Select/Toggle, dan gaya tombol “Browse” pada input file; juga memperbaiki impor `cn` yang salah (`from "cn"` → `@/lib/utils`). Aman dijalankan berulang kali.
 
 ## Menghubungkan ke API
 
