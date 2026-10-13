@@ -25,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { employeeOffices, initialEmployees, initials, type Employee, type EmployeeStatus } from "@/data/employees"
+import { format } from "date-fns"
 import { downloadCsv } from "@/lib/csv"
 import { csvHeader, employeeToRow } from "@/lib/employee-csv"
 
@@ -107,9 +108,10 @@ export default function Employees() {
   // ID default = bilangan bulat positif terkecil yang belum dipakai (mis. 1, lalu 2, ...)
   const nextId = useMemo(() => { const used = new Set(rows.map((r) => r.pin)); let n = 1; while (used.has(String(n))) n++; return String(n) }, [rows])
   const nextRowId = () => Math.max(0, ...rows.map((x) => x.id)) + 1
-  const save = (v: EmployeeValues & { name: string }, again: boolean) => {
-    if (form?.employee) { setRows((r) => r.map((x) => (x.id === form.employee!.id ? { ...x, ...v } : x))); setForm(null); return }
-    setRows((r) => [{ ...v, id: nextRowId() }, ...r])
+  const stamp = () => format(new Date(), "yyyy-MM-dd HH:mm:ss")
+  const save = (v: EmployeeValues, again: boolean) => {
+    if (form?.employee) { setRows((r) => r.map((x) => (x.id === form.employee!.id ? { ...x, ...v, updatedAt: stamp() } : x))); setForm(null); return }
+    setRows((r) => [{ ...v, id: nextRowId(), createdAt: stamp(), updatedAt: stamp() }, ...r])
     setForm(again ? { employee: null, key: (form?.key ?? 0) + 1 } : null)
   }
   const importRows = (list: Omit<Employee, "id">[]) => {
@@ -190,11 +192,11 @@ export default function Employees() {
                 <InputGroupInput placeholder="Cari karyawan…" value={query} onChange={(e) => { setQuery(e.target.value); reset() }} />
               </InputGroup>
               <Tooltip>
-                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Impor CSV" onClick={() => setImporting(true)}><Upload /></Button></TooltipTrigger>
+                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Impor CSV" onClick={() => setImporting(true)}><Download /></Button></TooltipTrigger>
                 <TooltipContent>Impor CSV</TooltipContent>
               </Tooltip>
               <Tooltip>
-                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Ekspor CSV" onClick={exportCsv}><Download /></Button></TooltipTrigger>
+                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Ekspor CSV" onClick={exportCsv}><Upload /></Button></TooltipTrigger>
                 <TooltipContent>Ekspor CSV ({filtered.length} data)</TooltipContent>
               </Tooltip>
             </div>
@@ -319,9 +321,9 @@ export default function Employees() {
         </CardContent>
       </Card>
 
-      <EmployeeFormDialog open={!!form} employee={form?.employee ?? null} existingPins={rows.map((r) => r.pin)} nextId={nextId} formKey={form?.key} onClose={() => setForm(null)} onSubmit={save} />
+      <EmployeeFormDialog open={!!form} employee={form?.employee ?? null} existingPins={rows.map((r) => r.pin)} people={rows} nextId={nextId} formKey={form?.key} onClose={() => setForm(null)} onSubmit={save} />
       <EmployeeImportDialog open={importing} existingPins={rows.map((r) => r.pin)} onClose={() => setImporting(false)} onImport={importRows} />
-      <EmployeeDetailSheet employee={detail} onClose={() => setDetail(null)} onEdit={(e) => { setDetail(null); setForm({ employee: e, key: 0 }) }} />
+      <EmployeeDetailSheet employee={detail} people={rows} onClose={() => setDetail(null)} onEdit={(e) => { setDetail(null); setForm({ employee: e, key: 0 }) }} />
 
       <AlertDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)}>
         <AlertDialogContent className="rounded-2xl">

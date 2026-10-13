@@ -25,6 +25,10 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status y
 - Pilih baris (satu atau semua di halaman) dengan aksi massal **Hapus terpilih**.
 - Aksi per baris: **Lihat detail** (Sheet), **Ubah** (Dialog), **Hapus** (konfirmasi), serta menu ⋮ (Aktifkan / Nonaktifkan / Tandai resign).
 - **Tambah / Ubah Karyawan**: dialog dua kolom (foto karyawan & foto verifikasi perangkat di kiri; kantor, nama depan/belakang, nama di perangkat maks. 15 karakter, ID & NIK, jabatan, tanggal mulai, PIN, jenis kelamin, kode QR, verifikasi perangkat di kanan). ID default = angka terkecil yang belum dipakai; tersedia **Simpan** dan **Simpan & Buat Baru**.
+- **Ubah Karyawan** berbeda dari Tambah: ada Status, password perangkat, PIN fingerspot.io tersembunyi (ikon mata), jadwal saat ini dengan tombol Ubah, peringatan bila jadwal berbeda dari jadwal jabatan (pilih tetap pakai jadwal khusus atau ubah ke jadwal jabatan), tanggal tambah/diperbarui, dan **Atasan Lain** (maks. 3, dipilih dari daftar karyawan aktif).
+- **Foto Verifikasi Perangkat** menampilkan catatan (perangkat VIDA/VIVO) dan membatasi ukuran foto 100KB.
+- **Detail karyawan** (panel samping) menampilkan foto dengan tab Foto Karyawan / Foto Verifikasi Perangkat, data perangkat, dan Atasan Lain.
+- Ikon toolbar: panah masuk = **Impor**, panah keluar = **Ekspor**.
 - **Ekspor CSV** sesuai filter aktif dan **Impor CSV** (validasi per baris: ID/PIN unik, kantor dikenal, hak akses/status/jadwal valid; baris bermasalah dilewati beserta alasannya; templat dapat diunduh). Berkas hasil ekspor dapat diimpor kembali.
 - Di mobile tabel berganti menjadi kartu per karyawan.
 - Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.

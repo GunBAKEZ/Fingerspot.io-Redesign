@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { AlertTriangle, CheckCircle2, FileSpreadsheet, Upload } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -59,7 +59,7 @@ export function EmployeeImportDialog({
         <DialogFooter>
           <Button type="button" variant="ghost" onClick={close}>Batal</Button>
           <Button type="button" disabled={!result || result.valid.length === 0} onClick={() => { if (result) { onImport(result.valid); close() } }}>
-            <Upload /> Impor {result && result.valid.length > 0 ? `${result.valid.length} karyawan` : ""}
+            <Download /> Impor {result && result.valid.length > 0 ? `${result.valid.length} karyawan` : ""}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -6,6 +6,7 @@ export const employeeToRow = (e: Employee) => [e.pin, e.nik, e.name, e.office, e
 
 export const templateRows = [csvHeader, ["3001", "3001", "Contoh Nama", employeeOffices[0], "Staff", "USER", "P1", "Aktif", "Pria", "2026-01-05"]]
 
+const stamp = () => new Date().toISOString().slice(0, 19).replace("T", " ")
 const norm = (h: string) => h.toLowerCase().replace(/[^a-z]/g, "")
 const alias: Record<string, string> = { idpin: "pin", id: "pin", pin: "pin", nik: "nik", nama: "name", kantor: "office", jabatan: "position", hakakses: "access", jadwal: "schedule", status: "status", jeniskelamin: "gender", tanggalmulai: "startDate" }
 const required = ["pin", "name", "office", "position"]
@@ -51,7 +52,7 @@ export function validateImport(rows: string[][], existingPins: string[]): Import
     if (!startDate || Number.isNaN(Date.parse(startDate))) return fail(`Tanggal mulai tidak valid: “${d}” (gunakan yyyy-mm-dd)`)
 
     seen.add(pin)
-    valid.push({ pin, nik: get("nik") || pin, name, office, position, access, schedule, status: status as EmployeeStatus, gender, startDate, deviceName: name.slice(0, 15), fsPin: "000000", allowQr: false, verifyType: "", targetDevice: "" })
+    valid.push({ pin, nik: get("nik") || pin, name, office, position, access, schedule, status: status as EmployeeStatus, gender, startDate, deviceName: name.slice(0, 15), fsPin: "000000", allowQr: false, verifyType: "", targetDevice: "", devicePassword: "0", createdAt: stamp(), updatedAt: stamp(), supervisors: [] })
   })
   return { valid, errors }
 }
