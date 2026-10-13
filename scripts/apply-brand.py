@@ -90,4 +90,11 @@ def choice_border(s):
     return s.replace("border border-input", "border border-muted-foreground")
 edit("checkbox.tsx", choice_border)
 edit("radio-group.tsx", choice_border)
+# 10. Input file: tombol "Browse" bergaya tombol soft; inset 4px merata dalam pil, jarak 12px ke teks
+def file_input(s):
+    old = "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground"
+    new = ("file:mr-3 file:inline-flex file:h-8 file:cursor-pointer file:items-center file:rounded-lg file:border-0 file:bg-primary-soft file:px-3 "
+           "file:text-sm file:font-semibold file:text-primary hover:file:bg-primary-soft/70 [&[type=file]]:py-0 [&[type=file]]:pr-3 [&[type=file]]:pl-[3px]")
+    return s.replace(old, new)
+edit("input.tsx", file_input)
 print("brand customizations applied")
