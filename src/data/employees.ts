@@ -10,6 +10,20 @@ export type Employee = {
   /** Nama jadwal kerja; kosong = N/A. */
   schedule: string
   status: EmployeeStatus
+  gender: "Pria" | "Wanita"
+  /** yyyy-mm-dd */
+  startDate: string
+  /** Nama yang tampil di perangkat absensi (maks. 15 karakter). */
+  deviceName: string
+  /** PIN fingerspot.io. */
+  fsPin: string
+  allowQr: boolean
+  /** Kosong = tanpa verifikasi ke perangkat. */
+  verifyType: "" | "Sidik Jari" | "Wajah" | "Vein" | "Card"
+  targetDevice: string
+  /** URL pratinjau foto (hanya selama sesi). */
+  photo?: string
+  verifyPhoto?: string
 }
 
 export const employeeOffices = [
@@ -19,9 +33,11 @@ export const employeeOffices = [
 export const employeePositions = ["Direksi", "Staff IT", "Karyawan", "Admin Support", "Staff", "Manager", "Supervisor", "Staff Finance", "Teknisi", "Customer Care"]
 export const schedules = ["P1", "Esemka 08-17", "Shift Pagi", "Shift Malam"]
 export const NO_SCHEDULE = "__none"
+export const targetDevices = ["demo ambas 17-4-26 (C2692463DF142035)", "Mesin Lobi (A1B2C3D4E5F60718)"]
+export const verifyTypes = ["Sidik Jari", "Wajah", "Vein", "Card"] as const
 
 const e = (id: number, pin: string, nik: string, name: string, office: string, position: string, schedule: string, access: Employee["access"] = "USER", status: EmployeeStatus = "Aktif"): Employee =>
-  ({ id, pin, nik, name, office, position, access, schedule, status })
+  ({ id, pin, nik, name, office, position, access, schedule, status, gender: "Pria", startDate: "2025-01-06", deviceName: name.slice(0, 15), fsPin: "000000", allowQr: false, verifyType: "Sidik Jari", targetDevice: targetDevices[0] })
 
 const names = ["Budi Hartono", "Citra Lestari", "Dewi Anggraini", "Fajar Nugroho", "Gita Pertiwi", "Hendra Wijaya", "Indah Permata", "Joko Santoso", "Kartika Sari", "Lukman Hakim", "Maya Putri", "Naufal Rizky", "Oki Pratama", "Putri Ayu", "Rudi Hermawan", "Sinta Wulandari", "Tono Prasetyo", "Umar Faruq", "Vina Melati", "Wahyu Ramadhan", "Yoga Pratama", "Zahra Amelia", "Rina Marlina", "Dimas Aryo", "Agus Salim"]
 

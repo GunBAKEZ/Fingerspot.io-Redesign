@@ -1,5 +1,7 @@
+import { format } from "date-fns"
+import { id } from "date-fns/locale"
 import { Pencil } from "lucide-react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { initials, type Employee } from "@/data/employees"
@@ -9,13 +11,16 @@ import { StatusBadge } from "./status-badge"
 export function EmployeeDetailSheet({ employee, onClose, onEdit }: { employee: Employee | null; onClose: () => void; onEdit: (e: Employee) => void }) {
   const rows: [string, React.ReactNode][] = employee ? [
     ["ID / PIN", employee.pin], ["NIK", employee.nik], ["Kantor", employee.office], ["Jabatan", employee.position],
-    ["Hak akses perangkat", employee.access], ["Jadwal", employee.schedule || "N/A"], ["Status", <StatusBadge status={employee.status} />],
+    ["Jenis kelamin", employee.gender], ["Tanggal mulai kerja", format(new Date(`${employee.startDate}T00:00:00`), "d MMM yyyy", { locale: id })],
+    ["Nama di perangkat", employee.deviceName || "-"], ["Hak akses perangkat", employee.access], ["Jadwal", employee.schedule || "N/A"],
+    ["Verifikasi perangkat", employee.verifyType ? `${employee.verifyType} · ${employee.targetDevice}` : "Tidak"], ["Absen dengan kode QR", employee.allowQr ? "Diizinkan" : "Tidak"],
+    ["Status", <StatusBadge status={employee.status} />],
   ] : []
   return (
     <Sheet open={!!employee} onOpenChange={(o) => !o && onClose()}>
       <SheetContent className="w-full sm:max-w-md">
         <SheetHeader className="flex-row items-center gap-3 border-b pb-4 pr-12">
-          <Avatar className="size-12"><AvatarFallback>{employee && initials(employee.name)}</AvatarFallback></Avatar>
+          <Avatar className="size-12">{employee?.photo && <AvatarImage src={employee.photo} alt="" />}<AvatarFallback>{employee && initials(employee.name)}</AvatarFallback></Avatar>
           <div className="min-w-0">
             <SheetTitle className="truncate">{employee?.name}</SheetTitle>
             <SheetDescription className="truncate">{employee?.position} · {employee?.office}</SheetDescription>

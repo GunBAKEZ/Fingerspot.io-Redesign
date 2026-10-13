@@ -85,4 +85,9 @@ def calendar(s):
     s = s.replace("[&:first-child[data-selected=true]_button]:rounded-l-md", "[&:first-child[data-selected=true]_button]:rounded-l-xl")
     return s.replace("text-accent-foreground data-[selected=true]:rounded-none", "text-accent-foreground data-[selected=true]:bg-transparent")
 edit("calendar.tsx", calendar)
+# 9. Checkbox & Radio: garis tepi kontras >= 3:1 (--input terlalu pucat untuk kontrol pilihan)
+def choice_border(s):
+    return s.replace("border border-input", "border border-muted-foreground")
+edit("checkbox.tsx", choice_border)
+edit("radio-group.tsx", choice_border)
 print("brand customizations applied")

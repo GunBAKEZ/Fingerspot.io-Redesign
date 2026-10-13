@@ -24,7 +24,8 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status y
 - Tabel karyawan dengan **filter per kolom**, urut (A–Z / Z–A), filter Kantor dan Status, pencarian global, *Tampilkan N data*, dan paginasi.
 - Pilih baris (satu atau semua di halaman) dengan aksi massal **Hapus terpilih**.
 - Aksi per baris: **Lihat detail** (Sheet), **Ubah** (Dialog), **Hapus** (konfirmasi), serta menu ⋮ (Aktifkan / Nonaktifkan / Tandai resign).
-- **Tambah Karyawan** dengan validasi (ID/PIN unik, kantor & jabatan wajib) dan **Ekspor CSV** sesuai filter aktif.
+- **Tambah / Ubah Karyawan**: dialog dua kolom (foto karyawan & foto verifikasi perangkat di kiri; kantor, nama depan/belakang, nama di perangkat maks. 15 karakter, ID & NIK, jabatan, tanggal mulai, PIN, jenis kelamin, kode QR, verifikasi perangkat di kanan). ID default = angka terkecil yang belum dipakai; tersedia **Simpan** dan **Simpan & Buat Baru**.
+- **Ekspor CSV** sesuai filter aktif dan **Impor CSV** (validasi per baris: ID/PIN unik, kantor dikenal, hak akses/status/jadwal valid; baris bermasalah dilewati beserta alasannya; templat dapat diunduh). Berkas hasil ekspor dapat diimpor kembali.
 - Di mobile tabel berganti menjadi kartu per karyawan.
 - Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.
 
@@ -153,7 +154,7 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 - [x] Struktur Organisasi
 - [x] Jabatan Fungsional
 - [x] Daftar Karyawan (tabel, filter, tambah/ubah/hapus, ekspor)
-- [ ] Submenu Karyawan lainnya (Pengguna App, Beberapa Kantor, Admin Perangkat, Absensi Tidak Ditampilkan, Resign) dan impor karyawan
+- [ ] Submenu Karyawan lainnya (Pengguna App, Beberapa Kantor, Admin Perangkat, Absensi Tidak Ditampilkan, Resign) 
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
 - [ ] i18n (ID/EN)

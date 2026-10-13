@@ -1,17 +1,18 @@
 import { useMemo, useState } from "react"
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, Clock, Download, Eye, MoreVertical, Pencil, Search, SearchX, Trash2, UserPlus, X,
+  ArrowDown, ArrowUp, ArrowUpDown, Clock, Download, Eye, MoreVertical, Pencil, Search, SearchX, Trash2, Upload, UserPlus, X,
 } from "lucide-react"
 import { ListPagination } from "@/components/dashboard/list-pagination"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { EmployeeDetailSheet } from "@/components/employees/employee-detail-sheet"
-import { EmployeeFormDialog } from "@/components/employees/employee-form-dialog"
+import { EmployeeFormDialog, type EmployeeValues } from "@/components/employees/employee-form-dialog"
+import { EmployeeImportDialog } from "@/components/employees/employee-import-dialog"
 import { StatusBadge } from "@/components/employees/status-badge"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,6 +25,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { employeeOffices, initialEmployees, initials, type Employee, type EmployeeStatus } from "@/data/employees"
+import { downloadCsv } from "@/lib/csv"
+import { csvHeader, employeeToRow } from "@/lib/employee-csv"
 
 type ColKey = "pin" | "name" | "office" | "position" | "access" | "schedule"
 const cols: { key: ColKey; label: string; title?: string; width: string }[] = [
@@ -65,7 +68,8 @@ export default function Employees() {
   const [pageSize, setPageSize] = useState(10)
   const [page, setPage] = useState(0)
   const [selected, setSelected] = useState<Set<number>>(new Set())
-  const [form, setForm] = useState<{ employee: Employee | null } | null>(null)
+  const [form, setForm] = useState<{ employee: Employee | null; key: number } | null>(null)
+  const [importing, setImporting] = useState(false)
   const [detail, setDetail] = useState<Employee | null>(null)
   const [deleting, setDeleting] = useState<Employee[] | null>(null)
 
@@ -100,10 +104,17 @@ export default function Employees() {
   const setStatusOf = (e: Employee, st: EmployeeStatus) => setRows((r) => r.map((x) => (x.id === e.id ? { ...x, status: st } : x)))
   const clearFilters = () => { setQuery(""); setColFilter({}); setStatus("Aktif"); setOffice("all"); reset() }
 
-  const save = (v: Omit<Employee, "id">) => {
-    if (form?.employee) setRows((r) => r.map((x) => (x.id === form.employee!.id ? { ...x, ...v } : x)))
-    else setRows((r) => [{ ...v, id: Math.max(0, ...r.map((x) => x.id)) + 1 }, ...r])
-    setForm(null)
+  // ID default = bilangan bulat positif terkecil yang belum dipakai (mis. 1, lalu 2, ...)
+  const nextId = useMemo(() => { const used = new Set(rows.map((r) => r.pin)); let n = 1; while (used.has(String(n))) n++; return String(n) }, [rows])
+  const nextRowId = () => Math.max(0, ...rows.map((x) => x.id)) + 1
+  const save = (v: EmployeeValues & { name: string }, again: boolean) => {
+    if (form?.employee) { setRows((r) => r.map((x) => (x.id === form.employee!.id ? { ...x, ...v } : x))); setForm(null); return }
+    setRows((r) => [{ ...v, id: nextRowId() }, ...r])
+    setForm(again ? { employee: null, key: (form?.key ?? 0) + 1 } : null)
+  }
+  const importRows = (list: Omit<Employee, "id">[]) => {
+    setRows((r) => { let id = Math.max(0, ...r.map((x) => x.id)); return [...list.map((v) => ({ ...v, id: ++id })), ...r] })
+    setStatus("all"); setOffice("all"); setQuery(""); setColFilter({}); reset()
   }
   const confirmDelete = () => {
     if (!deleting) return
@@ -112,13 +123,7 @@ export default function Employees() {
     setSelected((s) => new Set([...s].filter((id) => !ids.has(id))))
     setDeleting(null)
   }
-  const exportCsv = () => {
-    const esc = (v: string) => `"${v.replace(/"/g, '""')}"`
-    const csv = [["ID/PIN", "NIK", "Nama", "Kantor", "Jabatan", "Hak Akses", "Jadwal", "Status"], ...filtered.map((e) => [e.pin, e.nik, e.name, e.office, e.position, e.access, e.schedule || "N/A", e.status])]
-      .map((r) => r.map(esc).join(",")).join("\n")
-    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" })), download: "karyawan.csv" })
-    a.click(); URL.revokeObjectURL(a.href)
-  }
+  const exportCsv = () => downloadCsv("karyawan.csv", [csvHeader, ...filtered.map(employeeToRow)])
 
   /** Menu aksi tambahan (⋮); di mobile berisi semua aksi. */
   const RowMenu = ({ e, all = false }: { e: Employee; all?: boolean }) => (
@@ -127,7 +132,7 @@ export default function Employees() {
       <DropdownMenuContent align="end" className="w-52">
         {all && (<>
           <DropdownMenuItem onSelect={() => setDetail(e)}><Eye /> Lihat detail</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setForm({ employee: e })}><Pencil /> Ubah</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setForm({ employee: e, key: 0 })}><Pencil /> Ubah</DropdownMenuItem>
           <DropdownMenuSeparator />
         </>)}
         {e.status !== "Aktif" && <DropdownMenuItem onSelect={() => setStatusOf(e, "Aktif")}>Aktifkan</DropdownMenuItem>}
@@ -151,7 +156,7 @@ export default function Employees() {
     <>
       <PageHeader
         crumbs={[{ label: "Karyawan" }, { label: "Daftar Karyawan" }]}
-        actions={<Button onClick={() => setForm({ employee: null })}><UserPlus /> Tambah Karyawan</Button>}
+        actions={<Button onClick={() => setForm({ employee: null, key: 0 })}><UserPlus /> Tambah Karyawan</Button>}
       >
         Daftar Karyawan
       </PageHeader>
@@ -184,6 +189,10 @@ export default function Employees() {
                 <InputGroupAddon><Search /></InputGroupAddon>
                 <InputGroupInput placeholder="Cari karyawan…" value={query} onChange={(e) => { setQuery(e.target.value); reset() }} />
               </InputGroup>
+              <Tooltip>
+                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Impor CSV" onClick={() => setImporting(true)}><Upload /></Button></TooltipTrigger>
+                <TooltipContent>Impor CSV</TooltipContent>
+              </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Ekspor CSV" onClick={exportCsv}><Download /></Button></TooltipTrigger>
                 <TooltipContent>Ekspor CSV ({filtered.length} data)</TooltipContent>
@@ -225,7 +234,13 @@ export default function Employees() {
                 <Table className="min-w-[1000px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-10 align-bottom"><Checkbox aria-label="Pilih semua di halaman" checked={allOnPage ? true : someOnPage ? "indeterminate" : false} onCheckedChange={togglePage} /></TableHead>
+                      <TableHead className="w-10 align-top">
+                        {/* struktur sama dengan kolom lain (baris judul + baris filter) agar kotak sejajar dengan kotak filter */}
+                        <div className="flex flex-col gap-1.5 py-1">
+                          <div className="min-h-8" />
+                          <div className="flex h-8 items-center"><Checkbox aria-label="Pilih semua di halaman" checked={allOnPage ? true : someOnPage ? "indeterminate" : false} onCheckedChange={togglePage} /></div>
+                        </div>
+                      </TableHead>
                       {cols.map((c) => (
                         <TableHead key={c.key} className={`align-top ${c.width}`} title={c.title}>
                           <div className="flex flex-col gap-1.5 py-1">
@@ -246,7 +261,7 @@ export default function Employees() {
                         <TableCell><PinBadges e={e} /></TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <Avatar><AvatarFallback>{initials(e.name)}</AvatarFallback></Avatar>
+                            <Avatar>{e.photo && <AvatarImage src={e.photo} alt="" />}<AvatarFallback>{initials(e.name)}</AvatarFallback></Avatar>
                             <span className="font-medium">{e.name}</span>
                           </div>
                         </TableCell>
@@ -258,7 +273,7 @@ export default function Employees() {
                         <TableCell>
                           <div className="flex justify-end gap-1">
                             <Tooltip><TooltipTrigger asChild><Button size="icon-sm" variant="soft" aria-label={`Lihat ${e.name}`} onClick={() => setDetail(e)}><Eye /></Button></TooltipTrigger><TooltipContent>Lihat detail</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger asChild><Button size="icon-sm" aria-label={`Ubah ${e.name}`} onClick={() => setForm({ employee: e })}><Pencil /></Button></TooltipTrigger><TooltipContent>Ubah</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger asChild><Button size="icon-sm" aria-label={`Ubah ${e.name}`} onClick={() => setForm({ employee: e, key: 0 })}><Pencil /></Button></TooltipTrigger><TooltipContent>Ubah</TooltipContent></Tooltip>
                             <Tooltip><TooltipTrigger asChild><Button size="icon-sm" variant="outline" className="text-danger hover:text-danger" aria-label={`Hapus ${e.name}`} onClick={() => setDeleting([e])}><Trash2 /></Button></TooltipTrigger><TooltipContent>Hapus</TooltipContent></Tooltip>
                             <RowMenu e={e} />
                           </div>
@@ -275,7 +290,7 @@ export default function Employees() {
                   <li key={e.id} className="rounded-xl border p-3">
                     <div className="flex items-start gap-3">
                       <label className="-ml-2 -mt-0.5 grid size-10 shrink-0 cursor-pointer place-items-center"><Checkbox aria-label={`Pilih ${e.name}`} checked={selected.has(e.id)} onCheckedChange={() => toggleRow(e.id)} /></label>
-                      <Avatar><AvatarFallback>{initials(e.name)}</AvatarFallback></Avatar>
+                      <Avatar>{e.photo && <AvatarImage src={e.photo} alt="" />}<AvatarFallback>{initials(e.name)}</AvatarFallback></Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold">{e.name}</p>
                         <p className="text-xs text-muted-foreground">{e.position} · {e.office}</p>
@@ -304,8 +319,9 @@ export default function Employees() {
         </CardContent>
       </Card>
 
-      <EmployeeFormDialog open={!!form} employee={form?.employee ?? null} existingPins={rows.map((r) => r.pin)} onClose={() => setForm(null)} onSubmit={save} />
-      <EmployeeDetailSheet employee={detail} onClose={() => setDetail(null)} onEdit={(e) => { setDetail(null); setForm({ employee: e }) }} />
+      <EmployeeFormDialog open={!!form} employee={form?.employee ?? null} existingPins={rows.map((r) => r.pin)} nextId={nextId} formKey={form?.key} onClose={() => setForm(null)} onSubmit={save} />
+      <EmployeeImportDialog open={importing} existingPins={rows.map((r) => r.pin)} onClose={() => setImporting(false)} onImport={importRows} />
+      <EmployeeDetailSheet employee={detail} onClose={() => setDetail(null)} onEdit={(e) => { setDetail(null); setForm({ employee: e, key: 0 }) }} />
 
       <AlertDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)}>
         <AlertDialogContent className="rounded-2xl">
