@@ -254,7 +254,7 @@ export function Topbar() {
   const { theme, toggle } = useTheme()
   const { isMobile } = useSidebar()
   return (
-    <header className={cn("sticky top-0 z-10 flex h-[72px] items-center gap-2 border-b bg-card pr-4 md:gap-3 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
+    <header className={cn("sticky top-0 z-30 flex h-[72px] items-center gap-2 border-b bg-card pr-4 md:gap-3 md:pr-6", !isMobile && "pl-4 md:pl-6")}>
       {/* Desktop: tombol collapse/expand ada di header sidebar. Mobile: sidebar berupa Sheet, jadi tombol di sini. */}
       {isMobile && (
         <>

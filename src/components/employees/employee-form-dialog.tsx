@@ -60,7 +60,7 @@ function PhotoPanel({
   return (
     <div className="flex flex-col gap-4">
       <Tabs value={tab} onValueChange={(v) => { setTab(v as typeof tab); setError("") }}>
-        <TabsList className="h-auto w-full rounded-xl group-data-[orientation=horizontal]/tabs:h-auto">
+        <TabsList className="h-auto w-full items-stretch rounded-xl group-data-[orientation=horizontal]/tabs:h-auto">
           <TabsTrigger value="foto" className="h-auto whitespace-normal rounded-lg py-2 text-xs leading-tight sm:text-sm">Foto Karyawan</TabsTrigger>
           <TabsTrigger value="verifikasi" className="h-auto whitespace-normal rounded-lg py-2 text-xs leading-tight sm:text-sm">Foto Verifikasi Perangkat</TabsTrigger>
         </TabsList>
