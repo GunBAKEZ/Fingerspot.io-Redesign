@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { ChevronDown, SearchX, Trash2, Upload, UserPlus, X } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { IconAction, PersonCell, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
+import { IconAction, PersonCell, RemovableChips, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -26,22 +26,6 @@ type SortKey = "pin" | "name" | "position" | "home"
 const cols: { key: SortKey; label: string }[] = [
   { key: "pin", label: "ID" }, { key: "name", label: "Nama" }, { key: "position", label: "Jabatan" }, { key: "home", label: "Kantor Asal" },
 ]
-
-/** Chip kantor dengan tombol hapus (mencabut akses kantor tersebut). */
-function OfficeChips({ row, onRemove }: { row: MultiOfficeEmployee; onRemove: (office: string) => void }) {
-  return (
-    <ul className="flex flex-wrap gap-1.5">
-      {row.others.map((o) => (
-        <li key={o}>
-          <Badge variant="soft" className="h-auto gap-1 whitespace-normal rounded-md py-1 pr-1 text-left">
-            {o}
-            <button type="button" aria-label={`Hapus ${o} dari ${row.name}`} onClick={() => onRemove(o)} className="grid size-5 shrink-0 place-items-center rounded hover:bg-primary/15 pointer-coarse:size-6"><X className="size-3" /></button>
-          </Badge>
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 export default function MultiOffice() {
   const [rows, setRows] = useState<MultiOfficeEmployee[]>(initialMultiOffice)
@@ -153,7 +137,7 @@ export default function MultiOffice() {
                         <TableCell><PersonCell name={r.name} /></TableCell>
                         <TableCell className="whitespace-normal">{r.position}</TableCell>
                         <TableCell className="max-w-48 whitespace-normal">{r.home}</TableCell>
-                        <TableCell className="min-w-64 whitespace-normal"><OfficeChips row={r} onRemove={(o) => removeOffice(r.id, o)} /></TableCell>
+                        <TableCell className="min-w-64 whitespace-normal"><RemovableChips items={r.others} label={(o) => `Hapus ${o} dari ${r.name}`} onRemove={(o) => removeOffice(r.id, o)} /></TableCell>
                         <TableCell>
                           <div className="flex justify-end gap-1">
                             <Tooltip><TooltipTrigger asChild><Button size="icon-sm" variant="outline" className="text-danger hover:text-danger" aria-label={`Hapus ${r.name}`} onClick={() => setDeleting([r])}><Trash2 /></Button></TooltipTrigger><TooltipContent>Hapus dari daftar</TooltipContent></Tooltip>
@@ -180,7 +164,7 @@ export default function MultiOffice() {
                     <div className="mt-3 space-y-2 pl-[3.25rem]">
                       <Badge variant="success" className="rounded-md font-mono">{r.pin}</Badge>
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kantor lainnya</p>
-                      <OfficeChips row={r} onRemove={(o) => removeOffice(r.id, o)} />
+                      <RemovableChips items={r.others} label={(o) => `Hapus ${o} dari ${r.name}`} onRemove={(o) => removeOffice(r.id, o)} />
                     </div>
                   </li>
                 ))}

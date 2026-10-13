@@ -33,7 +33,7 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (biru sky, dari preset
 - Ikon toolbar: panah masuk = **Impor**, panah keluar = **Ekspor**.
 - **Ekspor CSV** sesuai filter aktif dan **Impor CSV** (validasi per baris: ID/PIN unik, kantor dikenal, hak akses/status/jadwal valid; baris bermasalah dilewati beserta alasannya; templat dapat diunduh). Berkas hasil ekspor dapat diimpor kembali.
 - Di mobile tabel berganti menjadi kartu per karyawan.
-- Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan*, *Pengguna App Karyawan*, dan *Karyawan Kerja di Beberapa Kantor* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.
+- Menu **Karyawan** punya 6 submenu dan semuanya sudah dibangun.
 
 **Pengguna App Karyawan** (`/#/karyawan/pengguna-app`)
 
@@ -46,6 +46,12 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (biru sky, dari preset
 - Tabel karyawan dengan kantor asal dan **chip kantor lainnya** yang bisa dihapus satu per satu (kantor terakhir dihapus = karyawan keluar dari daftar).
 - **Tambah Karyawan Kerja di Banyak Kantor**: pilih karyawan, centang kantor lain (kantor asal dan yang sudah ada tidak ditawarkan); menambah ke baris yang sudah ada bila karyawan sudah terdaftar.
 - Pola daftar yang sama (toolbar, aksi massal, ekspor CSV, kartu di mobile).
+
+**Admin Perangkat Absensi** (`/#/karyawan/admin-perangkat`) — karyawan lintas kantor dengan chip kantor yang bisa dicabut (kantor terakhir dicabut = keluar dari daftar), aksi massal, ekspor CSV.
+
+**Absensi Tidak Ditampilkan** (`/#/karyawan/absensi-tidak-ditampilkan`) — daftar karyawan yang disembunyikan dari Laporan Kehadiran; **Tambah karyawan** membuka pemilih (cari + centang banyak karyawan aktif), hapus per baris atau terpilih.
+
+**Karyawan Resign** (`/#/karyawan/resign`) — ID, nama, kantor, jabatan, tanggal resign, diproses pada; per baris **Aktifkan kembali** atau **Hapus permanen** (dengan konfirmasi), juga lewat Aksi untuk terpilih.
 
 **Karyawan Absensi GPS** (`/#/karyawan/pengguna-app/gps`)
 
@@ -99,7 +105,7 @@ Halaman:
 - `/#/pemberitahuan` — Pemberitahuan
 - `/#/karyawan/daftar` — Daftar Karyawan
 - `/#/karyawan/pengguna-app` — Pengguna App Karyawan (+ `/gps`)
-- `/#/karyawan/beberapa-kantor` — Karyawan Kerja di Beberapa Kantor
+- `/#/karyawan/beberapa-kantor`, `/admin-perangkat`, `/absensi-tidak-ditampilkan`, `/resign` — submenu Karyawan lainnya
 - `/#/organisasi/struktur` — Struktur Organisasi
 - `/#/organisasi/jabatan` — Jabatan Fungsional
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
@@ -181,7 +187,7 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 - [x] Daftar Karyawan (tabel, filter, tambah/ubah/hapus, ekspor)
 - [x] Pengguna App Karyawan + Karyawan Absensi GPS
 - [x] Karyawan Kerja di Beberapa Kantor
-- [ ] Submenu Karyawan lainnya ( Admin Perangkat, Absensi Tidak Ditampilkan, Resign) 
+- [x] Admin Perangkat Absensi, Absensi Tidak Ditampilkan, Karyawan Resign
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
 - [ ] i18n (ID/EN)

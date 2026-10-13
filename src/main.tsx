@@ -8,6 +8,9 @@ import Announcements from "./pages/announcements"
 import AppUsers from "./pages/app-users"
 import GpsEmployees from "./pages/gps-employees"
 import MultiOffice from "./pages/multi-office"
+import AdminDevice from "./pages/admin-device"
+import HiddenAttendance from "./pages/hidden-attendance"
+import Resigned from "./pages/resigned"
 import ComingSoon from "./pages/coming-soon"
 import Dashboard from "./pages/dashboard"
 import Employees from "./pages/employees"
@@ -25,6 +28,9 @@ function App() {
     path === "/organisasi" || path === "/organisasi/struktur" ? <OrganizationStructure /> :
     path === "/organisasi/jabatan" ? <FunctionalPositions /> :
     path === "/karyawan" || path === "/karyawan/daftar" ? <Employees /> :
+    path === "/karyawan/admin-perangkat" ? <AdminDevice /> :
+    path === "/karyawan/absensi-tidak-ditampilkan" ? <HiddenAttendance /> :
+    path === "/karyawan/resign" ? <Resigned /> :
     path === "/karyawan/beberapa-kantor" ? <MultiOffice /> :
     path === "/karyawan/pengguna-app" ? <AppUsers /> :
     path === "/karyawan/pengguna-app/gps" ? <GpsEmployees /> :

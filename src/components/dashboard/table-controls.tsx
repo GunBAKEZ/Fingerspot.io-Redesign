@@ -1,4 +1,6 @@
-import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowUpDown, Search, SearchX, X } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { ListPagination } from "@/components/dashboard/list-pagination"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -97,4 +99,33 @@ export function PlatformCell({ platform }: { platform: Platform }) {
   return platform === "N/A"
     ? <span className="text-muted-foreground">N/A</span>
     : <span className="inline-flex items-center gap-1.5"><Smartphone className="size-4 text-muted-foreground" />{platform}</span>
+}
+
+/** Chip yang bisa dihapus (mis. kantor lain tempat karyawan bekerja). */
+export function RemovableChips({ items, label, onRemove }: { items: string[]; label: (item: string) => string; onRemove: (item: string) => void }) {
+  return (
+    <ul className="flex flex-wrap gap-1.5">
+      {items.map((o) => (
+        <li key={o}>
+          <Badge variant="soft" className="h-auto gap-1 whitespace-normal rounded-md py-1 pr-1 text-left">
+            {o}
+            <button type="button" aria-label={label(o)} onClick={() => onRemove(o)} className="grid size-5 shrink-0 place-items-center rounded hover:bg-primary/15 pointer-coarse:size-6"><X className="size-3" /></button>
+          </Badge>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** Kotak pesan kosong seragam untuk tabel. */
+export function EmptyRows({ empty, emptyText, query }: { empty: boolean; emptyText: string; query: string }) {
+  return (
+    <Empty className="py-16">
+      <EmptyHeader>
+        <EmptyMedia variant="icon"><SearchX /></EmptyMedia>
+        <EmptyTitle>{empty ? "Belum ada data" : "Tidak ada hasil"}</EmptyTitle>
+        <EmptyDescription>{empty ? emptyText : `Tidak ada data yang cocok dengan “${query}”.`}</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  )
 }
