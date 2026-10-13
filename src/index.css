@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -11,42 +13,42 @@
    ========================================================================== */
 :root {
   /* Surface */
-  --background: #f6f7fb;          /* kanvas halaman */
-  --foreground: #1b2559;          /* teks utama (navy) */
-  --card: #ffffff;
-  --card-foreground: #1b2559;
-  --popover: #ffffff;
-  --popover-foreground: #1b2559;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1b2559;
-  --sidebar-accent: #e3f6fa;
-  --sidebar-accent-foreground: oklch(0.45 0.085 224.283); /* cyan-800 */
+  --background: oklch(1 0 0);          /* kanvas halaman */
+  --foreground: oklch(0.145 0 0);          /* teks utama (navy) */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0); /* cyan-800 */
 
   /* Brand */
-  --primary: oklch(0.52 0.105 223.128);        /* cyan-700: aksi utama (kontras AA dengan teks putih) */
-  --primary-foreground: oklch(0.984 0.019 200.873); /* cyan-50 */
-  --primary-soft: #e3f6fa;        /* tint untuk state aktif / hover */
-  --secondary: #eef0f8;
-  --secondary-foreground: #1b2559;
-  --accent: #eef0f8;
-  --accent-foreground: #1b2559;
+  --primary: oklch(0.5 0.134 242.749);        /* cyan-700: aksi utama (kontras AA dengan teks putih) */
+  --primary-foreground: oklch(0.977 0.013 236.62); /* cyan-50 */
+  --primary-soft: oklch(0.951 0.026 236.824); /* sky-100 */        /* tint untuk state aktif / hover */
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
 
   /* Neutral */
-  --muted: #f0f2f8;
-  --muted-foreground: #8790ad;
-  --border: #e8eaf3;
-  --input: #e1e4f0;
-  --ring: oklch(0.609 0.126 221.723); /* cyan-600 */
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0); /* cyan-600 */
 
   /* Semantic / status — dipakai konsisten di grafik, badge, dan kartu pastel */
-  --destructive: #e5484d;
+  --destructive: oklch(0.577 0.245 27.325);
   --success: #1f9d6b;             /* Hadir / Izin disetujui */
   --info: #3b5bdb;                /* Tepat waktu */
   --warning: #f59f00;             /* Terlambat */
   --danger: #e5484d;              /* Tidak hadir / Alpha */
 
   /* Pastel surface (kartu agenda, kuota) */
-  --tint-cyan: #def3f8;
+  --tint-cyan: oklch(0.951 0.026 236.824);
   --tint-lilac: #efeaff;
   --tint-peach: #fdece4;
   --tint-sky: #e6f1fc;
@@ -54,20 +56,20 @@
   --tint-cream: #fef6e3;
 
   /* Chart series */
-  --chart-1: #f5b400;
-  --chart-2: #3b5bdb;
-  --chart-3: oklch(0.609 0.126 221.723); /* cyan-600 */
-  --chart-4: #e5484d;
-  --chart-5: #8b5cf6;
+  --chart-1: oklch(0.828 0.111 230.318);
+  --chart-2: oklch(0.685 0.169 237.323);
+  --chart-3: oklch(0.588 0.158 241.966); /* cyan-600 */
+  --chart-4: oklch(0.5 0.134 242.749);
+  --chart-5: oklch(0.443 0.11 240.79);
 
   /* Shape & depth */
-  --radius: 1rem;
+  --radius: 0.625rem;
   --shadow-card: 0 1px 2px rgb(27 37 89 / 0.04), 0 8px 24px -8px rgb(27 37 89 / 0.08);
   --shadow-pop: 0 12px 32px -8px rgb(27 37 89 / 0.18);
-  --sidebar-primary: oklch(0.52 0.105 223.128);
-  --sidebar-primary-foreground: oklch(0.984 0.019 200.873);
-  --sidebar-border: #e8eaf3;
-  --sidebar-ring: oklch(0.609 0.126 221.723);
+  --sidebar-primary: oklch(0.588 0.158 241.966);
+  --sidebar-primary-foreground: oklch(0.977 0.013 236.62);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
@@ -78,7 +80,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
@@ -94,28 +96,32 @@
   --sidebar-border: oklch(1 0 0 / 10%);
 
   /* Brand (cyan) */
-  --primary: oklch(0.715 0.143 215.221);        /* cyan-500 */
-  --primary-foreground: oklch(0.302 0.056 229.695); /* cyan-950 */
-  --primary-soft: #0e3a45;
-  --ring: oklch(0.715 0.143 215.221);
-  --chart-3: oklch(0.715 0.143 215.221);
-  --sidebar-primary: oklch(0.715 0.143 215.221);
-  --sidebar-primary-foreground: oklch(0.302 0.056 229.695);
-  --sidebar-accent: #0e3a45;
-  --sidebar-accent-foreground: oklch(0.865 0.127 207.078); /* cyan-300 */
-  --sidebar-ring: oklch(0.715 0.143 215.221);
+  --primary: oklch(0.443 0.11 240.79);        /* cyan-500 */
+  --primary-foreground: oklch(0.977 0.013 236.62); /* cyan-950 */
+  --primary-soft: oklch(0.293 0.066 243.157); /* sky-900 */
+  --ring: oklch(0.556 0 0);
+  --chart-3: oklch(0.588 0.158 241.966);
+  --sidebar-primary: oklch(0.685 0.169 237.323);
+  --sidebar-primary-foreground: oklch(0.293 0.066 243.157);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0); /* cyan-300 */
+  --sidebar-ring: oklch(0.556 0 0);
 
   /* Kartu pastel (versi redup) */
-  --tint-cyan: #0f2f38;
+  --tint-cyan: oklch(0.26 0.05 243);
   --tint-lilac: #231f45;
   --tint-peach: #3a241d;
   --tint-sky: #14263d;
   --tint-rose: #3a1d22;
   --tint-cream: #38301a;
+  --chart-1: oklch(0.828 0.111 230.318);
+  --chart-2: oklch(0.685 0.169 237.323);
+  --chart-4: oklch(0.5 0.134 242.749);
+  --chart-5: oklch(0.443 0.11 240.79);
 }
 
 @theme inline {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -174,11 +180,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
+  --font-heading: var(--font-sans);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @layer base {
   * { @apply border-border outline-ring/50; }
-  body { @apply bg-background text-foreground font-sans antialiased; }
+  body { @apply font-sans antialiased bg-background text-foreground; }
+  html {
+    @apply font-sans;
+  }
 }
 
 /* Gaya judul bagian: kata pertama tebal, sisanya regular (seperti referensi) */
