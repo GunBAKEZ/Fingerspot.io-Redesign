@@ -38,6 +38,7 @@ export const nav: NavItem[] = [
 
 /** Rute di luar menu sidebar (diakses dari Topbar). */
 export const extraRoutes: Record<string, string> = {
+  "/karyawan/pengguna-app/gps": "Karyawan Absensi GPS",
   "/keranjang": "Keranjang",
   "/saldo": "Saldo",
   "/inbox": "Inbox",

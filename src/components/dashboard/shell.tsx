@@ -84,7 +84,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
           <SidebarMenuSub className="ml-[17px] mr-px">
             {item.children!.map((c) => (
               <SidebarMenuSubItem key={c.path}>
-                <SidebarMenuSubButton asChild isActive={c.path === path || (c.path === item.children![0].path && path === item.path)} className="h-auto min-h-9 whitespace-normal rounded-lg py-2 leading-snug">
+                <SidebarMenuSubButton asChild isActive={c.path === path || path.startsWith(c.path + "/") || (c.path === item.children![0].path && path === item.path)} className="h-auto min-h-9 whitespace-normal rounded-lg py-2 leading-snug">
                   <a href={`#${c.path}`} onClick={onNavigate}>{c.label}</a>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>

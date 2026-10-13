@@ -33,7 +33,17 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (biru sky, dari preset
 - Ikon toolbar: panah masuk = **Impor**, panah keluar = **Ekspor**.
 - **Ekspor CSV** sesuai filter aktif dan **Impor CSV** (validasi per baris: ID/PIN unik, kantor dikenal, hak akses/status/jadwal valid; baris bermasalah dilewati beserta alasannya; templat dapat diunduh). Berkas hasil ekspor dapat diimpor kembali.
 - Di mobile tabel berganti menjadi kartu per karyawan.
-- Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.
+- Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan* dan *Pengguna App Karyawan* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.
+
+**Pengguna App Karyawan** (`/#/karyawan/pengguna-app`)
+
+- Tabel pengguna App fingerspot.io: ID, nama, kantor, jabatan, platform (iOS/Android/N/A), dan status undangan; urut per kolom, *Tampilkan N data*, pencarian, paginasi, pilih baris (kartu di mobile).
+- **Aksi untuk terpilih** (pilih salah satu → *Hapus Pengguna Apps*, dengan konfirmasi), **Ekspor CSV**, dan tautan **Lihat Karyawan Absensi GPS**.
+- **Tambah Pengguna App**: pilih karyawan aktif yang belum terdaftar, cari berdasarkan **No telepon** (+62, 8–13 digit) atau **Email** (validasi), lalu status undangan “Menunggu”.
+
+**Karyawan Absensi GPS** (`/#/karyawan/pengguna-app/gps`)
+
+- Tab **Belum Registrasi** / **Sudah Registrasi** dengan jumlah, tabel urut/cari/paginasi, dan lencana status registrasi.
 
 **Jabatan Fungsional** (`/#/organisasi/jabatan`)
 
@@ -82,6 +92,7 @@ Halaman:
 - `/` — Dashboard
 - `/#/pemberitahuan` — Pemberitahuan
 - `/#/karyawan/daftar` — Daftar Karyawan
+- `/#/karyawan/pengguna-app` — Pengguna App Karyawan (+ `/gps`)
 - `/#/organisasi/struktur` — Struktur Organisasi
 - `/#/organisasi/jabatan` — Jabatan Fungsional
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
@@ -161,7 +172,8 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 - [x] Struktur Organisasi
 - [x] Jabatan Fungsional
 - [x] Daftar Karyawan (tabel, filter, tambah/ubah/hapus, ekspor)
-- [ ] Submenu Karyawan lainnya (Pengguna App, Beberapa Kantor, Admin Perangkat, Absensi Tidak Ditampilkan, Resign) 
+- [x] Pengguna App Karyawan + Karyawan Absensi GPS
+- [ ] Submenu Karyawan lainnya (Beberapa Kantor, Admin Perangkat, Absensi Tidak Ditampilkan, Resign) 
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
 - [ ] i18n (ID/EN)
