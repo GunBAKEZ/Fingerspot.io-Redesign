@@ -19,6 +19,15 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (cyan), warna status y
 - Status baru/terbaca, klik untuk membuka detail (`Dialog`), dan tombol **Tandai semua dibaca**.
 - Empty state dan skeleton loading.
 
+**Daftar Karyawan** (`/#/karyawan/daftar`)
+
+- Tabel karyawan dengan **filter per kolom**, urut (A–Z / Z–A), filter Kantor dan Status, pencarian global, *Tampilkan N data*, dan paginasi.
+- Pilih baris (satu atau semua di halaman) dengan aksi massal **Hapus terpilih**.
+- Aksi per baris: **Lihat detail** (Sheet), **Ubah** (Dialog), **Hapus** (konfirmasi), serta menu ⋮ (Aktifkan / Nonaktifkan / Tandai resign).
+- **Tambah Karyawan** dengan validasi (ID/PIN unik, kantor & jabatan wajib) dan **Ekspor CSV** sesuai filter aktif.
+- Di mobile tabel berganti menjadi kartu per karyawan.
+- Menu **Karyawan** punya 6 submenu; baru *Daftar Karyawan* yang dibangun, sisanya menampilkan halaman “sedang dibangun”.
+
 **Jabatan Fungsional** (`/#/organisasi/jabatan`)
 
 - Tabel dengan *Tampilkan N data* (10/25/50/100), pencarian, urut nama (A–Z / Z–A / asli), dan paginasi.
@@ -64,6 +73,7 @@ Halaman:
 
 - `/` — Dashboard
 - `/#/pemberitahuan` — Pemberitahuan
+- `/#/karyawan/daftar` — Daftar Karyawan
 - `/#/organisasi/struktur` — Struktur Organisasi
 - `/#/organisasi/jabatan` — Jabatan Fungsional
 - `/#/design-system` — Showcase design system (warna, tipografi, komponen)
@@ -88,8 +98,9 @@ src/
 ├── components/
 │   ├── ui/               # komponen shadcn (dari registry resmi + kustomisasi merek)
 │   ├── organization/     # pohon organisasi + dialog tambah/ubah
+│   ├── employees/        # form, detail (Sheet), badge status karyawan
 │   └── dashboard/        # komposisi aplikasi: app-layout, shell (sidebar/topbar), nav, kartu, grafik, filter
-├── data/                 # mock.ts (dashboard), announcements.ts (pemberitahuan) — data contoh
+├── data/                 # mock.ts (dashboard), announcements.ts (pemberitahuan), employees.ts (karyawan) — data contoh
 ├── hooks/                # use-theme, use-hash-route, use-fake-loading, use-mobile
 ├── pages/                # dashboard, announcements, coming-soon, design-system
 ├── lib/                  # utils.ts (cn), org-tree.ts (data & fungsi pohon organisasi)
@@ -141,7 +152,8 @@ Proyek ini dapat langsung di-deploy ke [Vercel](https://vercel.com/new): preset 
 - [x] Halaman Pemberitahuan
 - [x] Struktur Organisasi
 - [x] Jabatan Fungsional
-- [ ] Halaman Karyawan (tabel, filter, dialog tambah/edit)
+- [x] Daftar Karyawan (tabel, filter, tambah/ubah/hapus, ekspor)
+- [ ] Submenu Karyawan lainnya (Pengguna App, Beberapa Kantor, Admin Perangkat, Absensi Tidak Ditampilkan, Resign) dan impor karyawan
 - [ ] Halaman Absensi dan Laporan
 - [ ] Router sungguhan (React Router) menggantikan `use-hash-route`
 - [ ] i18n (ID/EN)

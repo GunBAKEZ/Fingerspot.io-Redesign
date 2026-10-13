@@ -7,6 +7,7 @@ import { useHashRoute } from "./hooks/use-hash-route"
 import Announcements from "./pages/announcements"
 import ComingSoon from "./pages/coming-soon"
 import Dashboard from "./pages/dashboard"
+import Employees from "./pages/employees"
 import FunctionalPositions from "./pages/functional-positions"
 import OrganizationStructure from "./pages/organization-structure"
 import DesignSystem from "./pages/design-system"
@@ -20,6 +21,7 @@ function App() {
     path === "/pemberitahuan" ? <Announcements /> :
     path === "/organisasi" || path === "/organisasi/struktur" ? <OrganizationStructure /> :
     path === "/organisasi/jabatan" ? <FunctionalPositions /> :
+    path === "/karyawan" || path === "/karyawan/daftar" ? <Employees /> :
     <ComingSoon title={titleFor(path) ?? "Halaman tidak ditemukan"} />
 
   return <AppLayout path={path}>{page}</AppLayout>

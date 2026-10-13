@@ -17,7 +17,17 @@ export const nav: NavItem[] = [
       { label: "Jabatan Fungsional", path: "/organisasi/jabatan" },
     ],
   },
-  { icon: Users, label: "Karyawan", path: "/karyawan" },
+  {
+    icon: Users, label: "Karyawan", path: "/karyawan",
+    children: [
+      { label: "Daftar Karyawan", path: "/karyawan/daftar" },
+      { label: "Pengguna App Karyawan", path: "/karyawan/pengguna-app" },
+      { label: "Karyawan Kerja di Beberapa Kantor", path: "/karyawan/beberapa-kantor" },
+      { label: "Karyawan Kerja di Beberapa Kantor sebagai Admin Perangkat Absensi", path: "/karyawan/admin-perangkat" },
+      { label: "Absensi Tidak Ditampilkan", path: "/karyawan/absensi-tidak-ditampilkan" },
+      { label: "Karyawan Resign", path: "/karyawan/resign" },
+    ],
+  },
   { icon: MapPin, label: "Kantor", path: "/kantor" },
   { icon: Fingerprint, label: "Perangkat Absensi", path: "/perangkat-absensi" },
   { icon: CalendarCheck, label: "Absensi", path: "/absensi" },

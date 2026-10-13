@@ -23,6 +23,8 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 
 **Menu (Dropdown/Select)** — kotak `rounded-2xl p-2` (jarak sorotan hover ke tepi 8px), baris `rounded-lg px-3 py-2` (tinggi 36px). Radius baris = radius kotak − padding supaya sudut serasi. Diatur di `scripts/apply-brand.py`; jangan beri override `rounded-*` per menu.
 
+**Tabel data padat (mis. Daftar Karyawan)** — kolom diberi lebar eksplisit (`min-w-*`) dan tabel `min-w` tertentu agar menggulir di dalam kartu, bukan melebarkan halaman (area utama `min-w-0`). Header kolom disusun vertikal (judul/urut di atas, filter di bawah). Di mobile tabel diganti kartu (`md:hidden`).
+
 **Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `sm`/`icon`/`icon-sm`, Toggle, Select, dan Tabs diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.
 
 **Sidebar** — lebar ciut 3.5rem; ikon **tidak pernah berpindah** saat animasi collapse (tombol tidak dipusatkan ulang, label memudar dan terpotong oleh lebar yang menyempit). Tanpa scroll horizontal; scrollbar vertikal disembunyikan.

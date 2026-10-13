@@ -58,10 +58,10 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
               <Icon /> <span>{item.label}</span>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" align="start" sideOffset={8} className="w-56">
+          <DropdownMenuContent side="right" align="start" sideOffset={8} className="w-72">
             <DropdownMenuLabel>{item.label}</DropdownMenuLabel>
             {item.children!.map((c) => (
-              <DropdownMenuItem key={c.path} asChild className={cn("cursor-pointer rounded-lg", c.path === path && "bg-sidebar-accent font-semibold text-sidebar-accent-foreground")}>
+              <DropdownMenuItem key={c.path} asChild className={cn("cursor-pointer whitespace-normal rounded-lg leading-snug", c.path === path && "bg-sidebar-accent font-semibold text-sidebar-accent-foreground")}>
                 <a href={`#${c.path}`}>{c.label}</a>
               </DropdownMenuItem>
             ))}
@@ -84,7 +84,7 @@ function NavGroup({ item, path, collapsed, onNavigate }: { item: NavItem; path: 
           <SidebarMenuSub className="ml-[17px] mr-px">
             {item.children!.map((c) => (
               <SidebarMenuSubItem key={c.path}>
-                <SidebarMenuSubButton asChild isActive={c.path === path || (c.path === item.children![0].path && path === item.path)} className="h-9 rounded-lg">
+                <SidebarMenuSubButton asChild isActive={c.path === path || (c.path === item.children![0].path && path === item.path)} className="h-auto min-h-9 whitespace-normal rounded-lg py-2 leading-snug">
                   <a href={`#${c.path}`} onClick={onNavigate}>{c.label}</a>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>

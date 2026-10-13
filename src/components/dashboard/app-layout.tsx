@@ -8,7 +8,7 @@ export function AppLayout({ path, children }: { path: string; children: React.Re
     <TooltipProvider>
       <SidebarProvider style={{ "--sidebar-width-icon": "3.5rem" } as React.CSSProperties}>
         <AppSidebar path={path} />
-        <SidebarInset className="bg-background">
+        <SidebarInset className="min-w-0 bg-background">
           <Topbar />
           <main className="mx-auto w-full max-w-[1400px] space-y-6 p-4 md:p-6">{children}</main>
         </SidebarInset>
