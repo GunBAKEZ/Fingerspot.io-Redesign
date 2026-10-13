@@ -29,6 +29,8 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 
 **Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `default`/`sm`/`icon`/`icon-sm`, Input, Select, dan Toggle diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.
 
+**Shell mobile** — di bawah 768px sidebar tidak dipakai. `AppLayout` memilih `MobileTopbar` (h-14) + `BottomNav` (5 tab, h-16 + safe-area; tab aktif berpil `primary-soft`) + lembar Menu. Dialog menjadi bottom sheet (`max-sm:` di `dialog.tsx`, dipasang `apply-brand.py`), form besar layar penuh, aksi utama halaman berupa FAB di atas tab bar. Konten diberi `pb` 6rem agar tidak tertutup tab bar.
+
 **Sidebar** — lebar ciut 3.5rem; ikon **tidak pernah berpindah** saat animasi collapse (tombol tidak dipusatkan ulang, label memudar dan terpotong oleh lebar yang menyempit). Tanpa scroll horizontal; scrollbar vertikal disembunyikan.
 
 **Mode gelap** — permukaan, teks, dan garis memakai palet netral bawaan shadcn/ui (`oklch`, hampir hitam: `background` 0.145, `card` 0.205, `border` putih 10%). Aksen sky (`primary` sky-500 — preset memakai sky-800 yang terlalu redup untuk teks — dan `primary-soft` sky-900). Token ada di blok `.dark` di `src/index.css`.

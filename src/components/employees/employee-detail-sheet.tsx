@@ -6,12 +6,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { initials, type Employee } from "@/data/employees"
 import { StatusBadge } from "./status-badge"
 
 /** Panel detail karyawan (Sheet dari kanan): foto, identitas, data dari perangkat, atasan lain. */
 export function EmployeeDetailSheet({ employee, people, onClose, onEdit }: { employee: Employee | null; people: Employee[]; onClose: () => void; onEdit: (e: Employee) => void }) {
+  const isMobile = useIsMobile()
   const [tab, setTab] = useState<"foto" | "verifikasi">("foto")
   const src = employee ? (tab === "foto" ? employee.photo : employee.verifyPhoto) : undefined
   const supervisors = (employee?.supervisors ?? []).map((sid) => people.find((p) => p.id === sid)).filter((p): p is Employee => !!p)
@@ -27,7 +29,7 @@ export function EmployeeDetailSheet({ employee, people, onClose, onEdit }: { emp
 
   return (
     <Sheet open={!!employee} onOpenChange={(o) => { if (!o) { onClose(); setTab("foto") } }}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+      <SheetContent side={isMobile ? "bottom" : "right"} className="w-full overflow-y-auto max-sm:max-h-[90dvh] max-sm:rounded-t-2xl sm:max-w-md">
         <SheetHeader className="border-b pb-4 pr-12">
           <SheetTitle className="text-xl">{employee?.name}</SheetTitle>
           <SheetDescription>{employee?.position} · {employee?.office}</SheetDescription>

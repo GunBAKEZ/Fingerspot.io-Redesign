@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react"
 import { format } from "date-fns"
-import { Eye, EyeOff, Info, TriangleAlert, UserRound } from "lucide-react"
+import { Eye, EyeOff, Info, TriangleAlert, UserRound, X } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DatePicker } from "@/components/ui/date-picker"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { employeeOffices, employeePositions, NO_SCHEDULE, positionSchedule, scheduleLabel, schedules, targetDevices, verifyTypes, type Employee, type EmployeeStatus } from "@/data/employees"
@@ -112,6 +113,7 @@ export function EmployeeFormDialog({
   const edit = !!employee
   const [d, setD] = useState<Draft>(() => blank(nextId))
   const contentRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
   const [photo, setPhoto] = useState<string>()
   const [verifyPhoto, setVerifyPhoto] = useState<string>()
   const [showPin, setShowPin] = useState(false)
@@ -145,7 +147,13 @@ export function EmployeeFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent ref={contentRef} className="max-h-[92dvh] gap-0 overflow-y-auto rounded-2xl p-0 sm:max-w-5xl">
+      <DialogContent ref={contentRef} showCloseButton={!isMobile} className="max-h-[92dvh] gap-0 overflow-y-auto rounded-2xl p-0 max-sm:top-0 max-sm:h-dvh max-sm:max-h-dvh max-sm:rounded-none max-sm:pb-0 sm:max-w-5xl">
+        {isMobile && (
+          <div className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b bg-popover px-4">
+            <span className="font-semibold">{edit ? "Ubah Karyawan" : "Tambah Karyawan"}</span>
+            <DialogClose asChild><Button type="button" variant="ghost" size="icon" aria-label="Tutup"><X /></Button></DialogClose>
+          </div>
+        )}
         <form onSubmit={(e) => { e.preventDefault(); submit(false) }}>
           <div className="grid grid-cols-1 md:grid-cols-[21rem_1fr]">
             <aside className="min-w-0 border-b bg-primary-soft/50 p-6 md:border-r md:border-b-0 md:p-8">
@@ -154,7 +162,7 @@ export function EmployeeFormDialog({
 
             <div className="min-w-0 space-y-5 p-6 md:p-8">
               <DialogHeader className="items-center text-center">
-                <DialogTitle className="text-2xl text-primary">{edit ? "Ubah Karyawan" : "Tambah Karyawan"}</DialogTitle>
+                <DialogTitle className="text-2xl text-primary max-sm:sr-only">{edit ? "Ubah Karyawan" : "Tambah Karyawan"}</DialogTitle>
                 <DialogDescription className="space-y-2 text-sm leading-relaxed">
                   {edit ? (
                     <span className="block">Mengubah data {employee.name}. Perubahan akan disinkronkan ke perangkat absensi.</span>
@@ -174,7 +182,7 @@ export function EmployeeFormDialog({
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2"><Label htmlFor="emp-first">Nama Depan <span className="text-danger" aria-hidden>*</span></Label><Input id="emp-first" autoFocus placeholder="Isi Nama Depan" value={d.first} onChange={(e) => set("first", e.target.value)} /></div>
+                <div className="space-y-2"><Label htmlFor="emp-first">Nama Depan <span className="text-danger" aria-hidden>*</span></Label><Input id="emp-first" autoFocus={!isMobile} placeholder="Isi Nama Depan" value={d.first} onChange={(e) => set("first", e.target.value)} /></div>
                 <div className="space-y-2"><Label htmlFor="emp-last">Nama Belakang</Label><Input id="emp-last" placeholder="Isi Nama Belakang" value={d.last} onChange={(e) => set("last", e.target.value)} /></div>
               </div>
 

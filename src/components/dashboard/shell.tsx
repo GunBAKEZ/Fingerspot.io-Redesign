@@ -182,7 +182,7 @@ const tasks = [
 ]
 
 /** Dropdown tugas yang menunggu tindakan (Karyawan Baru, Persetujuan Karyawan). */
-function TasksMenu() {
+export function TasksMenu() {
   const total = tasks.reduce((n, t) => n + t.count, 0)
   return (
     <DropdownMenu>

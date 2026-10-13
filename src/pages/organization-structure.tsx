@@ -64,7 +64,7 @@ export default function OrganizationStructure() {
 
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
-            <InputGroup className="h-10 max-w-sm flex-1 rounded-xl bg-background">
+            <InputGroup className="h-10 w-full max-w-sm flex-1 rounded-xl bg-background max-sm:max-w-none max-sm:basis-full">
               <InputGroupAddon><Search /></InputGroupAddon>
               <InputGroupInput placeholder="Cari struktur atau jabatan…" value={query} onChange={(e) => setQuery(e.target.value)} />
             </InputGroup>

@@ -46,6 +46,7 @@ Fokusnya: tampilan yang bersih dan ramah, satu warna aksi (biru sky, dari preset
 - Aksi per node: **Tambah** (Struktur/Jabatan/Kantor), **Ubah** (nama, kantor), **Hapus** dengan konfirmasi dan jumlah turunan; node akar tidak bisa dihapus. Ikon gedung + tooltip menunjukkan kantor yang terhubung.
 - Di layar kecil aksi dilipat dalam satu menu “⋯”.
 - Perubahan tersimpan di memori (belum ke API). Logika pohon ada di `src/lib/org-tree.ts`.
+- **Tampilan mobile tersendiri** (< 768px): topbar ringkas (logo, cari, tugas), **navigasi bawah** (Dashboard, Karyawan, Absensi, Info, Menu), lembar **Menu** dari bawah (akun, Saldo/Keranjang/Inbox, semua menu dengan submenu, tema, bahasa, keluar), tombol aksi mengambang (FAB) di Daftar Karyawan, dialog tampil sebagai lembar dari bawah, form karyawan layar penuh dengan header lengket, dan detail karyawan sebagai lembar bawah. Kode: `components/dashboard/mobile-shell.tsx`.
 - Menu **Organisasi** di sidebar memiliki submenu (Collapsible; flyout saat sidebar ciut). Sidebar dibagi dua kelompok: Dashboard & Pemberitahuan, lalu “Menu Utama”. 
 
 **Dashboard** (`/`)

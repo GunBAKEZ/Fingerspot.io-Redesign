@@ -74,3 +74,9 @@ def toggle(s):
         s = s.replace('sm: "h-8 min-w-8 ', 'sm: "h-8 min-w-8 pointer-coarse:h-10 pointer-coarse:min-w-10 ', 1)
     return s
 edit("toggle.tsx", toggle)
+
+# 7. Dialog: di mobile tampil sebagai lembar dari bawah (bottom sheet)
+def dialog(s):
+    if "max-sm:bottom-0" in s: return s
+    return s.replace('-translate-y-1/2 gap-6 rounded-xl', '-translate-y-1/2 max-sm:top-auto max-sm:bottom-0 max-sm:left-0 max-sm:max-h-[92dvh] max-sm:max-w-full max-sm:translate-x-0 max-sm:translate-y-0 max-sm:overflow-y-auto max-sm:rounded-b-none max-sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))] gap-6 rounded-xl', 1)
+edit("dialog.tsx", dialog)

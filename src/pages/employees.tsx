@@ -176,7 +176,7 @@ export default function Employees() {
     <>
       <PageHeader
         crumbs={[{ label: "Karyawan" }, { label: "Daftar Karyawan" }]}
-        actions={<Button onClick={() => setForm({ employee: null, key: 0 })}><UserPlus /> Tambah Karyawan</Button>}
+        actions={<Button className="max-md:hidden" onClick={() => setForm({ employee: null, key: 0 })}><UserPlus /> Tambah Karyawan</Button>}
       >
         Daftar Karyawan
       </PageHeader>
@@ -346,6 +346,8 @@ export default function Employees() {
           )}
         </CardContent>
       </Card>
+
+      <Button size="lg" aria-label="Tambah Karyawan" className="fixed right-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-30 size-14 rounded-full shadow-lg md:hidden" onClick={() => setForm({ employee: null, key: 0 })}><UserPlus className="size-6" /></Button>
 
       <EmployeeFormDialog open={!!form} employee={form?.employee ?? null} existingPins={rows.map((r) => r.pin)} people={rows} nextId={nextId} formKey={form?.key} onClose={() => setForm(null)} onSubmit={save} />
       <EmployeeImportDialog open={importing} existingPins={rows.map((r) => r.pin)} onClose={() => setImporting(false)} onImport={importRows} />
