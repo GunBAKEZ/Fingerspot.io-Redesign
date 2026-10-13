@@ -25,6 +25,8 @@ Semua di `src/index.css` (`:root` dan `.dark`), otomatis jadi utility Tailwind.
 
 **Tabel data padat (mis. Daftar Karyawan)** — kolom diberi lebar eksplisit (`min-w-*`) dan tabel `min-w` tertentu agar menggulir di dalam kartu, bukan melebarkan halaman (area utama `min-w-0`). Header kolom disusun vertikal (judul/urut di atas, filter di bawah). Di mobile tabel diganti kartu (`md:hidden`).
 
+**Halaman daftar (pola baku)** — semua halaman daftar memakai komponen bersama di `components/dashboard/table-controls.tsx`: `TableToolbar` (Tampilkan N data + filter di kiri; pencarian + `IconAction` impor/ekspor di kanan), `SelectionBar` (bar `primary-soft` + menu “Aksi untuk terpilih”), `PersonCell` (avatar + nama), `SortButton`, `TableFooter`, dan `mobileCardClass` (kartu mobile `rounded-xl border p-3`, avatar + chip ID hijau + aksi ikon). Header halaman hanya berisi aksi utama; ID selalu berupa chip hijau mono; aksi baris berupa tombol ikon (hapus = outline merah).
+
 **Kontrol pilihan** — Checkbox dan RadioGroup memakai garis tepi `muted-foreground` (kontras ≥ 3:1) karena `--input` terlalu pucat untuk kontrol yang harus terlihat saat belum dipilih.
 
 **Mobile & sentuh** — halaman tidak boleh overflow horizontal di 360–390px (grid memakai `grid-cols-1` + `min-w-0` pada item). Pada perangkat sentuh (`pointer-coarse:`) kontrol minimal 40px: Button `default`/`sm`/`icon`/`icon-sm`, Input, Select, dan Toggle diperbesar otomatis (diatur di `scripts/apply-brand.py`); di desktop tetap padat. Aksi tabel dilipat jadi ikon (`max-sm:`), aksi pohon jadi menu “⋯”.

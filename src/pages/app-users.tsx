@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
-import { MapPin, SearchX, Trash2, Upload, UserPlus } from "lucide-react"
+import { ChevronDown, MapPin, SearchX, Trash2, Upload, UserPlus } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { PlatformCell, SortButton, TableFooter, TableToolbar } from "@/components/dashboard/table-controls"
+import { IconAction, PersonCell, PlatformCell, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -19,6 +19,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { initials } from "@/data/employees"
 import { initialAppUsers, type AppUser, type InviteStatus } from "@/data/app-users"
 import { initialEmployees } from "@/data/employees"
 import { downloadCsv } from "@/lib/csv"
@@ -75,11 +78,8 @@ export default function AppUsers() {
       <PageHeader
         crumbs={[{ label: "Karyawan" }, { label: "Pengguna App Karyawan" }]}
         actions={<>
-          <Button className="min-w-0 max-sm:flex-1" onClick={() => setAdding(true)}><UserPlus /> <span>Tambah Pengguna App<span className="max-sm:hidden"> Karyawan</span></span></Button>
-          <Tooltip>
-            <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Ekspor CSV" className="shrink-0" onClick={exportCsv}><Upload /></Button></TooltipTrigger>
-            <TooltipContent>Ekspor CSV ({filtered.length} data)</TooltipContent>
-          </Tooltip>
+          <Button variant="outline" asChild className="max-sm:basis-full"><a href="#/karyawan/pengguna-app/gps"><MapPin /> <span>Lihat Karyawan Absensi GPS</span></a></Button>
+          <Button className="min-w-0 max-sm:basis-full" onClick={() => setAdding(true)}><UserPlus /> <span>Tambah Pengguna App<span className="max-sm:hidden"> Karyawan</span></span></Button>
         </>}
       >
         Pengguna App Karyawan
@@ -91,17 +91,20 @@ export default function AppUsers() {
             Dapatkan App fingerspot.io pada Google Play Store atau App Store untuk dapat menggunakan berbagai fitur unggulan kami. Kolom platform N/A berarti karyawan tersebut sedang tidak login.
           </p>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-y py-4">
-            <Select value="" onValueChange={onBulk} disabled={selected.size === 0}>
-              <SelectTrigger aria-label="Aksi untuk terpilih" className="w-full rounded-xl sm:w-56"><SelectValue placeholder={selected.size ? `Pilih salah satu (${selected.size} dipilih)` : "Pilih salah satu"} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hapus"><Trash2 /> Hapus Pengguna Apps</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button asChild variant="soft" className="max-sm:w-full"><a href="#/karyawan/pengguna-app/gps"><MapPin /> Lihat Karyawan Absensi GPS</a></Button>
-          </div>
+          <TableToolbar
+            pageSize={pageSize} onPageSize={(n) => { setPageSize(n); setPage(0) }}
+            query={query} onQuery={(v) => { setQuery(v); setPage(0) }} placeholder="Cari pengguna…"
+            actions={<IconAction label={`Ekspor CSV (${filtered.length} data)`} icon={Upload} onClick={exportCsv} />}
+          />
 
-          <TableToolbar pageSize={pageSize} onPageSize={(n) => { setPageSize(n); setPage(0) }} query={query} onQuery={(v) => { setQuery(v); setPage(0) }} placeholder="Cari pengguna…" />
+          <SelectionBar count={selected.size} noun="pengguna" onClear={() => setSelected(new Set())}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuItem variant="destructive" onSelect={() => setDeleting(rows.filter((r) => selected.has(r.id)))}><Trash2 /> Hapus Pengguna Apps</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SelectionBar>
 
           {filtered.length === 0 ? (
             <Empty className="py-16">
@@ -124,18 +127,24 @@ export default function AppUsers() {
                           <SortButton label={c.label} active={sort?.key === c.key} asc={!!sort?.asc} onClick={() => toggleSort(c.key)} />
                         </TableHead>
                       ))}
+                      <TableHead className="w-[1%] whitespace-nowrap text-right text-xs font-bold uppercase tracking-wide">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {slice.map((r) => (
                       <TableRow key={r.id} data-state={selected.has(r.id) ? "selected" : undefined}>
                         <TableCell><Checkbox aria-label={`Pilih ${r.name}`} checked={selected.has(r.id)} onCheckedChange={() => toggleRow(r.id)} /></TableCell>
-                        <TableCell className="tabular-nums">{r.pin}</TableCell>
-                        <TableCell className="font-medium">{r.name}</TableCell>
+                        <TableCell><Badge variant="success" className="rounded-md font-mono">{r.pin}</Badge></TableCell>
+                        <TableCell><PersonCell name={r.name} /></TableCell>
                         <TableCell className="max-w-56 whitespace-normal">{r.office}</TableCell>
                         <TableCell className="whitespace-normal">{r.position}</TableCell>
                         <TableCell><PlatformCell platform={r.platform} /></TableCell>
                         <TableCell><Badge variant={inviteVariant[r.invite]} dot>{r.invite}</Badge></TableCell>
+                        <TableCell>
+                          <div className="flex justify-end gap-1">
+                            <Tooltip><TooltipTrigger asChild><Button size="icon-sm" variant="outline" className="text-danger hover:text-danger" aria-label={`Hapus ${r.name}`} onClick={() => setDeleting([r])}><Trash2 /></Button></TooltipTrigger><TooltipContent>Hapus pengguna app</TooltipContent></Tooltip>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -145,16 +154,18 @@ export default function AppUsers() {
               {/* Mobile: kartu */}
               <ul className="space-y-3 md:hidden">
                 {slice.map((r) => (
-                  <li key={r.id} className="rounded-2xl border p-4">
+                  <li key={r.id} className={mobileCardClass}>
                     <div className="flex items-start gap-3">
                       <label className="-ml-2 -mt-0.5 grid size-10 shrink-0 cursor-pointer place-items-center"><Checkbox aria-label={`Pilih ${r.name}`} checked={selected.has(r.id)} onCheckedChange={() => toggleRow(r.id)} /></label>
+                      <Avatar><AvatarFallback>{initials(r.name)}</AvatarFallback></Avatar>
                       <div className="min-w-0 flex-1">
-                        <p className="font-semibold">{r.name}</p>
+                        <p className="truncate font-semibold">{r.name}</p>
                         <p className="text-xs text-muted-foreground">{r.position} · {r.office}</p>
                       </div>
+                      <Button size="icon-sm" variant="outline" className="text-danger hover:text-danger" aria-label={`Hapus ${r.name}`} onClick={() => setDeleting([r])}><Trash2 /></Button>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      <span className="tabular-nums text-muted-foreground">ID {r.pin}</span>
+                    <div className="mt-3 flex flex-wrap items-center gap-2 pl-[3.25rem]">
+                      <Badge variant="success" className="rounded-md font-mono">{r.pin}</Badge>
                       <PlatformCell platform={r.platform} />
                       <Badge variant={inviteVariant[r.invite]} dot>{r.invite}</Badge>
                     </div>

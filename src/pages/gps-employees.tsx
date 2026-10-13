@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react"
 import { SearchX } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { PlatformCell, SortButton, TableFooter, TableToolbar } from "@/components/dashboard/table-controls"
+import { PersonCell, PlatformCell, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { initials } from "@/data/employees"
 import { gpsEmployees, type GpsEmployee } from "@/data/app-users"
 
 type SortKey = "pin" | "name" | "office" | "position" | "platform"
@@ -82,8 +84,8 @@ export default function GpsEmployees() {
                   <TableBody>
                     {slice.map((r) => (
                       <TableRow key={r.id}>
-                        <TableCell className="tabular-nums">{r.pin}</TableCell>
-                        <TableCell className="font-medium">{r.name}</TableCell>
+                        <TableCell><Badge variant="success" className="rounded-md font-mono">{r.pin}</Badge></TableCell>
+                        <TableCell><PersonCell name={r.name} /></TableCell>
                         <TableCell className="max-w-56 whitespace-normal">{r.office}</TableCell>
                         <TableCell className="whitespace-normal">{r.position}</TableCell>
                         <TableCell><PlatformCell platform={r.platform} /></TableCell>
@@ -95,11 +97,16 @@ export default function GpsEmployees() {
               </div>
               <ul className="space-y-3 md:hidden">
                 {slice.map((r) => (
-                  <li key={r.id} className="rounded-2xl border p-4">
-                    <p className="font-semibold">{r.name}</p>
-                    <p className="text-xs text-muted-foreground">{r.position} · {r.office}</p>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      <span className="tabular-nums text-muted-foreground">ID {r.pin}</span>
+                  <li key={r.id} className={mobileCardClass}>
+                    <div className="flex items-start gap-3">
+                      <Avatar><AvatarFallback>{initials(r.name)}</AvatarFallback></Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-semibold">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">{r.position} · {r.office}</p>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-2 pl-[3.25rem]">
+                      <Badge variant="success" className="rounded-md font-mono">{r.pin}</Badge>
                       <PlatformCell platform={r.platform} />
                       {statusBadge(r)}
                     </div>

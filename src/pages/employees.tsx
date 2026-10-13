@@ -3,6 +3,7 @@ import {
   ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Clock, Download, Eye, Info, ListChecks, ScanFace, ServerCog, MoreVertical, Pencil, Search, SearchX, Trash2, Upload, UserPlus, X,
 } from "lucide-react"
 import { ListPagination } from "@/components/dashboard/list-pagination"
+import { IconAction, SelectionBar, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { EmployeeDetailSheet } from "@/components/employees/employee-detail-sheet"
 import { EmployeeFormDialog, type EmployeeValues } from "@/components/employees/employee-form-dialog"
@@ -183,42 +184,27 @@ export default function Employees() {
 
       <Card>
         <CardContent className="space-y-4">
-          {/* Toolbar */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-sm">
-              <span>Tampilkan</span>
-              <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); reset() }}>
-                <SelectTrigger size="sm" aria-label="Jumlah data per halaman" className="w-20 rounded-xl"><SelectValue /></SelectTrigger>
-                <SelectContent>{[10, 25, 50, 100].map((n) => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}</SelectContent>
+          <TableToolbar
+            pageSize={pageSize} onPageSize={(n) => { setPageSize(n); reset() }}
+            query={query} onQuery={(v) => { setQuery(v); reset() }} placeholder="Cari karyawan…"
+            filters={<>
+              <Select value={office} onValueChange={(v) => { setOffice(v); reset() }}>
+                <SelectTrigger size="sm" aria-label="Kantor" className="w-full rounded-xl sm:w-56"><SelectValue /></SelectTrigger>
+                <SelectContent><SelectItem value="all">Semua Kantor</SelectItem>{employeeOffices.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
               </Select>
-              <span>data</span>
-            </div>
-            <Select value={office} onValueChange={(v) => { setOffice(v); reset() }}>
-              <SelectTrigger size="sm" aria-label="Kantor" className="w-full rounded-xl sm:w-56"><SelectValue /></SelectTrigger>
-              <SelectContent><SelectItem value="all">Semua Kantor</SelectItem>{employeeOffices.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-            </Select>
-            <Select value={status} onValueChange={(v) => { setStatus(v as typeof status); reset() }}>
-              <SelectTrigger size="sm" aria-label="Status" className="w-36 rounded-xl"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua status</SelectItem>
-                {(["Aktif", "Nonaktif", "Resign"] as const).map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-              </SelectContent>
-            </Select>
-            <div className="flex flex-1 items-center justify-end gap-2 max-sm:w-full max-sm:flex-none">
-              <InputGroup className="h-10 w-full max-w-xs rounded-xl bg-background">
-                <InputGroupAddon><Search /></InputGroupAddon>
-                <InputGroupInput placeholder="Cari karyawan…" value={query} onChange={(e) => { setQuery(e.target.value); reset() }} />
-              </InputGroup>
-              <Tooltip>
-                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Impor CSV" onClick={() => setImporting(true)}><Download /></Button></TooltipTrigger>
-                <TooltipContent>Impor CSV</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Ekspor CSV" onClick={exportCsv}><Upload /></Button></TooltipTrigger>
-                <TooltipContent>Ekspor CSV ({filtered.length} data)</TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
+              <Select value={status} onValueChange={(v) => { setStatus(v as typeof status); reset() }}>
+                <SelectTrigger size="sm" aria-label="Status" className="w-36 rounded-xl"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua status</SelectItem>
+                  {(["Aktif", "Nonaktif", "Resign"] as const).map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </>}
+            actions={<>
+              <IconAction label="Impor CSV" icon={Download} onClick={() => setImporting(true)} />
+              <IconAction label={`Ekspor CSV (${filtered.length} data)`} icon={Upload} onClick={exportCsv} />
+            </>}
+          />
 
           {hasFilters && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -228,23 +214,17 @@ export default function Employees() {
           )}
 
           {/* Aksi massal */}
-          {selected.size > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-primary-soft px-4 py-2 text-sm">
-              <span className="font-semibold text-primary">{selected.size} karyawan dipilih</span>
-              <div className="flex gap-2">
-                <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Batal pilih</Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80">
-                    <DropdownMenuItem onSelect={() => pushToDevice(selectedRows())}><ServerCog /> Turunkan data ke perangkat absensi</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => { setRows((r) => r.map((x) => (selected.has(x.id) ? { ...x, status: "Resign", updatedAt: stamp() } : x))); setSelected(new Set()) }}><Clock /> Resign</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setBulkSchedule(schedules[0])}><ListChecks /> Ubah Jadwal</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((e) => selected.has(e.id)))}><Trash2 /> Hapus terpilih</Button>
-              </div>
-            </div>
-          )}
+          <SelectionBar count={selected.size} noun="karyawan" onClear={() => setSelected(new Set())}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuItem onSelect={() => pushToDevice(selectedRows())}><ServerCog /> Turunkan data ke perangkat absensi</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => { setRows((r) => r.map((x) => (selected.has(x.id) ? { ...x, status: "Resign", updatedAt: stamp() } : x))); setSelected(new Set()) }}><Clock /> Resign</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setBulkSchedule(schedules[0])}><ListChecks /> Ubah Jadwal</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((e) => selected.has(e.id)))}><Trash2 /> Hapus terpilih</Button>
+          </SelectionBar>
 
           {filtered.length === 0 ? (
             <Empty className="py-16">
@@ -315,7 +295,7 @@ export default function Employees() {
               {/* Mobile: kartu */}
               <ul className="space-y-3 md:hidden">
                 {slice.map((e) => (
-                  <li key={e.id} className="rounded-xl border p-3">
+                  <li key={e.id} className={mobileCardClass}>
                     <div className="flex items-start gap-3">
                       <label className="-ml-2 -mt-0.5 grid size-10 shrink-0 cursor-pointer place-items-center"><Checkbox aria-label={`Pilih ${e.name}`} checked={selected.has(e.id)} onCheckedChange={() => toggleRow(e.id)} /></label>
                       <Avatar>{e.photo && <AvatarImage src={e.photo} alt="" />}<AvatarFallback>{initials(e.name)}</AvatarFallback></Avatar>

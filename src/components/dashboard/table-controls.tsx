@@ -2,15 +2,20 @@ import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react"
 import { ListPagination } from "@/components/dashboard/list-pagination"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Smartphone } from "lucide-react"
+import { Smartphone, type LucideIcon } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { initials } from "@/data/employees"
 import type { Platform } from "@/data/app-users"
 
-/** Baris atas tabel: "Tampilkan N data" + pencarian. */
-export function TableToolbar({ pageSize, onPageSize, query, onQuery, placeholder = "Cari…" }: {
+/** Baris atas tabel (dipakai semua halaman daftar): "Tampilkan N data" + filter di kiri, pencarian + aksi ikon di kanan. */
+export function TableToolbar({ pageSize, onPageSize, query, onQuery, placeholder = "Cari…", filters, actions }: {
   pageSize: number; onPageSize: (n: number) => void; query: string; onQuery: (q: string) => void; placeholder?: string
+  filters?: React.ReactNode; actions?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="flex flex-wrap items-center gap-3">
       <div className="flex items-center gap-2 text-sm">
         <span>Tampilkan</span>
         <Select value={String(pageSize)} onValueChange={(v) => onPageSize(Number(v))}>
@@ -19,13 +24,54 @@ export function TableToolbar({ pageSize, onPageSize, query, onQuery, placeholder
         </Select>
         <span>data</span>
       </div>
-      <InputGroup className="h-10 w-full max-w-xs rounded-xl bg-background sm:w-64">
-        <InputGroupAddon><Search /></InputGroupAddon>
-        <InputGroupInput placeholder={placeholder} value={query} onChange={(e) => onQuery(e.target.value)} />
-      </InputGroup>
+      {filters}
+      <div className="flex flex-1 items-center justify-end gap-2 max-sm:w-full max-sm:flex-none">
+        <InputGroup className="h-10 w-full max-w-xs rounded-xl bg-background">
+          <InputGroupAddon><Search /></InputGroupAddon>
+          <InputGroupInput placeholder={placeholder} value={query} onChange={(e) => onQuery(e.target.value)} />
+        </InputGroup>
+        {actions}
+      </div>
     </div>
   )
 }
+
+/** Tombol ikon bertooltip untuk toolbar (impor/ekspor). */
+export function IconAction({ label, icon: Icon, onClick }: { label: string; icon: LucideIcon; onClick: () => void }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild><Button variant="outline" size="icon" aria-label={label} onClick={onClick}><Icon /></Button></TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  )
+}
+
+/** Bar aksi massal saat ada baris terpilih. */
+export function SelectionBar({ count, noun, onClear, children }: { count: number; noun: string; onClear: () => void; children: React.ReactNode }) {
+  if (count === 0) return null
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-primary-soft px-4 py-2 text-sm">
+      <span className="font-semibold text-primary">{count} {noun} dipilih</span>
+      <div className="flex gap-2">
+        <Button size="sm" variant="ghost" onClick={onClear}>Batal pilih</Button>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/** Avatar + nama (kolom Nama di semua tabel orang). */
+export function PersonCell({ name, photo }: { name: string; photo?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <Avatar>{photo && <AvatarImage src={photo} alt="" />}<AvatarFallback>{initials(name)}</AvatarFallback></Avatar>
+      <span className="font-medium">{name}</span>
+    </div>
+  )
+}
+
+/** Kelas kartu baris di mobile (sama di semua halaman daftar). */
+export const mobileCardClass = "rounded-xl border p-3"
 
 /** Baris bawah tabel: ringkasan + paginasi. */
 export function TableFooter({ from, to, total, page, pages, onPage }: { from: number; to: number; total: number; page: number; pages: number; onPage: (p: number) => void }) {
@@ -41,7 +87,7 @@ export function TableFooter({ from, to, total, page, pages, onPage }: { from: nu
 export function SortButton({ label, active, asc, onClick }: { label: string; active: boolean; asc: boolean; onClick: () => void }) {
   const Icon = !active ? ArrowUpDown : asc ? ArrowUp : ArrowDown
   return (
-    <button type="button" onClick={onClick} className="-my-2 inline-flex min-h-10 items-center gap-1.5 text-xs font-bold uppercase tracking-wide">
+    <button type="button" onClick={onClick} className="inline-flex min-h-8 items-center gap-1.5 self-start text-left text-xs font-bold uppercase tracking-wide">
       {label} <Icon className="size-3.5 text-muted-foreground" />
     </button>
   )
