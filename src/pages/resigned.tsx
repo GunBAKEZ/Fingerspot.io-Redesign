@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { format, parseISO } from "date-fns"
 import { id as idLocale } from "date-fns/locale"
-import { ChevronDown, RotateCcw, Trash2, Upload } from "lucide-react"
+import { RotateCcw, Trash2, Upload } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { EmptyRows, IconAction, PersonCell, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { initialResigned, type ResignedEmployee } from "@/data/employee-lists"
@@ -54,13 +53,8 @@ export default function Resigned() {
             actions={<IconAction label={`Ekspor CSV (${t.filtered.length} data)`} icon={Upload} onClick={exportCsv} />} />
 
           <SelectionBar count={t.selected.size} noun="karyawan" onClear={t.clear}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuItem onSelect={() => setAction({ kind: "restore", list: picked() })}><RotateCcw /> Aktifkan kembali</DropdownMenuItem>
-                <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: "delete", list: picked() })}><Trash2 /> Hapus permanen</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button size="sm" variant="soft" onClick={() => setAction({ kind: "restore", list: picked() })}><RotateCcw /> Aktifkan kembali</Button>
+            <Button size="sm" variant="destructive" onClick={() => setAction({ kind: "delete", list: picked() })}><Trash2 /> Hapus terpilih</Button>
           </SelectionBar>
 
           {t.filtered.length === 0 ? <EmptyRows empty={rows.length === 0} emptyText="Belum ada karyawan yang resign." query={t.query} /> : (

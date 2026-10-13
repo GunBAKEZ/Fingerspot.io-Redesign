@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronDown, Trash2, Upload } from "lucide-react"
+import { Trash2, Upload } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { IconAction, PersonCell, EmptyRows, RemovableChips, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { initialAdminDevice, type AdminDevice } from "@/data/employee-lists"
@@ -46,12 +45,7 @@ export default function AdminDevice() {
             actions={<IconAction label={`Ekspor CSV (${t.filtered.length} data)`} icon={Upload} onClick={exportCsv} />} />
 
           <SelectionBar count={t.selected.size} noun="karyawan" onClear={t.clear}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-72">
-                <DropdownMenuItem variant="destructive" onSelect={() => setDeleting(rows.filter((r) => t.selected.has(r.id)))}><Trash2 /> Cabut sebagai admin perangkat</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((r) => t.selected.has(r.id)))}><Trash2 /> Hapus terpilih</Button>
           </SelectionBar>
 
           {t.filtered.length === 0 ? <EmptyRows empty={rows.length === 0} emptyText="Belum ada karyawan yang menjadi admin perangkat absensi." query={t.query} /> : (

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { ChevronDown, MapPin, SearchX, Trash2, Upload, UserPlus } from "lucide-react"
+import { MapPin, SearchX, Trash2, Upload, UserPlus } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { IconAction, PersonCell, PlatformCell, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import {
@@ -20,7 +20,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { initials } from "@/data/employees"
 import { initialAppUsers, type AppUser, type InviteStatus } from "@/data/app-users"
 import { initialEmployees } from "@/data/employees"
@@ -98,12 +97,7 @@ export default function AppUsers() {
           />
 
           <SelectionBar count={selected.size} noun="pengguna" onClear={() => setSelected(new Set())}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuItem variant="destructive" onSelect={() => setDeleting(rows.filter((r) => selected.has(r.id)))}><Trash2 /> Hapus Pengguna Apps</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((r) => selected.has(r.id)))}><Trash2 /> Hapus terpilih</Button>
           </SelectionBar>
 
           {filtered.length === 0 ? (

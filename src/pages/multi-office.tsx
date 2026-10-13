@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { ChevronDown, SearchX, Trash2, Upload, UserPlus, X } from "lucide-react"
+import { SearchX, Trash2, Upload, UserPlus, X } from "lucide-react"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { IconAction, PersonCell, RemovableChips, SelectionBar, SortButton, TableFooter, TableToolbar, mobileCardClass } from "@/components/dashboard/table-controls"
 import {
@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -97,12 +96,7 @@ export default function MultiOffice() {
           />
 
           <SelectionBar count={selected.size} noun="karyawan" onClear={() => setSelected(new Set())}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild><Button size="sm">Aksi untuk terpilih <ChevronDown /></Button></DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-72">
-                <DropdownMenuItem variant="destructive" onSelect={() => setDeleting(rows.filter((r) => selected.has(r.id)))}><Trash2 /> Hapus dari daftar beberapa kantor</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button size="sm" variant="destructive" onClick={() => setDeleting(rows.filter((r) => selected.has(r.id)))}><Trash2 /> Hapus terpilih</Button>
           </SelectionBar>
 
           {filtered.length === 0 ? (
